@@ -1,13 +1,16 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default function HeaderView(props) {
   console.log('dans HeaderView')
+  const { width: screenWidth } = Dimensions.get('window');
 
   const pressedProfil = () =>{
     console.log("btn profil 🙍‍♂️")
+    console.log("screenWidth: ", screenWidth)
   }
-
+  // Create styles with dynamic padding based on screenWidth
+  const styles = createStyles(screenWidth);
 
   return (
     <View style={styles.container}>
@@ -24,7 +27,7 @@ export default function HeaderView(props) {
   );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (screenWidth) => StyleSheet.create({
   container: {
     display: 'flex',
     flexDirection: 'row',
@@ -32,22 +35,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#007ACC',
     height: 70,
     width: '100%',
-    borderBottomLeftRadius: 10,    // Radius for top-left corner
-    borderBottomRightRadius: 10,   // Radius for top-right corner
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
   image: {
     height: 80,
-    aspectRatio: 1, // Maintains the aspect ratio
-
+    aspectRatio: 1,
   },
   containerLogo: {
-    flex: 7,
-    justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'absolute',
+    left: screenWidth * 0.5 - 40, // Assuming 80 is the full width
   },
   containerProfil: {
-    flex: 1,
+    width:'100%',
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems:'flex-end',
+    paddingRight: 10,
+  },
 });
