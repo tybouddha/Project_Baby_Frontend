@@ -7,6 +7,25 @@
 - voir touts les branch: `git branch`
 - pull branch direct `git pull origin [nom_de_branch]`
 
+
+## Installation
+le depart de ce projet est `npx create-expo-app@latest --template`
+
+1. Navigation
+```bash
+yarn add @react-navigation/native@6
+expo install react-native-screens react-native-safe-area-context
+```
+Stack navigation:
+`yarn add @react-navigation/native-stack@6`
+Tab navigation:
+`yarn add @react-navigation/bottom-tabs@6`
+
+2. FontAwesome
+`yarn add @fortawesome/react-native-fontawesome @fortawesome/fontawesome-svg-core react-native-svg`
+`yarn add @fortawesome/free-solid-svg-icons`
+
+
 ## Project Baby Details
 
 ### Figma 
