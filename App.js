@@ -39,9 +39,14 @@ const TabNavigator = () => {
 
         return <FontAwesome name={iconName} size={size} color={color} />;
       },
-      tabBarActiveTintColor: '#ec6e5b',
-      tabBarInactiveTintColor: '#335561',
+      tabBarActiveTintColor: '#c6c6c6',
+      tabBarInactiveTintColor: '#FFFFFF',
       headerShown: false,
+      tabBarStyle: {
+        backgroundColor: '#007ACC',
+        borderTopLeftRadius: 10,    // Radius for top-left corner
+        borderTopRightRadius: 10,   // Radius for top-right corner
+      }
     })}>
       <Tab.Screen name="Acceuil" component={AcceuilScreen} />
       <Tab.Screen name="Agenda" component={AgendaScreen} />
