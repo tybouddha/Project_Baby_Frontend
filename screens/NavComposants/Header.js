@@ -1,47 +1,53 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-export default function HeaderView() {
-    console.log('dans HeaderView')
-    console.log(`focused: ${props.focused}`)
-    console.log(`focused: ${props.screenName}`)
-    return (
-      <View style={ styles.container }>
-        <View styles={styles.container}>
+export default function HeaderView(props) {
+  console.log('dans HeaderView')
 
-        <View style={styles.containerLogo}>
-        <Image style={styles.image} source={require('../../assets/images/logo128.png')} 
-            alt="logo" resizeMode="contain"/>
-        </View>
-        
-        <View style={styles.containerProfil}>
-        <FontAwesome name='user' size={25} color={'white'} />
-        </View>
-
-        </View>
-      </View>
-    );
+  const pressedProfil = () =>{
+    console.log("btn profil 🙍‍♂️")
   }
-  
-  const styles = StyleSheet.create({
-    container:{
-        display:'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 5,
-        backgroundColor: '#007ACC',
-        height: 70,
-        width:'100%',
-        borderBottomLeftRadius: 10,    // Radius for top-left corner
-        borderBottomRightRadius: 10,   // Radius for top-right corner
-    },
-    containerLogo:{
-      width: '70%'
-    },
-    image:{
-        //width: 30, // Set width to 50% of its original size
-        height: 80,
-        aspectRatio: 1, // Maintains the aspect ratio
-        //marginBottom: 4, // Add spacing if necessary
-    }
+
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.containerLogo}>
+        <Image style={styles.image} source={require('../../assets/images/logo128.png')} alt="logo"
+          resizeMode="contain" />
+      </View>
+      <View style={styles.containerProfil}>
+      <TouchableOpacity style={styles.btn} onPress={() => pressedProfil()}>
+        <FontAwesome name={'user'} size={25} color={'#FFFFFF'}/>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex',
+    flexDirection: 'row',
+    padding: 5,
+    backgroundColor: '#007ACC',
+    height: 70,
+    width: '100%',
+    borderBottomLeftRadius: 10,    // Radius for top-left corner
+    borderBottomRightRadius: 10,   // Radius for top-right corner
+  },
+  image: {
+    height: 80,
+    aspectRatio: 1, // Maintains the aspect ratio
+
+  },
+  containerLogo: {
+    flex: 7,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  containerProfil: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
 });
