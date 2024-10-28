@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'rea
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default function HeaderView(props) {
-  console.log('dans HeaderView')
   const { width: screenWidth } = Dimensions.get('window');
 
   const pressedProfil = () =>{

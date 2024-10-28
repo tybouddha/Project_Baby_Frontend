@@ -2,9 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default function IconView(props) {
-    console.log('dans IconView')
-    console.log(`focused: ${props.focused}`)
-    console.log(`focused: ${props.screenName}`)
+
     return (
       <View style={ styles.container }>
         <View style={props.focused ? styles.sousContainerFocused : styles.sousContainer }>
