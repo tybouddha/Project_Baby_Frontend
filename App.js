@@ -12,6 +12,7 @@ import AgendaScreen from './screens/AgendaScreen';
 import DocumentsScreen from './screens/DocumentsScreen'
 import CarnetBebeScreen from './screens/CarnetBebeScreen'
 
+import IconView from './screens/NavComposants/IconView'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -19,33 +20,39 @@ const Tab = createBottomTabNavigator();
 const TabNavigator = () => {
   return (
     <Tab.Navigator screenOptions={({ route }) => ({
-      tabBarIcon: ({ color, size }) => {
+      tabBarIcon: ({ color, size, focused }) => {
         let iconName = '';
-
+        let screenName = '';
         if (route.name === 'Acceuil') {
           iconName = 'home';
+          screenName=  'acceuil'
         } else if (route.name === 'Agenda') {
           iconName = 'calendar';
+          screenName=  'agenda'
         } 
         else if (route.name === 'Documents') {
           iconName = 'file';
+          screenName=  'documents'
         } 
         else if (route.name === 'CarnetBebe') {
           iconName = 'reddit-alien';// changee
+          screenName=  'carnet bebé'
         } 
         else {
           iconName = 'reddit-alien';
         }
 
-        return <FontAwesome name={iconName} size={size} color={color} />;
+        return <IconView iconName={iconName} size={size} color={color} focused={focused}  screenName={screenName}/>;
       },
-      tabBarActiveTintColor: '#c6c6c6',
+      tabBarActiveTintColor: '#FFFFFF',
       tabBarInactiveTintColor: '#FFFFFF',
       headerShown: false,
+      tabBarShowLabel:false,
       tabBarStyle: {
         backgroundColor: '#007ACC',
         borderTopLeftRadius: 10,    // Radius for top-left corner
         borderTopRightRadius: 10,   // Radius for top-right corner
+        height: 60,
       }
     })}>
       <Tab.Screen name="Acceuil" component={AcceuilScreen} />
