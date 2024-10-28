@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
+import HeaderView from "./NavComposants/Header";
 
 export default function AcceuilScreen() {
   return (
@@ -20,6 +21,9 @@ export default function AcceuilScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
       >
+        <View style={styles.header}>
+          <HeaderView />
+        </View>
         <View style={styles.div_btn}>
           <TouchableOpacity
             style={styles.btn}
@@ -56,6 +60,7 @@ const styles = StyleSheet.create({
     borderColor: "gray",
     height: 320,
     width: 380,
+    marginBottom: "auto",
   },
   title: {
     fontSize: 20,
@@ -73,6 +78,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   div_btn: {
-    display: "flex,",
+    display: "flex",
+    flexDirection: "row-reverse",
+    marginBottom: "auto",
+  },
+  header: {
+    display: "flex",
+    width: Dimensions.get("screen").width,
+    marginBottom: 250,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
