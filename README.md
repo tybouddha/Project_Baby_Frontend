@@ -26,6 +26,46 @@ Tab navigation:
 `yarn add @fortawesome/free-solid-svg-icons`
 
 
+### Police
+- Type: Caveat 
+- source: [React Native Police Medium Article](https://medium.com/@prathiba2796/how-to-add-and-use-custom-fonts-in-react-native-369d5bba9203)
+
+1. Telecharger police [Google Font Family Caveat](https://fonts.google.com/share?selection.family=Caveat:wght@400..700)
+2. (peut-etre pas necessaire)`npx react-native-asset`
+3. App.js - ajouter une useState et useEffect pour charger le police.
+
+```jsx
+import React, { useState, useEffect } from 'react';
+import * as Font from 'expo-font';
+
+export default function App() {
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+
+        'Caveat': require('./assets/fonts/Caveat-VariableFont_wght.ttf'),
+      });
+      setFontsLoaded(true);
+    }
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    console.log('--- font NOT loaded')
+  } else {
+    console.log('--- font loaded')
+  }
+
+  return (
+      <NavigationContainer>
+      </NavigationContainer>
+  );
+}
+```
+
+
 ## Project Baby Details
 
 ### Figma 

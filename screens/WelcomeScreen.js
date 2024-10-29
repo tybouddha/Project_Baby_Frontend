@@ -30,19 +30,19 @@ export default function WelcomeScreen() {
 
         <View style={styles.vwBtn}>
             <TouchableOpacity style={styles.btn} onPress={() => pressedLogin()}>
-                <Text>Login</Text>
+                <Text style={styles.btnText}>Login</Text>
             </TouchableOpacity>
         </View>
 
         <View style={styles.vwBtn}>
             <TouchableOpacity style={styles.btn} onPress={() => pressedInscrire()}>
-                <Text>Inscrire</Text>
+                <Text style={styles.btnText}>Inscrire</Text>
             </TouchableOpacity>
         </View>
 
         <View style={styles.vwBtn}>
             <TouchableOpacity style={styles.btn} onPress={() => pressedInviter()}>
-                <Text>Inviter</Text>
+                <Text style={styles.btnText}>Inviter</Text>
             </TouchableOpacity>
         </View>
 
@@ -76,6 +76,10 @@ const styles = StyleSheet.create({
         borderColor: '#007ACC',  // Blue outline
         backgroundColor: '#FFFFFF',  // White background
         alignItems: 'center',
+    },
+    btnText:{
+        fontFamily: 'Caveat',
+        fontSize: 30
     }
 
 });

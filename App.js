@@ -15,6 +15,9 @@ import WelcomeScreen from "./screens/WelcomeScreen";
 
 import IconView from './screens/NavComposants/IconView'
 
+import { useState, useEffect } from 'react';
+import * as Font from 'expo-font';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -65,6 +68,27 @@ const TabNavigator = () => {
 };
 
 export default function App() {
+
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        // 'Mont-Heavy': require('./assets/fonts/mont-heavy.ttf'),
+        // 'Mark-My-Words': require('./assets/fonts/mark_my_words.ttf'),
+        'Caveat': require('./assets/fonts/Caveat-VariableFont_wght.ttf'),
+      });
+      setFontsLoaded(true);
+    }
+    loadFonts();
+  }, []);
+
+  if (!fontsLoaded) {
+    console.log('--- font NOT loaded')
+  } else {
+    console.log('--- font loaded')
+  }
+
   return (
     <NavigationContainer>
     <Stack.Navigator screenOptions={{ headerShown: false }}>
