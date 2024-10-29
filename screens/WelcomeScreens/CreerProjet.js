@@ -28,7 +28,10 @@ export default function CreerProjetScreen() {
 
     const creerProjectScreenView = (
     <View style={styles.container}>
-
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
     <View style={styles.vwInput}>
         <TextInput style={styles.txtInput} 
             onChangeText={(value) => usernameSetter(value)} 
@@ -95,6 +98,8 @@ export default function CreerProjetScreen() {
             <Text style={styles.btnText}>Créer Projet</Text>
         </TouchableOpacity>
     </View>
+
+    </KeyboardAvoidingView>
     </View>
     )
     return (
