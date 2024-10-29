@@ -8,17 +8,17 @@ import {
     Platform,
     TouchableOpacity,
 } from "react-native";
-import { Calendar, CalendarList, Agenda } from "react-native-calendars";
-import TemplateViewNoNav from "./template/TemplateViewNoNav";
+import TemplateViewNoNav from "../template/TemplateViewNoNav";
 
-export default function WelcomeScreen() {
+export default function WelcomeScreen({ navigation }) {
 
     const pressedLogin = () => {
         console.log('- aller à LoginScreen 📢')
     }
 
-    const pressedInscrire = () => {
-        console.log('- aller à pressedInscrire 📢')
+    const pressedCreerProjet = () => {
+        console.log('- aller à pressedCreerProjet 📢')
+        navigation.navigate('CreerProjet')
     }
 
     const pressedInviter = () => {
@@ -35,8 +35,8 @@ export default function WelcomeScreen() {
         </View>
 
         <View style={styles.vwBtn}>
-            <TouchableOpacity style={styles.btn} onPress={() => pressedInscrire()}>
-                <Text style={styles.btnText}>Inscrire</Text>
+            <TouchableOpacity style={styles.btn} onPress={() => pressedCreerProjet()}>
+                <Text style={styles.btnText}>Créer Projet</Text>
             </TouchableOpacity>
         </View>
 

@@ -11,7 +11,8 @@ import AcceuilScreen from './screens/AcceuilScreen';
 import AgendaScreen from './screens/AgendaScreen';
 import DocumentsScreen from './screens/DocumentsScreen'
 import CarnetBebeScreen from './screens/CarnetBebeScreen'
-import WelcomeScreen from "./screens/WelcomeScreen";
+import WelcomeScreen from "./screens/WelcomeScreens/WelcomeScreen";
+import CreerProjetScreen from "./screens/WelcomeScreens/CreerProjet";
 
 import IconView from './screens/NavComposants/IconView'
 
@@ -94,6 +95,7 @@ export default function App() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Welcome" component={WelcomeScreen} />
       <Stack.Screen name="TabNavigator" component={TabNavigator} />
+      <Stack.Screen name="CreerProjet" component={CreerProjetScreen} />
     </Stack.Navigator>
   </NavigationContainer>
   );
