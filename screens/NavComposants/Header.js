@@ -7,9 +7,16 @@ export default function HeaderView(props) {
   const pressedProfil = () =>{
     console.log("btn profil 🙍‍♂️")
     console.log("screenWidth: ", screenWidth)
+    console.log("props.cacheProfilevwProfil: ", props.cacheProfilevwProfil)
   }
   // Create styles with dynamic padding based on screenWidth
   const styles = createStyles(screenWidth);
+
+  const vwProfil =       <View style={styles.containerProfil}>
+  <TouchableOpacity style={styles.btn} onPress={() => pressedProfil()}>
+    <FontAwesome name={'user'} size={25} color={'#FFFFFF'}/>
+    </TouchableOpacity>
+  </View>
 
   return (
     <View style={styles.container}>
@@ -17,11 +24,7 @@ export default function HeaderView(props) {
         <Image style={styles.image} source={require('../../assets/images/logo128.png')} alt="logo"
           resizeMode="contain" />
       </View>
-      <View style={styles.containerProfil}>
-      <TouchableOpacity style={styles.btn} onPress={() => pressedProfil()}>
-        <FontAwesome name={'user'} size={25} color={'#FFFFFF'}/>
-        </TouchableOpacity>
-      </View>
+        {props.cacheProfilevwProfil ? null: vwProfil}
     </View>
   );
 }
