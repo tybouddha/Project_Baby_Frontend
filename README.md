@@ -28,7 +28,6 @@ Tab navigation:
 
 ### Police
 - Type: Caveat 
-- source: [React Native Police Medium Article](https://medium.com/@prathiba2796/how-to-add-and-use-custom-fonts-in-react-native-369d5bba9203)
 
 1. Telecharger police [Google Font Family Caveat](https://fonts.google.com/share?selection.family=Caveat:wght@400..700)
 2. (peut-etre pas necessaire)`npx react-native-asset`
@@ -64,7 +63,15 @@ export default function App() {
   );
 }
 ```
-
+4. Pour l'utiliser:
+```jsx
+const styles = StyleSheet.create({
+    btnText:{
+        fontFamily: 'Caveat',
+        fontSize: 30
+    }
+    });
+```
 
 ## Project Baby Details
 
