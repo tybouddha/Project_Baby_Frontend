@@ -26,6 +26,8 @@ Tab navigation:
 `yarn add @fortawesome/free-solid-svg-icons`
 
 
+### Expliuque Header Props
+
 ### Police
 - Type: Caveat 
 
