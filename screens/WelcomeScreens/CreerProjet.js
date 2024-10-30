@@ -12,18 +12,17 @@ import {
 import TemplateViewNoNav from "../template/TemplateViewNoNav";
 import { useState, useEffect } from "react";
 import DatePickerComposant from "../template/DatePickerComposant";
-import DateTimePicker from "@react-native-community/datetimepicker";
 
-export default function CreerProjetScreen() {
+export default function CreerProjetScreen({ navigation }) {
+  console.log("CreerProjetScreen");
   const [username, usernameSetter] = useState("");
   const [prenom, prenomSetter] = useState("");
   const [nomDeFamille, nomDeFamilleSetter] = useState("");
   const [dateDeMenstru, dateDeMenstruSetter] = useState(new Date());
-  // const [afficherMenstruPicker, afficherMenstruPickerSetter] = useState(false);
   const [dateDeGrossess, dateDeGrossessSetter] = useState("");
-  // const [afficherGrossessPicker, afficherGrossessPickerSetter] = useState(false);
   const [email, emailSetter] = useState("");
   const [password, passwordSetter] = useState("");
+  const [envoyerData, envoyerDataSetter] = useState(false);
 
   const chopperDateDeMenstru = (datePickerDate) => {
     console.log(`date reçu: ${datePickerDate}`);
@@ -40,6 +39,20 @@ export default function CreerProjetScreen() {
     console.log(`dateDeMenstru: ${dateDeMenstru}`);
     console.log(`dateDeGrossess: ${dateDeGrossess}`);
   };
+
+  useEffect(
+    () => {
+      // <-- que une seul fois, quand le composant arriver
+      console.log("-Mount 📌");
+
+      // fetch('http://192.168.100.47/', {
+      //     method: 'POST',
+      //     headers: { 'Content-Type': 'application/json' },
+      //     body: JSON.stringify(data)
+      // })
+    },
+    [] //<--- tableaux vide
+  );
 
   const creerProjectScreenView = (
     <View style={styles.container}>
@@ -128,7 +141,13 @@ export default function CreerProjetScreen() {
       </ScrollView>
     </View>
   );
-  return <TemplateViewNoNav view={creerProjectScreenView} />;
+  return (
+    <TemplateViewNoNav
+      view={creerProjectScreenView}
+      navigation={navigation}
+      afficherArriére={true}
+    />
+  );
 }
 
 const styles = StyleSheet.create({
