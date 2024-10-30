@@ -1,3 +1,4 @@
+import HeaderView from "./NavComposants/Header";
 import {
   StyleSheet,
   Text,
@@ -5,11 +6,21 @@ import {
   Dimensions,
   ImageBackground,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { Agenda } from "react-native-calendars";
 import React, { useState } from "react";
 
-export default function AgendaScreen() {
+export default function AgendaScreen(navigation) {
+  const [modalVisible, setModalVisible] = useState(false);
+  const addRdv = () => {
+    setModalVisible(true);
+    console.log("btn fonctionnel");
+  };
+  const handleClose = () => {
+    setModalVisible(false);
+  };
   const [items, setItems] = useState({
     "2024-04-29": [{ name: "Meeting with client", time: "10:00 AM" }],
     "2024-04-30": [
@@ -38,32 +49,73 @@ export default function AgendaScreen() {
       source={require("../assets/images/projectbaby-background.jpg")}
       style={styles.background}
     >
-      <View style={{ marginHorizontal: 10 }}>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            width: Dimensions.get("screen").width,
-            marginTop: 30,
-            backgroundColor: "white",
-            padding: 10,
-          }}
-        >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.container}
+      >
+        <View style={styles.header}>
+          <HeaderView navigation={navigation} />
+        </View>
+        <View style={{ marginHorizontal: 10 }}>
           <View
             style={{
-              marginVertical: 10,
+              display: "flex",
+              flexDirection: "row",
+              width: Dimensions.get("screen").width,
               marginTop: 30,
               backgroundColor: "white",
-              marginHorizontal: 10,
               padding: 10,
             }}
           >
-            <Text style={{ fontWeight: "bold" }}>{items.name}</Text>
-            <Text>{items.time}</Text>
+            <View
+              style={{
+                marginVertical: 10,
+                marginTop: 30,
+                backgroundColor: "white",
+                marginHorizontal: 10,
+                padding: 10,
+              }}
+            >
+              <Text style={{ fontWeight: "bold" }}>{items.name}</Text>
+              <Text>{items.time}</Text>
+            </View>
+            <Modal visible={modalVisible} animationType="fade" transparent>
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <TextInput
+                    placeholder="code d'invitation"
+                    style={styles.input}
+                  />
+                  <Text style={styles.textrole}>{textrole}</Text>
+                  <Switch
+                    style={styles.toggle}
+                    thumbColor={role === "lecteur" ? "#f5dd4b" : "#f4f3f4"}
+                    ios_backgroundColor="black"
+                    onValueChange={toggleSwitch}
+                    onToggle={(role) => toggleSwitch()}
+                    value={role === "lecteur"}
+                  />
+                  <TouchableOpacity
+                    onPress={() => generateCode()}
+                    style={styles.btnModal}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={styles.textButton}>envoyer code</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => handleClose()}
+                    style={styles.btnModal}
+                    activeOpacity={0.8}
+                  >
+                    <Text style={styles.textButton}>Close</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+            <Agenda items={items} />
           </View>
-          <Agenda items={items} />
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </ImageBackground>
   );
 }
@@ -76,11 +128,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
-  // container: {
-
-  //   backgroundColor: '#fff',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
+  header: {
+    display: "flex",
+    width: Dimensions.get("screen").width,
+    marginBottom: 300,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
