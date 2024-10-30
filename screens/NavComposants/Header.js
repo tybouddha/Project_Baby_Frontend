@@ -9,16 +9,16 @@ import {
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function HeaderView(props) {
-  const { width: screenWidth } = Dimensions.get("window");
+  // const { width: screenWidth } = Dimensions.get("window");
 
   const pressedProfil = () => {
     console.log("btn profil 🙍‍♂️");
-    console.log("screenWidth: ", screenWidth);
-    // console.log("props.cacheProfilevwProfil: ", props.cacheProfilevwProfil);
     props.navigation.navigate("Profil");
   };
-  // Create styles with dynamic padding based on screenWidth
-  const styles = createStyles(screenWidth);
+
+  const allerArrière = () => {
+    props.navigation.goBack();
+  };
 
   const vwProfil = (
     <View style={styles.containerProfil}>
@@ -28,8 +28,17 @@ export default function HeaderView(props) {
     </View>
   );
 
+  const vwArrière = (
+    <View style={styles.containerArrière}>
+      <TouchableOpacity style={styles.btn} onPress={() => allerArrière()}>
+        <FontAwesome name={"arrow-left"} size={25} color={"#FFFFFF"} />
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
+      {props.afficherArriére ? vwArrière : null}
       <View style={styles.containerLogo}>
         <Image
           style={styles.image}
@@ -38,36 +47,40 @@ export default function HeaderView(props) {
           resizeMode="contain"
         />
       </View>
-      {vwProfil}
+      {props.cacheProfilevwProfil ? null : vwProfil}
     </View>
   );
 }
 
-const createStyles = (screenWidth) =>
-  StyleSheet.create({
-    container: {
-      display: "flex",
-      flexDirection: "row",
-      padding: 5,
-      backgroundColor: "#007ACC",
-      height: 70,
-      width: "100%",
-      borderBottomLeftRadius: 10,
-      borderBottomRightRadius: 10,
-    },
-    image: {
-      height: 80,
-      aspectRatio: 1,
-    },
-    containerLogo: {
-      alignItems: "center",
-      position: "absolute",
-      left: screenWidth * 0.5 - 40, // Assuming 80 is the full width
-    },
-    containerProfil: {
-      width: "100%",
-      justifyContent: "center",
-      alignItems: "flex-end",
-      paddingRight: 10,
-    },
-  });
+const styles = StyleSheet.create({
+  container: {
+    display: "flex",
+    flexDirection: "row",
+    padding: 5,
+    backgroundColor: "#007ACC",
+    height: 70,
+    width: "100%",
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
+  image: {
+    height: 80,
+    aspectRatio: 1,
+  },
+  containerLogo: {
+    alignItems: "center",
+    position: "absolute",
+    left: Dimensions.get("screen").width * 0.5 - 40,
+  },
+  containerProfil: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "flex-end",
+    paddingRight: 10,
+  },
+  containerArrière: {
+    display: "flex",
+    justifyContent: "flex-end",
+    paddingBottom: 10,
+  },
+});
