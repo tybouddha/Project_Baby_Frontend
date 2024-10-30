@@ -11,13 +11,35 @@ import HeaderView from "./NavComposants/Header";
 import { useEffect, useState } from "react";
 
 export default function Profil({ navigation }) {
+  const backend = "http://192.168.1.28:3000";
+
   const [username, setusername] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [grossesse, setgrossesse] = useState("");
   const [menstruation, setmenstruation] = useState("");
+  // const EMAIL_REGEX: RegExp =
+  //   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  useEffect(() => {
+    (async () => {})();
+    fetch(`${backend}/city/places/${user.nickname}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) dispatch(importPlace(data.places));
+      });
+  }, []);
 
-  const saveUpdate = () => {};
+  const saveUpdate = () => {
+    if (
+      username.length === 0 &&
+      email.length === 0 &&
+      password.length === 0 &&
+      grossesse.length === 0 &&
+      menstruation.length === 0
+    ) {
+      return;
+    }
+  };
 
   return (
     <ImageBackground
