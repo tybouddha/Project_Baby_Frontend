@@ -6,32 +6,18 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
+import TemplateView from "./template/TemplateView";
 
-export default function AgendaScreen() {
+export default function DocumentsScreen({ navigation }) {
   return (
-    <ImageBackground
-      source={require("../assets/images/projectbaby-background.jpg")}
-      style={styles.background}
-    >
-      <View style={styles.container}>
+    <TemplateView navigation={navigation}>
+      {/* Commence propriété children */}
+      <View>
         <Text>Documents Screen </Text>
       </View>
-    </ImageBackground>
+      {/* Fin propriété children */}
+    </TemplateView>
   );
 }
 
-const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    width: Dimensions.get("screen").width,
-    heigth: Dimensions.get("screen").height,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  // container: {
-  //   flex: 1,
-  //   backgroundColor: '#fff',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
-});
+const styles = StyleSheet.create({});

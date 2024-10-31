@@ -2,8 +2,8 @@ import { StyleSheet, View, Dimensions, ImageBackground } from "react-native";
 
 import HeaderView from "../NavComposants/Header";
 
-export default function TemplateViewNoNav(props) {
-  console.log("-- TemplateViewNoNav 👀");
+export default function TemplateView(props) {
+  console.log("-- TemplateView 👀");
 
   return (
     <ImageBackground
@@ -11,14 +11,10 @@ export default function TemplateViewNoNav(props) {
       style={styles.background}
     >
       <View style={styles.vwHeader}>
-        <HeaderView
-          cacheProfilevwProfil={true}
-          navigation={props.navigation}
-          afficherArriére={props.afficherArriére}
-        />
+        <HeaderView navigation={props.navigation} />
       </View>
       <View style={styles.vwMain}>{props.children}</View>
-      <View style={styles.vwFooter}></View>
+      {/* {props.children} sont touts les trucs de le vrai Screen */}
     </ImageBackground>
   );
 }

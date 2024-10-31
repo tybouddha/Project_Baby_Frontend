@@ -8,6 +8,16 @@
 2. yarn install
 3. yarn start
 
+## Variables environnementales avec Expo
+
+1. Crée un .env.local
+2. dans .env.local utiliser le prefix: `EXPO_PUBLIC_`
+   - exemple: `EXPO_PUBLIC_API_URL=http://192.168.100.47:3000`
+3. Pour l'utilser: `process.env.EXPO_PUBLIC_API_URL`
+
+- "The Expo CLI will automatically load environment variables with an EXPO*PUBLIC* prefix from .env files"
+- source: [https://docs.expo.dev/guides/environment-variables/](https://docs.expo.dev/guides/environment-variables/)
+
 ## Git command
 
 - créer un branch: ` git branch [nom_de_branch]`
@@ -40,3 +50,11 @@ Tab navigation:
 1. [Header](./docs/Header.md)
 2. [Police](./docs/Police.md)
 3. [AutresDetails](./docs/AutresDetails.md)
+4. Les templates
+   1. TemplateView
+      - children est le nom (syntax) de propertié pour touts les trucs entre le balise `<TemplateView>{children}<TemplateView/>`
+      - exemple: DocumentsScreen.js, CarenetBebeScreen.js
+   2. TemplateViewNoNav
+      - children est le nom (syntax) de propertié pour touts les trucs entre le balise `<TemplateViewNoNav>{children}<TemplateViewNoNav/>`
+      - ce template n'ai pas de profil icon et peux avoir une flesh pour aller au dernieres écran.
+      - exemple: CreerProjet.js, WelcomScreen.js

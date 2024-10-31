@@ -13,140 +13,174 @@ import TemplateViewNoNav from "../template/TemplateViewNoNav";
 import { useState, useEffect } from "react";
 import DatePickerComposant from "../template/DatePickerComposant";
 
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../reducers/user";
+import { useSelector } from "react-redux";
+
 export default function CreerProjetScreen({ navigation }) {
   console.log("CreerProjetScreen");
+  const dispatch = useDispatch();
+  const userReducer = useSelector((state) => state.user.value);
   const [username, usernameSetter] = useState("");
   const [prenom, prenomSetter] = useState("");
   const [nomDeFamille, nomDeFamilleSetter] = useState("");
-  const [dateDeMenstru, dateDeMenstruSetter] = useState(new Date());
-  const [dateDeGrossess, dateDeGrossessSetter] = useState("");
+  const [dateDerniereMenstruation, dateDerniereMenstruationSetter] = useState(
+    new Date()
+  );
+  const [dateDebutGrossesse, dateDebutGrossesseSetter] = useState("");
   const [email, emailSetter] = useState("");
   const [password, passwordSetter] = useState("");
   const [envoyerData, envoyerDataSetter] = useState(false);
 
-  const chopperDateDeMenstru = (datePickerDate) => {
+  const chopperDateDerniereMenstruation = (datePickerDate) => {
     console.log(`date reçu: ${datePickerDate}`);
-    dateDeMenstruSetter(datePickerDate);
+    dateDerniereMenstruationSetter(datePickerDate);
   };
 
-  const chopperDateDeGrossess = (datePickerDate) => {
+  const chopperDateDebutGrossesse = (datePickerDate) => {
     console.log(`date reçu: ${datePickerDate}`);
-    dateDeGrossessSetter(datePickerDate);
+    dateDebutGrossesseSetter(datePickerDate);
   };
 
   const pressedCreerProjet = () => {
     console.log("- aller à LoginScreen 📢");
-    console.log(`dateDeMenstru: ${dateDeMenstru}`);
-    console.log(`dateDeGrossess: ${dateDeGrossess}`);
+    console.log(`dateDerniereMenstruation: ${dateDerniereMenstruation}`);
+    console.log(`dateDebutGrossesse: ${dateDebutGrossesse}`);
+    envoyerDataSetter(true);
+    // envoyerDataSetter(false);
   };
 
   useEffect(
     () => {
       // <-- que une seul fois, quand le composant arriver
       console.log("-Mount 📌");
+      console.log(
+        `process.env.EXPO_PUBLIC_API_URL: ${process.env.EXPO_PUBLIC_API_URL}`
+      );
+      if (envoyerData) {
+        console.log("- envoyerData 🚀");
+        const bodyObj = {
+          prenom: prenom,
+          nomDeFamille: nomDeFamille,
+          username: username,
+          dateDebutGrossesse: dateDerniereMenstruation,
+          derniereMenstruation: dateDerniereMenstruation,
+          password: password,
+          email: email,
+        };
 
-      // fetch('http://192.168.100.47/', {
-      //     method: 'POST',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify(data)
-      // })
+        fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signupProject`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(bodyObj),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(`--- bien reçu le reponse ✅ `);
+            console.log(data);
+            dispatch(loginUser(data));
+            if (userReducer.token) {
+              console.log(`userReducer.token est Truey 🤗`);
+              navigation.navigate("TabNavigator");
+            } else {
+              console.log(`userReducer.token est falsey 😱`);
+            }
+          });
+
+        envoyerDataSetter(false);
+      }
     },
-    [] //<--- tableaux vide
+    [envoyerData] //<--- tableaux vide
   );
 
-  const creerProjectScreenView = (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.contentView}>
-          <View style={styles.vwInstructions}>
-            <Text style={styles.txtInstructions}>Créez votre compte</Text>
-          </View>
-
-          <View style={styles.vwInput}>
-            <TextInput
-              style={styles.txtInput}
-              onChangeText={(value) => usernameSetter(value)}
-              placeholder="Username"
-              placeholderTextColor="#555555" // Dark gray color for the placeholder
-              value={username}
-            />
-          </View>
-
-          <View style={styles.vwInput}>
-            <TextInput
-              style={styles.txtInput}
-              onChangeText={(value) => prenomSetter(value)}
-              placeholder="Prénom"
-              placeholderTextColor="#555555" // Dark gray color for the placeholder
-              value={prenom}
-            />
-          </View>
-
-          <View style={styles.vwInput}>
-            <TextInput
-              style={styles.txtInput}
-              onChangeText={(value) => nomDeFamilleSetter(value)}
-              placeholder="Nom De Famille"
-              placeholderTextColor="#555555" // Dark gray color for the placeholder
-              value={nomDeFamille}
-            />
-          </View>
-
-          {/* Ici Date De dernieres Menstruation */}
-          <View style={styles.vwInputDatePicker}>
-            <DatePickerComposant
-              style={styles.datePickerStyle}
-              btnText={"Date de Menstruation"}
-              chopperDate={chopperDateDeMenstru}
-            />
-          </View>
-
-          <View style={styles.vwInputDatePicker}>
-            <DatePickerComposant
-              style={styles.datePickerStyle}
-              btnText={"Date de Grossess"}
-              chopperDate={chopperDateDeGrossess}
-            />
-          </View>
-
-          <View style={styles.vwInput}>
-            <TextInput
-              style={styles.txtInput}
-              onChangeText={(value) => emailSetter(value)}
-              placeholder="Email"
-              placeholderTextColor="#555555" // Dark gray color for the placeholder
-              value={email}
-            />
-          </View>
-
-          <View style={styles.vwInput}>
-            <TextInput
-              style={styles.txtInput}
-              onChangeText={(value) => passwordSetter(value)}
-              placeholder="Password"
-              placeholderTextColor="#555555" // Dark gray color for the placeholder
-              value={password}
-            />
-          </View>
-
-          <View style={styles.vwBtn}>
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={() => pressedCreerProjet()}
-            >
-              <Text style={styles.btnText}>Créer Projet</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
-    </View>
-  );
   return (
-    <TemplateViewNoNav
-      view={creerProjectScreenView}
-      navigation={navigation}
-      afficherArriére={true}
-    />
+    <TemplateViewNoNav navigation={navigation} afficherArriére={true}>
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.contentView}>
+            <View style={styles.vwInstructions}>
+              <Text style={styles.txtInstructions}>Créez votre compte</Text>
+            </View>
+
+            <View style={styles.vwInput}>
+              <TextInput
+                style={styles.txtInput}
+                onChangeText={(value) => usernameSetter(value)}
+                placeholder="Username"
+                placeholderTextColor="#555555" // Dark gray color for the placeholder
+                value={username}
+              />
+            </View>
+
+            <View style={styles.vwInput}>
+              <TextInput
+                style={styles.txtInput}
+                onChangeText={(value) => prenomSetter(value)}
+                placeholder="Prénom"
+                placeholderTextColor="#555555" // Dark gray color for the placeholder
+                value={prenom}
+              />
+            </View>
+
+            <View style={styles.vwInput}>
+              <TextInput
+                style={styles.txtInput}
+                onChangeText={(value) => nomDeFamilleSetter(value)}
+                placeholder="Nom De Famille"
+                placeholderTextColor="#555555" // Dark gray color for the placeholder
+                value={nomDeFamille}
+              />
+            </View>
+
+            {/* Ici Date De dernieres Menstruation */}
+            <View style={styles.vwInputDatePicker}>
+              <DatePickerComposant
+                style={styles.datePickerStyle}
+                btnText={"Date de Menstruation"}
+                chopperDate={chopperDateDerniereMenstruation}
+              />
+            </View>
+
+            <View style={styles.vwInputDatePicker}>
+              <DatePickerComposant
+                style={styles.datePickerStyle}
+                btnText={"Date de Grossess"}
+                chopperDate={chopperDateDebutGrossesse}
+              />
+            </View>
+
+            <View style={styles.vwInput}>
+              <TextInput
+                style={styles.txtInput}
+                onChangeText={(value) => emailSetter(value)}
+                placeholder="Email"
+                placeholderTextColor="#555555" // Dark gray color for the placeholder
+                value={email}
+              />
+            </View>
+
+            <View style={styles.vwInput}>
+              <TextInput
+                style={styles.txtInput}
+                onChangeText={(value) => passwordSetter(value)}
+                placeholder="Password"
+                placeholderTextColor="#555555" // Dark gray color for the placeholder
+                value={password}
+              />
+            </View>
+
+            <View style={styles.vwBtn}>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => pressedCreerProjet()}
+              >
+                <Text style={styles.btnText}>Créer Projet</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </TemplateViewNoNav>
   );
 }
 

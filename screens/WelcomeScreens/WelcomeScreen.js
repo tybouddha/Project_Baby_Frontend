@@ -25,31 +25,32 @@ export default function WelcomeScreen({ navigation }) {
     navigation.navigate("TabNavigator");
   };
 
-  const welcomeScreenView = (
-    <View style={styles.container}>
-      <View style={styles.vwBtn}>
-        <TouchableOpacity style={styles.btn} onPress={() => pressedLogin()}>
-          <Text style={styles.btnText}>Login</Text>
-        </TouchableOpacity>
-      </View>
+  return (
+    <TemplateViewNoNav>
+      <View style={styles.container}>
+        <View style={styles.vwBtn}>
+          <TouchableOpacity style={styles.btn} onPress={() => pressedLogin()}>
+            <Text style={styles.btnText}>Login</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.vwBtn}>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => pressedCreerProjet()}
-        >
-          <Text style={styles.btnText}>Créer Projet</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.vwBtn}>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => pressedCreerProjet()}
+          >
+            <Text style={styles.btnText}>Créer Projet</Text>
+          </TouchableOpacity>
+        </View>
 
-      <View style={styles.vwBtn}>
-        <TouchableOpacity style={styles.btn} onPress={() => pressedInviter()}>
-          <Text style={styles.btnText}>Inviter</Text>
-        </TouchableOpacity>
+        <View style={styles.vwBtn}>
+          <TouchableOpacity style={styles.btn} onPress={() => pressedInviter()}>
+            <Text style={styles.btnText}>Inviter</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </TemplateViewNoNav>
   );
-  return <TemplateViewNoNav view={welcomeScreenView} />;
 }
 
 const styles = StyleSheet.create({
