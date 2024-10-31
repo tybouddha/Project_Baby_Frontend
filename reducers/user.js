@@ -21,11 +21,7 @@ export const userSlice = createSlice({
       console.log(`- dans Redux: loginUser 🔔`);
       state.value.token = action.payload.token;
       state.value.projectId = action.payload.project._id;
-      state.value.username = action.payload.username;
-      state.value.prenom = action.payload.prenom;
-      state.value.documentArr = action.payload.documentsArr;
-      state.value.carnetBebeArr = action.payload.carnetBebeArr;
-      state.value.rdvArr = action.payload.rdvArr;
+      state.value.tokenProject = action.payload.project.token;
       console.log(`- dans Redux: loginUser fini 🏁`);
     },
     logoutUser: (state) => {
