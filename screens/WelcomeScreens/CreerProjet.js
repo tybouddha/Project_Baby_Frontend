@@ -63,11 +63,11 @@ export default function CreerProjetScreen({ navigation }) {
     envoyerDataSetter(true);
   };
 
-  const pressedTestReducer = () => {
-    console.log("- pressedTestReducer 📢");
-    console.log(`userReducer.prenom: ${userReducer.prenom}`);
-    console.log(`userReducer.token: ${userReducer.token}`);
-  };
+  // const pressedTestReducer = () => {
+  //   console.log("- pressedTestReducer 📢");
+  //   console.log(`userReducer.prenom: ${userReducer.prenom}`);
+  //   console.log(`userReducer.token: ${userReducer.token}`);
+  // };
 
   useEffect(
     () => {
