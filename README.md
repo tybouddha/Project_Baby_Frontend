@@ -50,6 +50,11 @@ Tab navigation:
 1. [Header](./docs/Header.md)
 2. [Police](./docs/Police.md)
 3. [AutresDetails](./docs/AutresDetails.md)
-4. Template View
-   - children est le nom (syntax) de propertié pour touts les trucs entre le balise `<TemplateView>{children}<TemplateView/>`
-   - exemple: DocumentsScreen.js
+4. Les templates
+   1. TemplateView
+      - children est le nom (syntax) de propertié pour touts les trucs entre le balise `<TemplateView>{children}<TemplateView/>`
+      - exemple: DocumentsScreen.js, CarenetBebeScreen.js
+   2. TemplateViewNoNav
+      - children est le nom (syntax) de propertié pour touts les trucs entre le balise `<TemplateViewNoNav>{children}<TemplateViewNoNav/>`
+      - ce template n'ai pas de profil icon et peux avoir une flesh pour aller au dernieres écran.
+      - exemple: CreerProjet.js, WelcomScreen.js

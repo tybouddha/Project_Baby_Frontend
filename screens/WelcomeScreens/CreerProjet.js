@@ -80,99 +80,94 @@ export default function CreerProjetScreen({ navigation }) {
     [envoyerData] //<--- tableaux vide
   );
 
-  const creerProjectScreenView = (
-    <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.contentView}>
-          <View style={styles.vwInstructions}>
-            <Text style={styles.txtInstructions}>Créez votre compte</Text>
-          </View>
-
-          <View style={styles.vwInput}>
-            <TextInput
-              style={styles.txtInput}
-              onChangeText={(value) => usernameSetter(value)}
-              placeholder="Username"
-              placeholderTextColor="#555555" // Dark gray color for the placeholder
-              value={username}
-            />
-          </View>
-
-          <View style={styles.vwInput}>
-            <TextInput
-              style={styles.txtInput}
-              onChangeText={(value) => prenomSetter(value)}
-              placeholder="Prénom"
-              placeholderTextColor="#555555" // Dark gray color for the placeholder
-              value={prenom}
-            />
-          </View>
-
-          <View style={styles.vwInput}>
-            <TextInput
-              style={styles.txtInput}
-              onChangeText={(value) => nomDeFamilleSetter(value)}
-              placeholder="Nom De Famille"
-              placeholderTextColor="#555555" // Dark gray color for the placeholder
-              value={nomDeFamille}
-            />
-          </View>
-
-          {/* Ici Date De dernieres Menstruation */}
-          <View style={styles.vwInputDatePicker}>
-            <DatePickerComposant
-              style={styles.datePickerStyle}
-              btnText={"Date de Menstruation"}
-              chopperDate={chopperDateDerniereMenstruation}
-            />
-          </View>
-
-          <View style={styles.vwInputDatePicker}>
-            <DatePickerComposant
-              style={styles.datePickerStyle}
-              btnText={"Date de Grossess"}
-              chopperDate={chopperDateDebutGrossesse}
-            />
-          </View>
-
-          <View style={styles.vwInput}>
-            <TextInput
-              style={styles.txtInput}
-              onChangeText={(value) => emailSetter(value)}
-              placeholder="Email"
-              placeholderTextColor="#555555" // Dark gray color for the placeholder
-              value={email}
-            />
-          </View>
-
-          <View style={styles.vwInput}>
-            <TextInput
-              style={styles.txtInput}
-              onChangeText={(value) => passwordSetter(value)}
-              placeholder="Password"
-              placeholderTextColor="#555555" // Dark gray color for the placeholder
-              value={password}
-            />
-          </View>
-
-          <View style={styles.vwBtn}>
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={() => pressedCreerProjet()}
-            >
-              <Text style={styles.btnText}>Créer Projet</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
-    </View>
-  );
   return (
-    <TemplateViewNoNav
-      view={creerProjectScreenView}
-      navigation={navigation}
-      afficherArriére={true}
-    />
+    <TemplateViewNoNav navigation={navigation} afficherArriére={true}>
+      <View style={styles.container}>
+        <ScrollView style={styles.scrollView}>
+          <View style={styles.contentView}>
+            <View style={styles.vwInstructions}>
+              <Text style={styles.txtInstructions}>Créez votre compte</Text>
+            </View>
+
+            <View style={styles.vwInput}>
+              <TextInput
+                style={styles.txtInput}
+                onChangeText={(value) => usernameSetter(value)}
+                placeholder="Username"
+                placeholderTextColor="#555555" // Dark gray color for the placeholder
+                value={username}
+              />
+            </View>
+
+            <View style={styles.vwInput}>
+              <TextInput
+                style={styles.txtInput}
+                onChangeText={(value) => prenomSetter(value)}
+                placeholder="Prénom"
+                placeholderTextColor="#555555" // Dark gray color for the placeholder
+                value={prenom}
+              />
+            </View>
+
+            <View style={styles.vwInput}>
+              <TextInput
+                style={styles.txtInput}
+                onChangeText={(value) => nomDeFamilleSetter(value)}
+                placeholder="Nom De Famille"
+                placeholderTextColor="#555555" // Dark gray color for the placeholder
+                value={nomDeFamille}
+              />
+            </View>
+
+            {/* Ici Date De dernieres Menstruation */}
+            <View style={styles.vwInputDatePicker}>
+              <DatePickerComposant
+                style={styles.datePickerStyle}
+                btnText={"Date de Menstruation"}
+                chopperDate={chopperDateDerniereMenstruation}
+              />
+            </View>
+
+            <View style={styles.vwInputDatePicker}>
+              <DatePickerComposant
+                style={styles.datePickerStyle}
+                btnText={"Date de Grossess"}
+                chopperDate={chopperDateDebutGrossesse}
+              />
+            </View>
+
+            <View style={styles.vwInput}>
+              <TextInput
+                style={styles.txtInput}
+                onChangeText={(value) => emailSetter(value)}
+                placeholder="Email"
+                placeholderTextColor="#555555" // Dark gray color for the placeholder
+                value={email}
+              />
+            </View>
+
+            <View style={styles.vwInput}>
+              <TextInput
+                style={styles.txtInput}
+                onChangeText={(value) => passwordSetter(value)}
+                placeholder="Password"
+                placeholderTextColor="#555555" // Dark gray color for the placeholder
+                value={password}
+              />
+            </View>
+
+            <View style={styles.vwBtn}>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => pressedCreerProjet()}
+              >
+                <Text style={styles.btnText}>Créer Projet</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    </TemplateViewNoNav>
   );
 }
 

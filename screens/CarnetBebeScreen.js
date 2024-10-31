@@ -6,17 +6,17 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
+import TemplateView from "./template/TemplateView";
 
-export default function CarnetBebeScreen() {
+export default function CarnetBebeScreen({ navigation }) {
   return (
-    <ImageBackground
-      source={require("../assets/images/projectbaby-background.jpg")}
-      style={styles.background}
-    >
+    <TemplateView navigation={navigation}>
+      {/* Commence propriété children */}
       <View style={styles.container}>
         <Text>Carnet Bebe Screen </Text>
       </View>
-    </ImageBackground>
+      {/* Fin propriété children */}
+    </TemplateView>
   );
 }
 

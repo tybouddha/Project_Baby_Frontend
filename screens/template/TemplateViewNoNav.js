@@ -17,7 +17,7 @@ export default function TemplateViewNoNav(props) {
           afficherArriére={props.afficherArriére}
         />
       </View>
-      <View style={styles.vwMain}>{props.view}</View>
+      <View style={styles.vwMain}>{props.children}</View>
       <View style={styles.vwFooter}></View>
     </ImageBackground>
   );
