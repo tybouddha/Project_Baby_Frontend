@@ -2,7 +2,7 @@ import { StyleSheet, View, Dimensions, ImageBackground } from "react-native";
 
 import HeaderView from "../NavComposants/Header";
 
-const TemplateView = ({ navigation, children }) => {
+export default function TemplateView(props) {
   console.log("-- TemplateView 👀");
 
   return (
@@ -11,16 +11,13 @@ const TemplateView = ({ navigation, children }) => {
       style={styles.background}
     >
       <View style={styles.vwHeader}>
-        <HeaderView
-          //   cacheProfilevwProfil={true}
-          navigation={navigation}
-          //   afficherArriére={props.afficherArriére}
-        />
+        <HeaderView navigation={props.navigation} />
       </View>
-      <View style={styles.vwMain}>{children}</View>
+      <View style={styles.vwMain}>{props.children}</View>
+      {/* {props.children} sont touts les trucs de le vrai Screen */}
     </ImageBackground>
   );
-};
+}
 
 const styles = StyleSheet.create({
   background: {
@@ -44,5 +41,3 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
   },
 });
-
-export default TemplateView;

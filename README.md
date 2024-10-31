@@ -50,3 +50,6 @@ Tab navigation:
 1. [Header](./docs/Header.md)
 2. [Police](./docs/Police.md)
 3. [AutresDetails](./docs/AutresDetails.md)
+4. Template View
+   - children est le nom (syntax) de propertié pour touts les trucs entre le balise `<TemplateView>{children}<TemplateView/>`
+   - exemple: DocumentsScreen.js
