@@ -73,7 +73,8 @@ const TabNavigator = () => {
           backgroundColor: "#007ACC",
           borderTopLeftRadius: 10, // Radius for top-left corner
           borderTopRightRadius: 10, // Radius for top-right corner
-          height: 60,
+          height: 70,
+          paddingTop: 10,
         },
       })}
     >
