@@ -21,6 +21,14 @@ import IconView from "./screens/NavComposants/IconView";
 import { useState, useEffect } from "react";
 import * as Font from "expo-font";
 
+import { Provider } from "react-redux";
+import { configureStore } from "@reduxjs/toolkit";
+import user from "./reducers/user";
+
+const store = configureStore({
+  reducer: { user },
+});
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -98,15 +106,17 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Welcome" component={WelcomeScreen} />
-        <Stack.Screen name="TabNavigator" component={TabNavigator} />
-        <Stack.Screen name="CreerProjet" component={CreerProjetScreen} />
-        <Stack.Screen name="Profil" component={ProfilScreen} />
-        <Stack.Screen name="Documents" component={DocumentsScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen name="TabNavigator" component={TabNavigator} />
+          <Stack.Screen name="CreerProjet" component={CreerProjetScreen} />
+          <Stack.Screen name="Profil" component={ProfilScreen} />
+          <Stack.Screen name="Documents" component={DocumentsScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 

@@ -13,8 +13,14 @@ import TemplateViewNoNav from "../template/TemplateViewNoNav";
 import { useState, useEffect } from "react";
 import DatePickerComposant from "../template/DatePickerComposant";
 
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../reducers/user";
+import { useSelector } from "react-redux";
+
 export default function CreerProjetScreen({ navigation }) {
   console.log("CreerProjetScreen");
+  const dispatch = useDispatch();
+  const userReducer = useSelector((state) => state.user.value);
   const [username, usernameSetter] = useState("");
   const [prenom, prenomSetter] = useState("");
   const [nomDeFamille, nomDeFamilleSetter] = useState("");
@@ -72,6 +78,13 @@ export default function CreerProjetScreen({ navigation }) {
           .then((data) => {
             console.log(`--- bien reçu le reponse ✅ `);
             console.log(data);
+            dispatch(loginUser(data));
+            if (userReducer.token) {
+              console.log(`userReducer.token est Truey 🤗`);
+              navigation.navigate("TabNavigator");
+            } else {
+              console.log(`userReducer.token est falsey 😱`);
+            }
           });
 
         envoyerDataSetter(false);
