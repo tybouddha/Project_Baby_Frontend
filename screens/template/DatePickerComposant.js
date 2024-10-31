@@ -33,6 +33,7 @@ const DatePickerComposant = (props) => {
     } else if (event.type === "dismissed" && Platform.OS != "ios") {
       console.log("- date picker CANCEL ");
       // "Cancel" button or outside tap
+      dateDeIntretSetter(dateChoisi);
       // Optionally handle cancellation if needed
       // dateDeIntretSetter(false); // Always hide picker
       afficherPickerSetter(false);
