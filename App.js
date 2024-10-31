@@ -104,7 +104,7 @@ export default function App() {
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
         <Stack.Screen name="CreerProjet" component={CreerProjetScreen} />
         <Stack.Screen name="Profil" component={ProfilScreen} />
-        {/* <Stack.Screen name="HeaderView" component={Header} /> */}
+        <Stack.Screen name="Documents" component={DocumentsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

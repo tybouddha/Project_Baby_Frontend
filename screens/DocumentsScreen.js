@@ -6,17 +6,15 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
+import TemplateView from "./template/TemplateView";
 
-export default function AgendaScreen() {
+export default function DocumentsScreen({ navigation }) {
   return (
-    <ImageBackground
-      source={require("../assets/images/projectbaby-background.jpg")}
-      style={styles.background}
-    >
+    <TemplateView navigation={navigation}>
       <View style={styles.container}>
         <Text>Documents Screen </Text>
       </View>
-    </ImageBackground>
+    </TemplateView>
   );
 }
 
