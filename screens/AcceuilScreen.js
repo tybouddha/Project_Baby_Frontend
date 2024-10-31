@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     marginBottom: 50,
     margin: "auto",
     borderRadius: 20,
-    borderWidth: 1,
+    // borderWidth: 1,
   },
   textrole: {
     fontSize: 20,
