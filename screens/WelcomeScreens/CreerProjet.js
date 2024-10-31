@@ -9,10 +9,12 @@ import {
   Platform,
   ScrollView,
   Switch,
+  Modal,
 } from "react-native";
 import TemplateViewNoNav from "../template/TemplateViewNoNav";
 import { useState, useEffect } from "react";
 import DatePickerComposant from "../template/DatePickerComposant";
+import VwEchec from "../template/VwEchec";
 
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../reducers/user";
@@ -33,6 +35,16 @@ export default function CreerProjetScreen({ navigation }) {
   const [password, passwordSetter] = useState("");
   const [envoyerData, envoyerDataSetter] = useState(false);
   const [cachePassword, cachePasswordSetter] = useState(false);
+  const [modalEchecVisible, setModalEchecVisible] = useState(false);
+  const [messageError, messageErrorSetter] = useState("");
+
+  const closeModal = () => setModalEchecVisible(false);
+
+  const modalEchec = (
+    <Modal visible={modalEchecVisible} animationType="fade" transparent={true}>
+      <VwEchec closeModal={closeModal} messageError={messageError} />
+    </Modal>
+  );
 
   const chopperDateDerniereMenstruation = (datePickerDate) => {
     console.log(`date reçu: ${datePickerDate}`);
@@ -85,20 +97,19 @@ export default function CreerProjetScreen({ navigation }) {
           .then((data) => {
             console.log(`--- bien reçu le reponse ✅ `);
             console.log(data);
-            // data = {
-            //   ...data,
-            //   prenom: prenom,
-            //   username: username,
-            //   email: email,
-            // };
-            dispatch(loginUser(data));
             console.log(`reçu token: ${data.token}`);
-            console.log(`reducer token: ${userReducer.token}`);
-            if (data.token) {
-              console.log(`userReducer.token est Truey 🤗`);
+            // console.log(`reducer token: ${userReducer.token}`);
+            if (data.project?.token && password != "") {
+              console.log(`data.project?.token est Truey 🤗`);
+              dispatch(loginUser(data));
               navigation.navigate("TabNavigator");
+            } else if (password == "") {
+              messageErrorSetter("mot de pass est vide");
+              setModalEchecVisible(true);
             } else {
-              console.log(`userReducer.token est falsey 😱`);
+              console.log(`data.project?.token est falsey 😱`);
+              messageErrorSetter(data?.error);
+              setModalEchecVisible(true);
             }
           });
 
@@ -111,6 +122,7 @@ export default function CreerProjetScreen({ navigation }) {
   return (
     <TemplateViewNoNav navigation={navigation} afficherArriére={true}>
       <View style={styles.container}>
+        {modalEchecVisible ? modalEchec : null}
         <ScrollView style={styles.scrollView}>
           <View style={styles.contentView}>
             <View style={styles.vwInstructions}>
@@ -201,14 +213,14 @@ export default function CreerProjetScreen({ navigation }) {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.vwBtn}>
+            {/* <View style={styles.vwBtn}>
               <TouchableOpacity
                 style={styles.btn}
                 onPress={() => pressedTestReducer()}
               >
                 <Text style={styles.btnText}>Test Reducer</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       </View>

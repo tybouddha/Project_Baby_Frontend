@@ -5,10 +5,11 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
-  //   ScrollView,
   Switch,
+  Modal,
 } from "react-native";
 import TemplateViewNoNav from "../template/TemplateViewNoNav";
+import VwEchec from "../template/VwEchec";
 import { useState, useEffect } from "react";
 
 import { useDispatch } from "react-redux";
@@ -23,12 +24,21 @@ export default function LoginScreen({ navigation }) {
   const [password, passwordSetter] = useState("");
   const [envoyerData, envoyerDataSetter] = useState(false);
   const [cachePassword, cachePasswordSetter] = useState(false);
+  const [modalEchecVisible, setModalEchecVisible] = useState(false);
+  const [messageError, messageErrorSetter] = useState("");
 
   const pressedLogin = () => {
     console.log("- aller à LoginScreen 📢");
     envoyerDataSetter(true);
   };
 
+  const closeModal = () => setModalEchecVisible(false);
+
+  const modalEchec = (
+    <Modal visible={modalEchecVisible} animationType="fade" transparent={true}>
+      <VwEchec closeModal={closeModal} messageError={messageError} />
+    </Modal>
+  );
   useEffect(
     () => {
       // <-- que une seul fois, quand le composant arriver
@@ -50,30 +60,28 @@ export default function LoginScreen({ navigation }) {
         })
           .then((response) => response.json())
           .then((data) => {
-            // data = {
-            //   ...data,
-            //   username: username,
-            // };
             console.log(`--- bien reçu le reponse ✅ `);
             console.log(data);
-            dispatch(loginUser(data));
-
-            if (data.project.token) {
-              console.log(`userReducer.token est Truey 🤗`);
+            if (data.project?.token) {
+              console.log(`data.project?.token est Truey 🤗`);
               navigation.navigate("TabNavigator");
+              dispatch(loginUser(data));
             } else {
-              console.log(`userReducer.token est falsey 😱`);
+              console.log(`data.project?.token est falsey 😱`);
+              messageErrorSetter(data?.error);
+              setModalEchecVisible(true);
             }
           });
         envoyerDataSetter(false);
       }
     },
-    [envoyerData] //<--- tableaux vide
+    [envoyerData, modalEchecVisible] //<--- tableaux vide
   );
 
   return (
     <TemplateViewNoNav navigation={navigation} afficherArriére={true}>
       <View style={styles.container}>
+        {modalEchecVisible ? modalEchec : null}
         <View style={styles.vwInstructions}>
           <Text style={styles.txtInstructions}></Text>
         </View>
