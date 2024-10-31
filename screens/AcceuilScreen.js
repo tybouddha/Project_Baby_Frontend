@@ -40,6 +40,7 @@ export default function AcceuilScreen({ navigation }) {
     setModalVisible(false);
   };
   const generateCode = () => {
+    //  fetch la route http://localhost/user/invite
     console.log("123456");
   };
   //function to get the page for guide
