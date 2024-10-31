@@ -18,40 +18,66 @@ export default function CreerProjetScreen({ navigation }) {
   const [username, usernameSetter] = useState("");
   const [prenom, prenomSetter] = useState("");
   const [nomDeFamille, nomDeFamilleSetter] = useState("");
-  const [dateDeMenstru, dateDeMenstruSetter] = useState(new Date());
-  const [dateDeGrossess, dateDeGrossessSetter] = useState("");
+  const [dateDerniereMenstruation, dateDerniereMenstruationSetter] = useState(
+    new Date()
+  );
+  const [dateDebutGrossesse, dateDebutGrossesseSetter] = useState("");
   const [email, emailSetter] = useState("");
   const [password, passwordSetter] = useState("");
   const [envoyerData, envoyerDataSetter] = useState(false);
 
-  const chopperDateDeMenstru = (datePickerDate) => {
+  const chopperDateDerniereMenstruation = (datePickerDate) => {
     console.log(`date reçu: ${datePickerDate}`);
-    dateDeMenstruSetter(datePickerDate);
+    dateDerniereMenstruationSetter(datePickerDate);
   };
 
-  const chopperDateDeGrossess = (datePickerDate) => {
+  const chopperDateDebutGrossesse = (datePickerDate) => {
     console.log(`date reçu: ${datePickerDate}`);
-    dateDeGrossessSetter(datePickerDate);
+    dateDebutGrossesseSetter(datePickerDate);
   };
 
   const pressedCreerProjet = () => {
     console.log("- aller à LoginScreen 📢");
-    console.log(`dateDeMenstru: ${dateDeMenstru}`);
-    console.log(`dateDeGrossess: ${dateDeGrossess}`);
+    console.log(`dateDerniereMenstruation: ${dateDerniereMenstruation}`);
+    console.log(`dateDebutGrossesse: ${dateDebutGrossesse}`);
+    envoyerDataSetter(true);
+    // envoyerDataSetter(false);
   };
 
   useEffect(
     () => {
       // <-- que une seul fois, quand le composant arriver
       console.log("-Mount 📌");
+      console.log(
+        `process.env.EXPO_PUBLIC_API_URL: ${process.env.EXPO_PUBLIC_API_URL}`
+      );
+      if (envoyerData) {
+        console.log("- envoyerData 🚀");
+        const bodyObj = {
+          prenom: prenom,
+          nomDeFamille: nomDeFamille,
+          username: username,
+          dateDebutGrossesse: dateDerniereMenstruation,
+          derniereMenstruation: dateDerniereMenstruation,
+          password: password,
+          email: email,
+        };
 
-      // fetch('http://192.168.100.47/', {
-      //     method: 'POST',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify(data)
-      // })
+        fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signupProject`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(bodyObj),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(`--- bien reçu le reponse ✅ `);
+            console.log(data);
+          });
+
+        envoyerDataSetter(false);
+      }
     },
-    [] //<--- tableaux vide
+    [envoyerData] //<--- tableaux vide
   );
 
   const creerProjectScreenView = (
@@ -97,7 +123,7 @@ export default function CreerProjetScreen({ navigation }) {
             <DatePickerComposant
               style={styles.datePickerStyle}
               btnText={"Date de Menstruation"}
-              chopperDate={chopperDateDeMenstru}
+              chopperDate={chopperDateDerniereMenstruation}
             />
           </View>
 
@@ -105,7 +131,7 @@ export default function CreerProjetScreen({ navigation }) {
             <DatePickerComposant
               style={styles.datePickerStyle}
               btnText={"Date de Grossess"}
-              chopperDate={chopperDateDeGrossess}
+              chopperDate={chopperDateDebutGrossesse}
             />
           </View>
 
