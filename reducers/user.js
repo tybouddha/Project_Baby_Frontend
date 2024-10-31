@@ -7,9 +7,9 @@ const initialState = {
     username: null,
     prenom: null,
     email: null,
-    documents: [],
-    carnetBebe: [],
-    rdv: [],
+    documentsArr: [],
+    carnetBebeArr: [],
+    rdvArr: [],
   },
 };
 
@@ -23,9 +23,10 @@ export const userSlice = createSlice({
       state.value.projectId = action.payload.project._id;
       state.value.username = action.payload.username;
       state.value.prenom = action.payload.prenom;
-      state.value.documents = action.payload.documents;
-      state.value.carnetBebe = action.payload.carnetBebe;
-      state.value.rdv = action.payload.rdv;
+      state.value.documentArr = action.payload.documentsArr;
+      state.value.carnetBebeArr = action.payload.carnetBebeArr;
+      state.value.rdvArr = action.payload.rdvArr;
+      console.log(`- dans Redux: loginUser fini 🏁`);
     },
     logoutUser: (state) => {
       console.log(`- dans Redux: logoutUser 🔔`);

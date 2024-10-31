@@ -13,6 +13,7 @@ import TemplateViewNoNav from "../template/TemplateViewNoNav";
 export default function WelcomeScreen({ navigation }) {
   const pressedLogin = () => {
     console.log("- aller à LoginScreen 📢");
+    navigation.navigate("Login");
   };
 
   const pressedCreerProjet = () => {

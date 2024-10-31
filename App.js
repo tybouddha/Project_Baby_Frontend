@@ -14,7 +14,7 @@ import CarnetBebeScreen from "./screens/CarnetBebeScreen";
 import WelcomeScreen from "./screens/WelcomeScreens/WelcomeScreen";
 import CreerProjetScreen from "./screens/WelcomeScreens/CreerProjet";
 import ProfilScreen from "./screens/ProfilScreen";
-import Header from "./screens/NavComposants/Header";
+import LoginScreen from "./screens/WelcomeScreens/LoginScreen";
 
 import IconView from "./screens/NavComposants/IconView";
 
@@ -114,6 +114,7 @@ export default function App() {
           <Stack.Screen name="CreerProjet" component={CreerProjetScreen} />
           <Stack.Screen name="Profil" component={ProfilScreen} />
           <Stack.Screen name="Documents" component={DocumentsScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

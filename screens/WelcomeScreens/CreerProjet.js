@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Switch,
 } from "react-native";
 import TemplateViewNoNav from "../template/TemplateViewNoNav";
 import { useState, useEffect } from "react";
@@ -31,6 +32,7 @@ export default function CreerProjetScreen({ navigation }) {
   const [email, emailSetter] = useState("");
   const [password, passwordSetter] = useState("");
   const [envoyerData, envoyerDataSetter] = useState(false);
+  const [cachePassword, cachePasswordSetter] = useState(false);
 
   const chopperDateDerniereMenstruation = (datePickerDate) => {
     console.log(`date reçu: ${datePickerDate}`);
@@ -47,7 +49,12 @@ export default function CreerProjetScreen({ navigation }) {
     console.log(`dateDerniereMenstruation: ${dateDerniereMenstruation}`);
     console.log(`dateDebutGrossesse: ${dateDebutGrossesse}`);
     envoyerDataSetter(true);
-    // envoyerDataSetter(false);
+  };
+
+  const pressedTestReducer = () => {
+    console.log("- pressedTestReducer 📢");
+    console.log(`userReducer.prenom: ${userReducer.prenom}`);
+    console.log(`userReducer.token: ${userReducer.token}`);
   };
 
   useEffect(
@@ -78,8 +85,16 @@ export default function CreerProjetScreen({ navigation }) {
           .then((data) => {
             console.log(`--- bien reçu le reponse ✅ `);
             console.log(data);
+            // data = {
+            //   ...data,
+            //   prenom: prenom,
+            //   username: username,
+            //   email: email,
+            // };
             dispatch(loginUser(data));
-            if (userReducer.token) {
+            console.log(`reçu token: ${data.token}`);
+            console.log(`reducer token: ${userReducer.token}`);
+            if (data.token) {
               console.log(`userReducer.token est Truey 🤗`);
               navigation.navigate("TabNavigator");
             } else {
@@ -164,8 +179,16 @@ export default function CreerProjetScreen({ navigation }) {
                 style={styles.txtInput}
                 onChangeText={(value) => passwordSetter(value)}
                 placeholder="Password"
+                secureTextEntry={!cachePassword} // cache le text dans le input
                 placeholderTextColor="#555555" // Dark gray color for the placeholder
                 value={password}
+              />
+            </View>
+            <View style={styles.switchCachePassword}>
+              <Text>Afficher Password</Text>
+              <Switch
+                value={cachePassword}
+                onValueChange={(value) => cachePasswordSetter(value)}
               />
             </View>
 
@@ -175,6 +198,15 @@ export default function CreerProjetScreen({ navigation }) {
                 onPress={() => pressedCreerProjet()}
               >
                 <Text style={styles.btnText}>Créer Projet</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.vwBtn}>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => pressedTestReducer()}
+              >
+                <Text style={styles.btnText}>Test Reducer</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -246,5 +278,12 @@ const styles = StyleSheet.create({
   btnText: {
     fontFamily: "Caveat",
     fontSize: 30,
+  },
+  switchCachePassword: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: "100%",
+    alignItems: "center",
+    paddingRight: "10%",
   },
 });
