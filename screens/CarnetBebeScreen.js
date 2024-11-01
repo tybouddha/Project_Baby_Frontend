@@ -32,75 +32,74 @@ export default function CarnetBebeScreen({ navigation }) {
   return (
     <TemplateView navigation={navigation}>
       {/* Commence propriété children */}
-      <TemplateView navigation={navigation}>
-        <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.carnetBebeBtn}
-            onPress={() => modalCarnetBebe()}
-          >
-            <Text>Carnet Bebe</Text>
-          </TouchableOpacity>
 
-          <Modal visible={modalVisible} animationType="fade" transparent>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <TouchableOpacity
-                  onPress={() => updateInfos()}
-                  style={styles.btnModal}
-                  activeOpacity={0.8}
-                >
-                  <TextInput
-                    placeholder="Date"
-                    style={styles.input}
-                    // value={date}
-                    onChangeText={(value) => setdate(value)}
-                  />
-                  <TextInput
-                    placeholder="coucher"
-                    style={styles.input}
-                    // value={coucher}
-                    onChangeText={(value) => setcoucher(value)}
-                  />
-                  <TextInput
-                    placeholder="selle"
-                    style={styles.input}
-                    // value={selle}
-                    onChangeText={(value) => setselle(value)}
-                  />
-                  <TextInput
-                    placeholder="couleur selle"
-                    style={styles.input}
-                    // value={couleur}
-                    onChangeText={(value) => setcouleur(value)}
-                  />
-                  <TextInput
-                    placeholder="repas"
-                    style={styles.input}
-                    // value={repas}
-                    onChangeText={(value) => setrepas(value)}
-                  />
+      <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.carnetBebeBtn}
+          onPress={() => modalCarnetBebe()}
+        >
+          <Text>Carnet Bebe</Text>
+        </TouchableOpacity>
 
-                  <Text style={styles.textButton}>enregistré modification</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => closeModal()}
-                  style={styles.btnModal}
-                  activeOpacity={0.8}
-                >
-                  <Text style={styles.textButton}>Close</Text>
-                </TouchableOpacity>
-              </View>
+        <Modal visible={modalVisible} animationType="fade" transparent>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <TouchableOpacity
+                onPress={() => updateInfos()}
+                style={styles.btnModal}
+                activeOpacity={0.8}
+              >
+                <TextInput
+                  placeholder="Date"
+                  style={styles.input}
+                  // value={date}
+                  onChangeText={(value) => setdate(value)}
+                />
+                <TextInput
+                  placeholder="coucher"
+                  style={styles.input}
+                  // value={coucher}
+                  onChangeText={(value) => setcoucher(value)}
+                />
+                <TextInput
+                  placeholder="selle"
+                  style={styles.input}
+                  // value={selle}
+                  onChangeText={(value) => setselle(value)}
+                />
+                <TextInput
+                  placeholder="couleur selle"
+                  style={styles.input}
+                  // value={couleur}
+                  onChangeText={(value) => setcouleur(value)}
+                />
+                <TextInput
+                  placeholder="repas"
+                  style={styles.input}
+                  // value={repas}
+                  onChangeText={(value) => setrepas(value)}
+                />
+
+                <Text style={styles.textButton}>enregistré modification</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => closeModal()}
+                style={styles.btnModal}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.textButton}>Close</Text>
+              </TouchableOpacity>
             </View>
-          </Modal>
-          <Agenda
-            style={styles.agenda}
-            onDayPress={(day) => {
-              console.log("selected day", day);
-            }}
-          />
-        </View>
-        {/* Fin propriété children */}
-      </TemplateView>
+          </View>
+        </Modal>
+        <Agenda
+          style={styles.agenda}
+          onDayPress={(day) => {
+            console.log("selected day", day);
+          }}
+        />
+      </View>
+      {/* Fin propriété children */}
       <View style={styles.container}>
         <Text>Carnet Bebe Screen </Text>
       </View>

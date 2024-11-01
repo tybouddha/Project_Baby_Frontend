@@ -16,6 +16,8 @@ const DatePickerComposant = (props) => {
   const [afficherPicker, afficherPickerSetter] = useState(false);
   const [btnText, btnTextSetter] = useState(props.btnText);
 
+  console.log("ntrettts", dateDeIntret);
+
   const changeDateDeInteret = (event, dateChoisi) => {
     // const currentDate = dateChoisi || dateDeIntret;
     // // afficherPickerSetter(Platform.OS === 'ios'); // Keep picker open on iOS
@@ -69,7 +71,7 @@ const DatePickerComposant = (props) => {
       {afficherPicker ? (
         <DateTimePicker
           style={styles.pickerStyle}
-          value={dateDeIntret}
+          // value={dateDeIntret}
           mode="date"
           display="default"
           onChange={changeDateDeInteret}
