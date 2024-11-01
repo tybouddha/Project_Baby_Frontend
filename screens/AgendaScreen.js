@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import {
   View,
@@ -25,9 +25,10 @@ export default function AgendaScreen({ navigation }) {
   const [pourQui, setPourQui] = useState("");
   const [practicien, setPracticien] = useState("");
   const [lieu, setLieu] = useState("");
+  const [heure, setHeure] = useState("");
   const [notes, setNotes] = useState("");
   const [rendezVous, setRendezVous] = useState({});
-  const userToken = useSelector((state) => state.user.value.token);
+  const projectToken = useSelector((state) => state.user.value.projectId);
 
   const mamanRendezVousList = [
     "1er trimestre : Prendre rendez-vous avec un médecin généraliste, gynécologue ou sage-femme pour confirmer la grossesse.",
@@ -75,7 +76,7 @@ export default function AgendaScreen({ navigation }) {
   const openAgendaModal = () => setAgendaModalVisible(true);
   const closeAgendaModal = () => setAgendaModalVisible(false);
   useEffect(() => {
-    fetch(`http://192.168.100.149:3000/rdv/${userToken}`)
+    fetch(`http://192.168.100.149:3000/rdv/${projectToken}`)
       .then((response) => response.json())
       .then((data) => {
         if (data) {
@@ -98,6 +99,7 @@ export default function AgendaScreen({ navigation }) {
       practicien,
       lieu,
       notes,
+      heure,
     };
 
     // add rdv to date
@@ -152,6 +154,12 @@ export default function AgendaScreen({ navigation }) {
                 style={styles.input}
                 value={lieu}
                 onChangeText={(text) => setLieu(text)}
+              />
+              <TextInput
+                placeholder="Heure"
+                style={styles.input}
+                value={notes}
+                onChangeText={(text) => setHeure(text)}
               />
               <TextInput
                 placeholder="Notes"
@@ -287,6 +295,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: 5,
   },
+
   modalView: {
     justifyContent: "space-between",
     backgroundColor: "white",
