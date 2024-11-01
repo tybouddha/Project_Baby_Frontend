@@ -32,7 +32,7 @@ export default function AgendaScreen({ navigation }) {
   const [rendezVous, setRendezVous] = useState({});
   const [markedDates, setMarkedDates] = useState({});
   const [filteredRendezVous, setFilteredRendezVous] = useState({});
-  const projectToken = useSelector((state) => state.user.value.projectId);
+  const projectToken = useSelector((state) => state.user.value.tokenProject);
 
   const mamanRendezVousList = [
     "1er trimestre : Prendre rendez-vous avec un médecin généraliste, gynécologue ou sage-femme pour confirmer la grossesse.",
@@ -83,10 +83,11 @@ export default function AgendaScreen({ navigation }) {
   const closeSearchModal = () => setSearchModalVisible(false);
 
   useEffect(() => {
-    fetch(`http://192.168.100.149:3000/rdv/${projectToken}`)
+    fetch(`${process.env.EXPO_PUBLIC_API_URL}/rdv/${tokenProject}`)
       .then((response) => response.json())
       .then((data) => {
-        if (data) {
+        if (data.rdv) {
+          console.log(data.rdv);
           setRendezVous(data);
         } else {
           res.json({ result: false, error: "no data" });
