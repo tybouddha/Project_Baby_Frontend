@@ -73,16 +73,22 @@ export default function CreerProjetScreen({ navigation }) {
   );
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> jujufront
   const chopperDateDerniereMenstruation = (datePickerDate) => {
     console.log(`date reçu: ${datePickerDate}`);
     dateDerniereMenstruationSetter(datePickerDate);
     console.log(dateDerniereMenstruation);
   };
+<<<<<<< HEAD
 =======
   // const chopperDateDerniereMenstruation = (FormulaireDate) => {
   //   console.log(`date reçu: ${FormulaireDate}`);
   //   dateDerniereMenstruationSetter(FormulaireDate);
   // };
+>>>>>>> jujufront
+=======
 >>>>>>> jujufront
 
   // const chopperDateDebutGrossesse = (FormulaireDate) => {
