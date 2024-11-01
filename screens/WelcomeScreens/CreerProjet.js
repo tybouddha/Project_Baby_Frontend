@@ -72,10 +72,11 @@ export default function CreerProjetScreen({ navigation }) {
     </Modal>
   );
 
-  // const chopperDateDerniereMenstruation = (FormulaireDate) => {
-  //   console.log(`date reçu: ${FormulaireDate}`);
-  //   dateDerniereMenstruationSetter(FormulaireDate);
-  // };
+  const chopperDateDerniereMenstruation = (datePickerDate) => {
+    console.log(`date reçu: ${datePickerDate}`);
+    dateDerniereMenstruationSetter(datePickerDate);
+    console.log(dateDerniereMenstruation);
+  };
 
   // const chopperDateDebutGrossesse = (FormulaireDate) => {
   //   console.log(`date reçu: ${FormulaireDate}`);
