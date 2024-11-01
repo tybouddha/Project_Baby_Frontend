@@ -79,3 +79,37 @@ Tab navigation:
       - exemple: CreerProjet.js, WelcomScreen.js
 
 ## Recherche infos bebé
+
+## Installation de Android Emulator dans MacOS
+
+1. install watchman `brew install watchman`
+2. install JDK `brew install --cask zulu@17`
+3. telecharger Android Studio
+4. créer env variables:
+
+```bash
+export ANDROID_HOME=/Users/your-username/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+```
+
+5. `yarn start`
+
+### nettoyer le android dossier
+
+1. dans le racine de le project il y a un android/. Dans ça fait `./gradlew clean`
+
+```bash
+cd android
+./gradlew clean
+```
+
+2. re-install yarn env
+
+```bash
+rm -rf node_modules
+rm -rf .expo
+yarn install   # or `npm install` if you use npm
+```
