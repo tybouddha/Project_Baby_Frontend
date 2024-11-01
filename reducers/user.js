@@ -7,6 +7,7 @@ const initialState = {
     username: null,
     prenom: null,
     email: null,
+    tokenProject: null,
   },
 };
 
@@ -17,8 +18,8 @@ export const userSlice = createSlice({
     loginUser: (state, action) => {
       console.log(`- dans Redux: loginUser 🔔`);
       state.value.token = action.payload.token;
-      state.value.projectId = action.payload.project._id;
-      state.value.tokenProject = action.payload.project.token;
+      state.value.projectId = action.payload.projectId;
+      state.value.tokenProject = action.payload.tokenProject;
       console.log(`- dans Redux: loginUser fini 🏁`);
     },
     logoutUser: (state) => {

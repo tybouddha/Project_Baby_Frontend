@@ -72,24 +72,11 @@ export default function CreerProjetScreen({ navigation }) {
     </Modal>
   );
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> jujufront
   const chopperDateDerniereMenstruation = (datePickerDate) => {
     console.log(`date reçu: ${datePickerDate}`);
     dateDerniereMenstruationSetter(datePickerDate);
     console.log(dateDerniereMenstruation);
   };
-<<<<<<< HEAD
-=======
-  // const chopperDateDerniereMenstruation = (FormulaireDate) => {
-  //   console.log(`date reçu: ${FormulaireDate}`);
-  //   dateDerniereMenstruationSetter(FormulaireDate);
-  // };
->>>>>>> jujufront
-=======
->>>>>>> jujufront
 
   // const chopperDateDebutGrossesse = (FormulaireDate) => {
   //   console.log(`date reçu: ${FormulaireDate}`);
@@ -97,7 +84,7 @@ export default function CreerProjetScreen({ navigation }) {
   // };
 
   const pressedCreerProjet = () => {
-    console.log("- aller à LoginScreen 📢");
+    // console.log("- aller à LoginScreen 📢");
     console.log(`dateDerniereMenstruation: ${dateDerniereMenstruation}`);
     console.log(`dateDebutGrossesse: ${dateDebutGrossesse}`);
     envoyerDataSetter(true);
@@ -113,9 +100,9 @@ export default function CreerProjetScreen({ navigation }) {
     () => {
       // <-- que une seul fois, quand le composant arriver
       console.log("-Mount 📌");
-      console.log(
-        (process.env.EXPO_PUBLIC_API_URL = `${process.env.EXPO_PUBLIC_API_URL}`)
-      );
+      // console.log(
+      //   (process.env.EXPO_PUBLIC_API_URL = `${process.env.EXPO_PUBLIC_API_URL}`)
+      // );
       if (envoyerData) {
         console.log("- envoyerData 🚀");
         const bodyObj = {
@@ -128,7 +115,7 @@ export default function CreerProjetScreen({ navigation }) {
           email: email,
         };
 
-        fetch("http://192.168.100.149:3000/user/signupProject", {
+        fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signupProject`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(bodyObj),
@@ -140,14 +127,24 @@ export default function CreerProjetScreen({ navigation }) {
             console.log(`reçu token: ${data.token}`);
             // console.log(`reducer token: ${userReducer.token}`);
             if (data.project?.token && password != "") {
-              console.log(`data.project?.token est Truey 🤗`);
-              dispatch(loginUser(data));
+              // console.log(`data.project?.token est Truey 🤗`);
+              dispatch(
+                loginUser({
+                  username: username,
+                  token: data.token,
+                  projectId: data.project._id,
+                  prenom: prenom,
+                  email: email,
+                  tokenProject: data.project.token, // tokenProject: data.token2,
+                })
+              );
               navigation.navigate("TabNavigator");
             } else if (password == "") {
               messageErrorSetter("mot de pass est vide");
               setModalEchecVisible(true);
             } else {
               console.log(`data.project?.token est falsey 😱`);
+              console.log(data?.error);
               messageErrorSetter(data?.error);
               setModalEchecVisible(true);
             }

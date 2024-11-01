@@ -65,9 +65,18 @@ export default function LoginScreen({ navigation }) {
             if (data.project?.token) {
               console.log(`data.project?.token est Truey 🤗`);
               navigation.navigate("TabNavigator");
-              dispatch(loginUser(data));
+              dispatch(
+                loginUser({
+                  username: username,
+                  token: data.token,
+                  projectId: data.project._id,
+                  prenom: prenom,
+                  email: email,
+                  tokenProject: data.project.token, // tokenProject: data.token2,
+                })
+              );
             } else {
-              console.log(`data.project?.token est falsey 😱`);
+              console.log(`data.project?.token2 est falsey 😱`);
               messageErrorSetter(data?.error);
               setModalEchecVisible(true);
             }

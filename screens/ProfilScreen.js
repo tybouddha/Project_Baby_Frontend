@@ -9,9 +9,12 @@ import {
 } from "react-native";
 import HeaderView from "./NavComposants/Header";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function Profil({ navigation }) {
-  // const backend = "http://192.168.1.28:3000";
+  // const backend = "http://192.168.1.28;
+  const user = useSelector((state) => state.user.value);
+  const token = user.token;
 
   const [username, setusername] = useState("");
   const [email, setemail] = useState("");
@@ -23,7 +26,7 @@ export default function Profil({ navigation }) {
   const emailRegExp =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   useEffect(() => {
-    fetch("http://192.168.100.149:3000/user/xw2bLtrCvDtBe93ZJId0IznYe8eQ3KDn")
+    fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/${token}`)
       .then((response) => response.json())
       .then((data) => {
         console.log("coucou");
