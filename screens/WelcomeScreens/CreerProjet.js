@@ -49,6 +49,7 @@ export default function CreerProjetScreen({ navigation }) {
   const chopperDateDerniereMenstruation = (datePickerDate) => {
     console.log(`date reçu: ${datePickerDate}`);
     dateDerniereMenstruationSetter(datePickerDate);
+    console.log(dateDerniereMenstruation);
   };
 
   const chopperDateDebutGrossesse = (datePickerDate) => {
