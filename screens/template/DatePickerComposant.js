@@ -17,24 +17,14 @@ const DatePickerComposant = (props) => {
   const [btnText, btnTextSetter] = useState(props.btnText);
 
   const changeDateDeInteret = (event, dateChoisi) => {
-    // const currentDate = dateChoisi || dateDeIntret;
-    // // afficherPickerSetter(Platform.OS === 'ios'); // Keep picker open on iOS
-    // dateDeIntretSetter(currentDate);
-    // props.chopperDate(currentDate);
-
     // setShowPicker(false); // Always hide picker
     if (event.type === "set" && dateChoisi) {
       console.log("- date picker OK");
-      // "OK" button
-      // setDateDeIntret(selectedDate);
       dateDeIntretSetter(dateChoisi);
       props.chopperDate(dateChoisi);
-      afficherPickerSetter(false); // Always hide picker
+      // afficherPickerSetter(false); // Always hide picker
     } else if (event.type === "dismissed" && Platform.OS != "ios") {
       console.log("- date picker CANCEL ");
-      // "Cancel" button or outside tap
-      // Optionally handle cancellation if needed
-      // dateDeIntretSetter(false); // Always hide picker
       afficherPickerSetter(false);
     }
   };
