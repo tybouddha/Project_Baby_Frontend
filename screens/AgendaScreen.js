@@ -20,6 +20,7 @@ export default function AgendaScreen({ navigation }) {
   const [mamanModalVisible, setMamanModalVisible] = useState(false);
   const [babyModalVisible, setBabyModalVisible] = useState(false);
   const [agendaModalVisible, setAgendaModalVisible] = useState(false);
+  const [searchModalVisible, setSearchModalVisible] = useState(false);
 
   const [selectedDate, setSelectedDate] = useState("");
   const [pourQui, setPourQui] = useState("");
@@ -27,7 +28,10 @@ export default function AgendaScreen({ navigation }) {
   const [lieu, setLieu] = useState("");
   const [heure, setHeure] = useState("");
   const [notes, setNotes] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [rendezVous, setRendezVous] = useState({});
+  const [markedDates, setMarkedDates] = useState({});
+  const [filteredRendezVous, setFilteredRendezVous] = useState({});
   const projectToken = useSelector((state) => state.user.value.projectId);
 
   const mamanRendezVousList = [
@@ -75,6 +79,9 @@ export default function AgendaScreen({ navigation }) {
   const closeBabyModal = () => setBabyModalVisible(false);
   const openAgendaModal = () => setAgendaModalVisible(true);
   const closeAgendaModal = () => setAgendaModalVisible(false);
+  const openSearchModal = () => setSearchModalVisible(true);
+  const closeSearchModal = () => setSearchModalVisible(false);
+
   useEffect(() => {
     fetch(`http://192.168.100.149:3000/rdv/${projectToken}`)
       .then((response) => response.json())
@@ -85,7 +92,7 @@ export default function AgendaScreen({ navigation }) {
           res.json({ result: false, error: "no data" });
         }
       });
-  });
+  }, []);
 
   // to select date in calendar
   const handleDayPress = (day) => {
@@ -105,7 +112,12 @@ export default function AgendaScreen({ navigation }) {
     // add rdv to date
     setRendezVous((prevRendezVous) => ({
       ...prevRendezVous,
-      [selectedDate]: [{ ...newRdv }],
+      [selectedDate]: [...(prevRendezVous[selectedDate] || []), newRdv],
+    }));
+    //add marker to date
+    setMarkedDates((prevMarkedDates) => ({
+      ...prevMarkedDates,
+      [selectedDate]: { marked: true, dotColor: "blue" },
     }));
 
     closeModal();
@@ -113,6 +125,25 @@ export default function AgendaScreen({ navigation }) {
     setPracticien("");
     setLieu("");
     setNotes("");
+    setHeure(""); // reset heure
+  };
+
+  const handleSearch = () => {
+    const filteredRdv = Object.keys(rendezVous).reduce((acc, date) => {
+      const filteredRdvForDate = rendezVous[date].filter(
+        (rdv) =>
+          rdv.pourQui.includes(searchInput) ||
+          rdv.practicien.includes(searchInput) ||
+          rdv.lieu.includes(searchInput) ||
+          rdv.notes.includes(searchInput)
+      );
+      if (filteredRdvForDate.length > 0) {
+        acc[date] = filteredRdvForDate;
+      }
+      return acc;
+    }, {});
+
+    setFilteredRendezVous(filteredRdv);
   };
 
   return (
@@ -122,6 +153,9 @@ export default function AgendaScreen({ navigation }) {
         style={styles.container}
       >
         <View style={styles.div_btn}>
+          <TouchableOpacity style={styles.btn} onPress={openSearchModal}>
+            <Text>Rechercher un rendez-vous</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.btn} onPress={openAgendaModal}>
             <Text>Voir agenda</Text>
           </TouchableOpacity>
@@ -132,11 +166,71 @@ export default function AgendaScreen({ navigation }) {
             <Text>Voir les maman rendez-vous</Text>
           </TouchableOpacity>
         </View>
+        <Modal visible={searchModalVisible} animationType="fade" transparent>
+          <View style={styles.centeredView}>
+            <View style={styles.modalListView}>
+              <Text style={styles.modalTitle}>Rechercher</Text>
+              <TextInput
+                style={styles.listItem}
+                placeholder="Rechercher un rendez-vous"
+                value={searchInput}
+                onChangeText={(text) => setSearchInput(text)}
+              />
+              <ScrollView style={styles.scrollView}>
+                {Object.keys(filteredRendezVous).map((date) => (
+                  <View key={date} style={styles.listItem}>
+                    <Text style={styles.dateText}>{date}</Text>
+                    {filteredRendezVous[date].map((rdv, index) => (
+                      <View key={index} style={styles.listItem}>
+                        <Text>Pour : {rdv.pourQui}</Text>
+                        <Text>Praticien : {rdv.practicien}</Text>
+                        <Text>Lieu : {rdv.lieu}</Text>
+                        <Text>Heure : {rdv.heure}</Text>
+                        <Text>Notes : {rdv.notes}</Text>
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </ScrollView>
+              <TouchableOpacity
+                onPress={handleSearch}
+                style={styles.btnModal}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.textButton}>rechercher</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={closeSearchModal}
+                style={styles.btnModal}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.textButton}>Fermer</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         <Modal visible={modalVisible} animationType="fade" transparent>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalTitle}>Nouveau Rendez-vous</Text>
               <Text>Date sélectionnée : {selectedDate}</Text>
+              {rendezVous[selectedDate] &&
+                rendezVous[selectedDate].length > 0 && (
+                  <View>
+                    <Text style={{ fontWeight: "bold", marginTop: 10 }}>
+                      Rendez-vous existants :
+                    </Text>
+                    {rendezVous[selectedDate].map((rdv, index) => (
+                      <View key={index} style={styles.listItem}>
+                        <Text>Pour : {rdv.pourQui}</Text>
+                        <Text>Praticien : {rdv.practicien}</Text>
+                        <Text>Lieu : {rdv.lieu}</Text>
+                        <Text>Heure : {rdv.heure}</Text>
+                        <Text>Notes : {rdv.notes}</Text>
+                      </View>
+                    ))}
+                  </View>
+                )}
               <TextInput
                 placeholder="Pour Qui"
                 style={styles.input}
@@ -158,7 +252,7 @@ export default function AgendaScreen({ navigation }) {
               <TextInput
                 placeholder="Heure"
                 style={styles.input}
-                value={notes}
+                value={heure}
                 onChangeText={(text) => setHeure(text)}
               />
               <TextInput
@@ -235,6 +329,7 @@ export default function AgendaScreen({ navigation }) {
                 style={{ borderRadius: 10, elevation: 4, margin: 40 }}
                 minDate={"2024-10-31"}
                 maxDate={"2035-12-31"}
+                markedDates={markedDates}
               />
               <TouchableOpacity
                 onPress={closeAgendaModal}
@@ -276,6 +371,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  searchBar: {
+    flex: 1,
+    textAlign: "center",
+  },
+  rdvContainer: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 8,
+    marginVertical: 5,
+  },
   div_btn: {
     display: "flex",
     width: 300,
@@ -295,7 +401,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: 5,
   },
-
   modalView: {
     justifyContent: "space-between",
     backgroundColor: "white",
@@ -311,7 +416,6 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
   },
-
   modalListView: {
     backgroundColor: "white",
     borderRadius: 20,
