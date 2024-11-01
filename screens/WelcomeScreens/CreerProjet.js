@@ -15,6 +15,8 @@ import TemplateViewNoNav from "../template/TemplateViewNoNav";
 import { useState, useEffect } from "react";
 import DatePickerComposant from "../template/DatePickerComposant";
 import VwEchec from "../template/VwEchec";
+import FormulaireDate from "../template/EssaiDatePicker";
+import DateTimePicker from "react-native-modal-datetime-picker";
 
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../reducers/user";
@@ -27,9 +29,8 @@ export default function CreerProjetScreen({ navigation }) {
   const [username, usernameSetter] = useState("");
   const [prenom, prenomSetter] = useState("");
   const [nomDeFamille, nomDeFamilleSetter] = useState("");
-  const [dateDerniereMenstruation, dateDerniereMenstruationSetter] = useState(
-    new Date()
-  );
+  const [dateDerniereMenstruation, dateDerniereMenstruationSetter] =
+    useState("");
   const [dateDebutGrossesse, dateDebutGrossesseSetter] = useState("");
   const [email, emailSetter] = useState("");
   const [password, passwordSetter] = useState("");
@@ -37,8 +38,33 @@ export default function CreerProjetScreen({ navigation }) {
   const [cachePassword, cachePasswordSetter] = useState(false);
   const [modalEchecVisible, setModalEchecVisible] = useState(false);
   const [messageError, messageErrorSetter] = useState("");
+  // const [date1, setDate1] = useState("");
+  const [date2, setDate2] = useState("");
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+  const [currentField, setCurrentField] = useState(null);
 
   const closeModal = () => setModalEchecVisible(false);
+  // Affiche le sélecteur de date pour un champ donné
+  const showDatePicker = (field) => {
+    setCurrentField(field);
+    setDatePickerVisible(true);
+  };
+
+  // Cache le sélecteur de date
+  const hideDatePicker = () => setDatePickerVisible(false);
+
+  // Gère la sélection de date
+  const handleDatePicked = (pickedDate) => {
+    const formattedDate = `${pickedDate.getDate()}-${
+      pickedDate.getMonth() + 1
+    }-${pickedDate.getFullYear()}`;
+    if (currentField === "dateDerniereMenstruation") {
+      dateDerniereMenstruationSetter(formattedDate);
+    } else if (currentField === "date2") {
+      setDate2(formattedDate);
+    }
+    hideDatePicker();
+  };
 
   const modalEchec = (
     <Modal visible={modalEchecVisible} animationType="fade" transparent={true}>
@@ -46,16 +72,23 @@ export default function CreerProjetScreen({ navigation }) {
     </Modal>
   );
 
+<<<<<<< HEAD
   const chopperDateDerniereMenstruation = (datePickerDate) => {
     console.log(`date reçu: ${datePickerDate}`);
     dateDerniereMenstruationSetter(datePickerDate);
     console.log(dateDerniereMenstruation);
   };
+=======
+  // const chopperDateDerniereMenstruation = (FormulaireDate) => {
+  //   console.log(`date reçu: ${FormulaireDate}`);
+  //   dateDerniereMenstruationSetter(FormulaireDate);
+  // };
+>>>>>>> jujufront
 
-  const chopperDateDebutGrossesse = (datePickerDate) => {
-    console.log(`date reçu: ${datePickerDate}`);
-    dateDebutGrossesseSetter(datePickerDate);
-  };
+  // const chopperDateDebutGrossesse = (FormulaireDate) => {
+  //   console.log(`date reçu: ${FormulaireDate}`);
+  //   dateDebutGrossesseSetter(FormulaireDate);
+  // };
 
   const pressedCreerProjet = () => {
     console.log("- aller à LoginScreen 📢");
@@ -75,7 +108,7 @@ export default function CreerProjetScreen({ navigation }) {
       // <-- que une seul fois, quand le composant arriver
       console.log("-Mount 📌");
       console.log(
-        `process.env.EXPO_PUBLIC_API_URL: ${process.env.EXPO_PUBLIC_API_URL}`
+        (process.env.EXPO_PUBLIC_API_URL = `${process.env.EXPO_PUBLIC_API_URL}`)
       );
       if (envoyerData) {
         console.log("- envoyerData 🚀");
@@ -83,13 +116,13 @@ export default function CreerProjetScreen({ navigation }) {
           prenom: prenom,
           nomDeFamille: nomDeFamille,
           username: username,
-          dateDebutGrossesse: dateDerniereMenstruation,
+          dateDebutGrossesse: dateDebutGrossesse,
           derniereMenstruation: dateDerniereMenstruation,
           password: password,
           email: email,
         };
 
-        fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signupProject`, {
+        fetch("http://192.168.100.149:3000/user/signupProject", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(bodyObj),
@@ -160,22 +193,44 @@ export default function CreerProjetScreen({ navigation }) {
               />
             </View>
 
-            {/* Ici Date De dernieres Menstruation */}
-            <View style={styles.vwInputDatePicker}>
-              <DatePickerComposant
-                style={styles.datePickerStyle}
-                btnText={"Date de Menstruation"}
+            {/* Ici Date De dernieres Menstruation
+            <View style={styles.vwInput}>
+              <FormulaireDate
+                style={styles.vwInput}
+                placeholder="date de menstruation"
                 chopperDate={chopperDateDerniereMenstruation}
               />
-            </View>
+            </View> */}
+            <TouchableOpacity
+              style={styles.vwInput}
+              onPress={() => showDatePicker("dateDerniereMenstruation")}
+            >
+              <TextInput
+                style={styles.txtInput}
+                placeholder="date de la derniere menstruation"
+                value={dateDerniereMenstruation}
+                editable={false}
+              />
+            </TouchableOpacity>
 
-            <View style={styles.vwInputDatePicker}>
-              <DatePickerComposant
-                style={styles.datePickerStyle}
-                btnText={"Date de Grossess"}
+            {/* <View style={styles.vwInput}>
+              <FormulaireDate
+                style={styles.vwInput}
+                placeholder="date de grossesse"
                 chopperDate={chopperDateDebutGrossesse}
               />
-            </View>
+            </View> */}
+            <TouchableOpacity
+              style={styles.vwInput}
+              onPress={() => showDatePicker("date2")}
+            >
+              <TextInput
+                style={styles.txtInput}
+                placeholder="Choisir la date"
+                value={date2}
+                editable={false}
+              />
+            </TouchableOpacity>
 
             <View style={styles.vwInput}>
               <TextInput
@@ -213,6 +268,12 @@ export default function CreerProjetScreen({ navigation }) {
                 <Text style={styles.btnText}>Créer Projet</Text>
               </TouchableOpacity>
             </View>
+            <DateTimePicker
+              isVisible={isDatePickerVisible}
+              mode="date"
+              onConfirm={handleDatePicked}
+              onCancel={hideDatePicker}
+            />
 
             {/* <View style={styles.vwBtn}>
               <TouchableOpacity

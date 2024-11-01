@@ -7,9 +7,6 @@ const initialState = {
     username: null,
     prenom: null,
     email: null,
-    documentsArr: [],
-    carnetBebeArr: [],
-    rdvArr: [],
   },
 };
 
