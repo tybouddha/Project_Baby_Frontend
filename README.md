@@ -66,6 +66,7 @@ Tab navigation:
 3. [AutresDetails](./docs/AutresDetails.md)
 
 4. Les templates
+
    1. TemplateView
       - children est le nom (syntax) de propertié pour touts les trucs entre le balise `<TemplateView>{children}<TemplateView/>`
       - exemple: DocumentsScreen.js, CarenetBebeScreen.js
@@ -78,13 +79,16 @@ Tab navigation:
       - ce template n'ai pas de profil icon et peux avoir une flesh pour aller au dernieres écran.
       - exemple: CreerProjet.js, WelcomScreen.js
 
+5. Ficher Chercher
+   1. ajouter `yarn add react-native-fs`
+
 ## Recherche infos bebé
 
 ## Installation de Android Emulator dans MacOS
 
 1. install watchman `brew install watchman`
 2. install JDK `brew install --cask zulu@17`
-3. telecharger Android Studio
+3. telecharger Android Studio [https://developer.android.com/studio](https://developer.android.com/studio)
 4. créer env variables:
 
 ```bash

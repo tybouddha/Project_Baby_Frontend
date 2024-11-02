@@ -70,7 +70,6 @@ export default function LoginScreen({ navigation }) {
                   username: username,
                   token: data.token,
                   projectId: data.project._id,
-                  prenom: prenom,
                   email: email,
                   tokenProject: data.project.token, // tokenProject: data.token2,
                 })
