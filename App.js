@@ -100,6 +100,11 @@ export default function App() {
 
   if (!fontsLoaded) {
     console.log("--- font NOT loaded");
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading...</Text>
+      </View>
+    );
   } else {
     console.log("--- font loaded");
   }
