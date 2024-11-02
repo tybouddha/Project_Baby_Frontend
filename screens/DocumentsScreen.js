@@ -8,7 +8,7 @@ import {
   Image,
 } from "react-native";
 import TemplateView from "./template/TemplateView";
-import RNFS from "react-native-fs";
+// import RNFS from "react-native-fs";
 import { PermissionsAndroid } from "react-native";
 import { useEffect, useState } from "react";
 
@@ -19,33 +19,33 @@ export default function DocumentsScreen({ navigation }) {
     console.log(`pressAddDocument`);
   };
 
-  useEffect(
-    () => {
-      // <-- que une seul fois, quand le composant arriver
+  // useEffect(
+  //   () => {
+  //     // <-- que une seul fois, quand le composant arriver
 
-      async () => {
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-            {
-              title: "Storage Permission",
-              message: "App needs access to your storage to browse files.",
-              buttonNeutral: "Ask Me Later",
-              buttonNegative: "Cancel",
-              buttonPositive: "OK",
-            }
-          );
-          return granted === PermissionsAndroid.RESULTS.GRANTED;
-        } catch (err) {
-          console.warn(err);
-          return false;
-        }
-      };
+  //     async () => {
+  //       try {
+  //         const granted = await PermissionsAndroid.request(
+  //           PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+  //           {
+  //             title: "Storage Permission",
+  //             message: "App needs access to your storage to browse files.",
+  //             buttonNeutral: "Ask Me Later",
+  //             buttonNegative: "Cancel",
+  //             buttonPositive: "OK",
+  //           }
+  //         );
+  //         return granted === PermissionsAndroid.RESULTS.GRANTED;
+  //       } catch (err) {
+  //         console.warn(err);
+  //         return false;
+  //       }
+  //     };
 
-      console.log("Mount");
-    },
-    [] //<--- tableaux vide
-  );
+  //     console.log("Mount");
+  //   },
+  //   [] //<--- tableaux vide
+  // );
 
   return (
     <TemplateView navigation={navigation}>
