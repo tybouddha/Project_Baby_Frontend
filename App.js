@@ -91,8 +91,6 @@ export default function App() {
   useEffect(() => {
     async function loadFonts() {
       await Font.loadAsync({
-        // 'Mont-Heavy': require('./assets/fonts/mont-heavy.ttf'),
-        // 'Mark-My-Words': require('./assets/fonts/mark_my_words.ttf'),
         Caveat: require("./assets/fonts/Caveat-VariableFont_wght.ttf"),
       });
       setFontsLoaded(true);
