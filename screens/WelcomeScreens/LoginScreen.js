@@ -44,7 +44,8 @@ export default function LoginScreen({ navigation }) {
       // <-- que une seul fois, quand le composant arriver
       console.log("- Mount 📌");
       console.log(
-        `process.env.EXPO_PUBLIC_API_URL: ${process.env.EXPO_PUBLIC_API_URL}`
+        // `process.env.EXPO_PUBLIC_API_URL: ${process.env.EXPO_PUBLIC_API_URL}`
+        `process.env.EXPO_PUBLIC_API_URL: http://192.168.1.156:3000`
       );
       if (envoyerData) {
         console.log("- envoyerData 🚀");
@@ -53,7 +54,8 @@ export default function LoginScreen({ navigation }) {
           password: password,
         };
 
-        fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signin`, {
+        // fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signin`,
+        fetch("http://192.168.1.156:3000/user/signin", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(bodyObj),

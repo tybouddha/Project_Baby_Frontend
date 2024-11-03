@@ -16,24 +16,29 @@ import { Calendar } from "react-native-calendars";
 import TemplateView from "./template/TemplateView";
 
 export default function AgendaScreen({ navigation }) {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [mamanModalVisible, setMamanModalVisible] = useState(false);
-  const [babyModalVisible, setBabyModalVisible] = useState(false);
-  const [agendaModalVisible, setAgendaModalVisible] = useState(false);
-  const [searchModalVisible, setSearchModalVisible] = useState(false);
+  // state for visibility of differents modals
+  const [modalVisible, setModalVisible] = useState(false); // Modale pour ajouter un rendez-vous.
+  const [mamanModalVisible, setMamanModalVisible] = useState(false); // Modale pour les rendez-vous de la maman.
+  const [babyModalVisible, setBabyModalVisible] = useState(false); // Modale pour les rendez-vous du bébé.
+  const [agendaModalVisible, setAgendaModalVisible] = useState(false); // Modale pour afficher les rendez-vous du jour.
+  const [searchModalVisible, setSearchModalVisible] = useState(false); // Modale pour rechercher des rendez-vous.
 
-  const [selectedDate, setSelectedDate] = useState("");
-  const [pourQui, setPourQui] = useState("");
-  const [practicien, setPracticien] = useState("");
-  const [lieu, setLieu] = useState("");
-  const [heure, setHeure] = useState("");
-  const [notes, setNotes] = useState("");
-  const [searchInput, setSearchInput] = useState("");
-  const [rendezVous, setRendezVous] = useState({});
-  const [markedDates, setMarkedDates] = useState({});
-  const [filteredRendezVous, setFilteredRendezVous] = useState({});
+  //state to stock rdv's info
+  const [selectedDate, setSelectedDate] = useState(""); // Date sélectionnée dans le calendrier.
+  const [pourQui, setPourQui] = useState(""); // Nom de la personne pour qui le rendez-vous est pris.
+  const [practicien, setPracticien] = useState(""); // Nom du praticien.
+  const [lieu, setLieu] = useState(""); // Lieu du rendez-vous.
+  const [heure, setHeure] = useState(""); // Heure du rendez-vous.
+  const [notes, setNotes] = useState(""); // Notes concernant le rendez-vous.
+  const [searchInput, setSearchInput] = useState(""); // Champ de saisie pour la recherche.
+  const [rendezVous, setRendezVous] = useState({}); // Liste des rendez-vous récupérés.
+  const [rendezVousDuJour, setRendezVousDuJour] = useState({}); // Rendez-vous pour la date sélectionnée.
+  const [markedDates, setMarkedDates] = useState({}); // Dates marquées dans le calendrier.
+  const [filteredRendezVous, setFilteredRendezVous] = useState({}); // Rendez-vous filtrés selon la recherche.
+
+  //recober user's data by store redux
   const user = useSelector((state) => state.user.value);
-  const projectToken = user.tokenProject;
+  const projectToken = user.tokenProject; // recover token project
 
   const mamanRendezVousList = [
     "1er trimestre : Prendre rendez-vous avec un médecin généraliste, gynécologue ou sage-femme pour confirmer la grossesse.",
@@ -72,37 +77,78 @@ export default function AgendaScreen({ navigation }) {
     "Entre 15 et 16 ans",
   ];
 
-  const openModal = () => setModalVisible(true);
-  const closeModal = () => setModalVisible(false);
-  const openMamanModal = () => setMamanModalVisible(true);
-  const closeMamanModal = () => setMamanModalVisible(false);
-  const openBabyModal = () => setBabyModalVisible(true);
-  const closeBabyModal = () => setBabyModalVisible(false);
-  const openAgendaModal = () => setAgendaModalVisible(true);
-  const closeAgendaModal = () => setAgendaModalVisible(false);
-  const openSearchModal = () => setSearchModalVisible(true);
-  const closeSearchModal = () => setSearchModalVisible(false);
-  console.log(user);
+  //function to open and close differents modals
+  const openModal = () => setModalVisible(true); // Ouvre la modale pour ajouter un rendez-vous.
+  const closeModal = () => setModalVisible(false); // Ferme la modale pour ajouter un rendez-vous.
+  const openMamanModal = () => setMamanModalVisible(true); // Ouvre la modale pour les rendez-vous de la maman.
+  const closeMamanModal = () => setMamanModalVisible(false); // Ferme la modale pour les rendez-vous de la maman.
+  const openBabyModal = () => setBabyModalVisible(true); // Ouvre la modale pour les rendez-vous du bébé.
+  const closeBabyModal = () => setBabyModalVisible(false); // Ferme la modale pour les rendez-vous du bébé.
+  const openAgendaModal = () => setAgendaModalVisible(true); // Ouvre la modale pour les rendez-vous du jour.
+  const closeAgendaModal = () => {
+    setAgendaModalVisible(false); // Ferme la modale des rendez-vous.
+    setRendezVousDuJour({}); // Réinitialise les rendez-vous du jour.
+  };
+  const openSearchModal = () => setSearchModalVisible(true); // Ouvre la modale de recherche.
+  const closeSearchModal = () => {
+    setSearchModalVisible(false); // Ferme la modale de recherche.
+    setFilteredRendezVous({}); // Réinitialise les rendez-vous filtrés.
+    setSearchInput(""); // Vide le champ de recherche.
+    console.log(user); // Affiche les informations de l'utilisateur dans la console.
+  };
 
+  // fetch(`${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}`)
+  // use Effect to recover rdv at mount
   useEffect(() => {
-    fetch(`${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}`)
-      .then((response) => response.json())
+    fetch(`http://192.168.1.156:3000/rdv/${projectToken}`) // Envoie une requête pour récupérer les rendez-vous.
+      .then((response) => response.json()) // Convertit la réponse en JSON.
       .then((data) => {
         if (data.rdv) {
-          console.log(data.rdv);
-          setRendezVous(data);
+          setRendezVous(data); // Met à jour l'état avec les rendez-vous récupérés.
+          initializeMarkedDates(data.rdv); // Initialise les dates marquées avec les rendez-vous récupérés.
         } else {
-          res.json({ result: false, error: "no data" });
+          setRendezVous({ rdv: [] }); // Réinitialise les rendez-vous si aucun n'est trouvé.
+          setMarkedDates({}); // Réinitialise les dates marquées.
         }
+      })
+      .catch(
+        (error) =>
+          console.error("Erreur lors de la récupération des données :", error) // Affiche une erreur en cas d'échec.
+      );
+  }, []); // [] signifie que cela s'exécute uniquement au premier rendu.
+
+  // function to init the marked's appointments by appointments downloaded
+  const initializeMarkedDates = (appointments) => {
+    const newMarkedDates = {}; // Crée un nouvel objet pour les dates marquées.
+    if (appointments && Array.isArray(appointments)) {
+      appointments.forEach((appointment) => {
+        const date = appointment.date.split("T")[0]; // Normalise la date au format YYYY-MM-DD.
+        newMarkedDates[date] = { marked: true, dotColor: "blue" }; // Marque la date avec un point de couleur.
       });
-  }, []);
+    }
+    setMarkedDates(newMarkedDates); // Met à jour l'état avec les nouvelles dates marquées.
+  };
 
   // to select date in calendar
   const handleDayPress = (day) => {
-    setSelectedDate(day.dateString);
-    openModal();
-  };
+    const dateKey = day.dateString; // Utilise le format YYYY-MM-DD.
+    setSelectedDate(dateKey); // Définit la date sélectionnée.
 
+    // Vérifie si des rendez-vous existent à cette date.
+    const rendezVousDuJour = rendezVous.rdv.filter(
+      (rdv) => rdv.date.split("T")[0] === dateKey // Normalise la date ici.
+    );
+
+    if (rendezVousDuJour.length > 0) {
+      // S'il y a des rendez-vous, affichez-les dans une modale.
+      setRendezVousDuJour(rendezVousDuJour); // Utilise un état pour stocker les RDV du jour.
+      setAgendaModalVisible(true); // Ouvre la modale des rendez-vous.
+    } else {
+      // S'il n'y a pas de rendez-vous, ouvrez la modale pour en ajouter un.
+      openModal(); // Appelle la fonction pour ouvrir la modale d'ajout.
+    }
+  };
+  //function to create new appointments
   const handleSubmit = () => {
     const newRdv = {
       pourQui,
@@ -113,53 +159,67 @@ export default function AgendaScreen({ navigation }) {
       heure,
     };
 
+    // Envoie une requête POST pour ajouter un nouveau rendez-vous.
     fetch(`${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newRdv),
     })
-      .then((response) => response.json())
+      .then((response) => response.json()) // Convertit la réponse en JSON.
       .then((data) => {
         if (data.result === true) {
-          console.log("Youpi !");
+          // Si le rendez-vous a été ajouté avec succès.
           setRendezVous((prevRendezVous) => ({
             ...prevRendezVous,
-            [selectedDate]: [...(prevRendezVous[selectedDate] || []), newRdv],
+            rdv: [...(prevRendezVous.rdv || []), newRdv], // Ajoute le nouveau rendez-vous à l'état existant.
           }));
-          setMarkedDates((prevMarkedDates) => ({
-            ...prevMarkedDates,
-            [selectedDate]: { marked: true, dotColor: "blue" },
-          }));
-        } else {
-          console.log("Moins youpi...");
+          initializeMarkedDates([...rendezVous.rdv, newRdv]); // Met à jour les dates marquées avec le nouveau rendez-vous.
         }
       })
-      .catch((error) => console.error("Erreur lors de la requête :", error));
+      .catch((error) => console.error("Erreur lors de la requête :", error)); // Affiche une erreur en cas d'échec.
 
-    closeModal();
+    closeModal(); // Ferme la modale d'ajout.
+    // Réinitialise les champs de saisie.
     setPourQui("");
     setPracticien("");
     setLieu("");
     setNotes("");
-    setHeure(""); // reset heure
+    setHeure("");
   };
-
+  //function to search appointment
   const handleSearch = () => {
-    const filteredRdv = Object.keys(rendezVous).reduce((acc, date) => {
-      const filteredRdvForDate = rendezVous[date].filter(
-        (rdv) =>
-          rdv.pourQui.includes(searchInput) ||
-          rdv.practicien.includes(searchInput) ||
-          rdv.lieu.includes(searchInput) ||
-          rdv.notes.includes(searchInput)
-      );
-      if (filteredRdvForDate.length > 0) {
-        acc[date] = filteredRdvForDate;
-      }
-      return acc;
-    }, {});
+    const normalizedSearch = searchInput.trim().toLowerCase();
+    console.log("Valeur de recherche :", searchInput);
 
-    setFilteredRendezVous(filteredRdv);
+    if (!rendezVous.rdv || !Array.isArray(rendezVous.rdv)) {
+      console.error("Données de rendez-vous manquantes ou incorrectes");
+      setFilteredRendezVous({});
+      return;
+    }
+
+    // Structurer les rendez-vous filtrés dans un dictionnaire par date
+    const structuredFilteredRdv = {};
+    rendezVous.rdv.forEach((rdv) => {
+      const dateKey = rdv.date.split("T")[0]; // Normalise la date au format YYYY-MM-DD.
+
+      // Filtrer selon les champs
+      const matchesSearch =
+        rdv.pourQui.toLowerCase().includes(normalizedSearch) ||
+        rdv.practicien.toLowerCase().includes(normalizedSearch) ||
+        rdv.lieu.toLowerCase().includes(normalizedSearch) ||
+        rdv.notes.toLowerCase().includes(normalizedSearch);
+
+      if (matchesSearch) {
+        // Si un rendez-vous correspond à la recherche, l'ajoute à la structure filtrée.
+        if (!structuredFilteredRdv[dateKey]) {
+          structuredFilteredRdv[dateKey] = []; // Crée une nouvelle entrée pour chaque date unique
+        }
+        structuredFilteredRdv[dateKey].push(rdv); // Ajoute le rendez-vous à la date correspondante
+      }
+    });
+
+    console.log("RDV filtrés :", structuredFilteredRdv); // Affiche les rendez-vous filtrés.
+    setFilteredRendezVous(structuredFilteredRdv); // Met à jour l'état avec les rendez-vous filtrés.
   };
 
   return (
@@ -340,6 +400,24 @@ export default function AgendaScreen({ navigation }) {
           <View style={styles.centeredView}>
             <View style={styles.modalListView}>
               <Text style={styles.modalTitle}>Agenda</Text>
+              <ScrollView style={styles.scrollView}>
+                <Text style={styles.modalTitle}>
+                  Rendez-vous pour le {selectedDate}
+                </Text>
+                {rendezVousDuJour.length > 0 ? (
+                  rendezVousDuJour.map((rdv, index) => (
+                    <View key={index} style={styles.listItem}>
+                      <Text>Pour : {rdv.pourQui}</Text>
+                      <Text>Praticien : {rdv.practicien}</Text>
+                      <Text>Lieu : {rdv.lieu}</Text>
+                      <Text>Heure : {rdv.heure}</Text>
+                      <Text>Notes : {rdv.notes}</Text>
+                    </View>
+                  ))
+                ) : (
+                  <Text>Aucun rendez-vous trouvé pour cette date.</Text>
+                )}
+              </ScrollView>
               <Calendar
                 onDayPress={handleDayPress}
                 style={{ borderRadius: 10, elevation: 4, margin: 40 }}
