@@ -43,9 +43,10 @@ export default function LoginScreen({ navigation }) {
     () => {
       // <-- que une seul fois, quand le composant arriver
       console.log("- Mount 📌");
-      console.log(
-        `process.env.EXPO_PUBLIC_API_URL: ${process.env.EXPO_PUBLIC_API_URL}`
-      );
+      console
+        .log
+        // `process.env.EXPO_PUBLIC_API_URL: ${http://192.168.1.28:3000}`
+        ();
       if (envoyerData) {
         console.log("- envoyerData 🚀");
         const bodyObj = {
@@ -53,7 +54,7 @@ export default function LoginScreen({ navigation }) {
           password: password,
         };
 
-        fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signin`, {
+        fetch("http://192.168.1.28:3000/user/signin", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(bodyObj),
@@ -69,12 +70,10 @@ export default function LoginScreen({ navigation }) {
                 loginUser({
                   username: username,
                   token: data.token,
-                  projectId: data.project._id,
-                  prenom: prenom,
-                  email: email,
-                  tokenProject: data.project.token, // tokenProject: data.token2,
+                  tokenProject: data.project.token,
                 })
               );
+              console.log("tokenproject", data.project.token);
             } else {
               console.log(`data.project?.token2 est falsey 😱`);
               messageErrorSetter(data?.error);

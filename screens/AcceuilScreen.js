@@ -15,8 +15,11 @@ import ToggleSwitch from "toggle-switch-react-native";
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
 import HeaderView from "./NavComposants/Header";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function AcceuilScreen({ navigation }) {
+  const user = useSelector((state) => state.user.value);
+  const username = user.username;
   //hook for update the modal and open the modal
   const [modalVisible, setModalVisible] = useState(false);
   const [role, setrole] = useState("lecteur");
@@ -96,7 +99,9 @@ export default function AcceuilScreen({ navigation }) {
         </Modal>
 
         <View>
-          <Text style={styles.title}>Bienvenue sur BabyProject!</Text>
+          <Text style={styles.title}>
+            Bienvenue {username} sur BabyProject!
+          </Text>
           <Calendar
             style={styles.calendar}
             onDayPress={(day) => {

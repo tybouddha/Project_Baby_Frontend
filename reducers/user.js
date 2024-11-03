@@ -20,6 +20,7 @@ export const userSlice = createSlice({
       state.value.token = action.payload.token;
       state.value.projectId = action.payload.projectId;
       state.value.tokenProject = action.payload.tokenProject;
+      state.value.username = action.payload.username;
       console.log(`- dans Redux: loginUser fini 🏁`);
     },
     logoutUser: (state) => {
