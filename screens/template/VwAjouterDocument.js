@@ -16,7 +16,12 @@ export default function VwAjouterDocument(props) {
   const [praticien, setPraticien] = useState("");
   const [notes, setNotes] = useState("");
   const [modalFicherTypeVisible, setModalFicherTypeVisible] = useState(false);
-  const fermerModal = () => setModalFicherTypeVisible(false);
+
+  const fermerModal = () => {
+    console.log("VwAjouterDocument fermerModal");
+    setModalFicherTypeVisible(false);
+    props.closeModal();
+  };
 
   const modalFicher = (
     <Modal
@@ -24,7 +29,7 @@ export default function VwAjouterDocument(props) {
       animationType="fade"
       transparent={true}
     >
-      <VwFicherType closeModal={fermerModal} />
+      <VwFicherType closeModal={fermerModal} navigation={props.navigation} />
     </Modal>
   );
 

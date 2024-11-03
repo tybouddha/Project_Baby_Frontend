@@ -6,10 +6,19 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { changeDocumentModalStatus } from "../../reducers/document";
 
 export default function VwFicherType(props) {
   console.log("- dans VwFicherType ");
-  // export default function LoginScreen({ navigation }) {
+  const dispatch = useDispatch();
+
+  const appuyerCamera = () => {
+    console.log("appuyerCamera");
+    dispatch(changeDocumentModalStatus());
+    props.closeModal();
+    props.navigation.navigate("Camera");
+  };
 
   return (
     <View style={styles.modalOverlay}>
@@ -24,7 +33,7 @@ export default function VwFicherType(props) {
             <Text style={styles.btnAjouterText}>Ficher</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={props.closeModal}
+            onPress={() => appuyerCamera()}
             style={styles.btn}
             activeOpacity={0.8}
           >

@@ -15,16 +15,23 @@ import { useEffect, useState } from "react";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import VwAjouterDocument from "./template/VwAjouterDocument";
+import { useSelector } from "react-redux";
 
 export default function DocumentsScreen({ navigation }) {
+  const documentRedux = useSelector((state) => state.document.value);
+  console.log("documentsRedux show modal: ", documentRedux.modalOuvert);
+
   const [modalAjouterDocumentVisible, setmodalAjouterDocumentVisible] =
-    useState(false);
+    useState(documentRedux);
   const appuyerAjouterDocument = () => {
     console.log(`appuyerAjouterDocument`);
     setmodalAjouterDocumentVisible(true);
   };
 
-  const fermerModal = () => setmodalAjouterDocumentVisible(false);
+  const fermerModal = () => {
+    console.log("DocumentsScreen fermerModal");
+    setmodalAjouterDocumentVisible(false);
+  };
 
   let ajourdhui = new Date();
   const fauxDonnes = [
@@ -67,7 +74,7 @@ export default function DocumentsScreen({ navigation }) {
       animationType="fade"
       transparent={true}
     >
-      <VwAjouterDocument closeModal={fermerModal} />
+      <VwAjouterDocument closeModal={fermerModal} navigation={navigation} />
     </Modal>
   );
 
