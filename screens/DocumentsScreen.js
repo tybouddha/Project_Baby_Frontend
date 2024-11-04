@@ -15,13 +15,17 @@ import { useEffect, useState } from "react";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import VwAjouterDocument from "./template/VwAjouterDocument";
-import { useSelector } from "react-redux";
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  sauvgaurderDocumentInfos,
+  supprimerTousLesPhotos,
+} from "../reducers/document";
 
 export default function DocumentsScreen({ navigation }) {
   const documentRedux = useSelector((state) => state.document.value);
-  // console.log("documentsRedux show modal: ", documentRedux.modalOuvert);
+  const dispatch = useDispatch();
 
   const [modalAjouterDocumentVisible, setmodalAjouterDocumentVisible] =
     useState(documentRedux);
@@ -31,8 +35,10 @@ export default function DocumentsScreen({ navigation }) {
   };
 
   const fermerModal = () => {
-    // console.log("DocumentsScreen fermerModal");
+    // cette fonctionne ferme le VwAjouterDocument
     setmodalAjouterDocumentVisible(false);
+    dispatch(sauvgaurderDocumentInfos({ nom: "", practcien: "", notes: "" }));
+    dispatch(supprimerTousLesPhotos());
   };
 
   let ajourdhui = new Date();
@@ -100,7 +106,7 @@ export default function DocumentsScreen({ navigation }) {
               <Text style={styles.txtPracticien}>{elem.practcien}</Text>
             </View>
             <View style={styles.cardRayon2SousPracticien}>
-              <Text style={styles.txtLabel}>Pour qoui: </Text>
+              <Text style={styles.txtLabel}>Pour qui: </Text>
               <Text style={styles.txtNom}>{elem.nom}</Text>
             </View>
           </View>

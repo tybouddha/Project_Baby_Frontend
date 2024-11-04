@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
   TextInput,
   Modal,
+  ScrollView,
+  Image,
 } from "react-native";
 import VwFicherType from "./VwFicherType";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { sauvgaurderDocumentInfos } from "../../reducers/document";
 import { useFocusEffect } from "@react-navigation/native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function VwAjouterDocument(props) {
   const documentRedux = useSelector((state) => state.document.value);
@@ -21,6 +23,9 @@ export default function VwAjouterDocument(props) {
   const [notes, setNotes] = useState("");
   const [modalFicherTypeVisible, setModalFicherTypeVisible] = useState(false);
   const dispatch = useDispatch();
+  const [photosArr, setPhotosArr] = useState([]);
+
+  let imagesArr = [];
 
   useFocusEffect(
     useCallback(() => {
@@ -28,6 +33,7 @@ export default function VwAjouterDocument(props) {
       setNom(documentRedux.nom);
       setPracticien(documentRedux.practicien);
       setNotes(documentRedux.notes);
+      setPhotosArr(documentRedux.photos);
 
       // return () => {
       //   // Optional cleanup when the screen loses focus
@@ -36,8 +42,31 @@ export default function VwAjouterDocument(props) {
     }, [])
   );
 
+  photosArr.map((elem, index) => {
+    const imgElem = (
+      // <Image
+      //   source={{ uri: elem }}
+      //   style={styles.imgElemStyle}
+      //   resizeMode="contain"
+      // />
+      <View key={index} style={styles.photoContainer}>
+        <TouchableOpacity onPress={() => dispatch(removePhoto(data))}>
+          <FontAwesome
+            name="times"
+            size={20}
+            color="#000000"
+            style={styles.deleteIcon}
+          />
+        </TouchableOpacity>
+
+        <Image source={{ uri: elem }} style={styles.imgElemStyle} />
+      </View>
+    );
+    imagesArr.push(imgElem);
+  });
+
   const fermerModal = () => {
-    // console.log("VwAjouterDocument fermerModal");
+    // cette fonctionnne fermer le modal VwFicherType
     setModalFicherTypeVisible(false);
     props.closeModal();
   };
@@ -56,10 +85,6 @@ export default function VwAjouterDocument(props) {
     setModalFicherTypeVisible(true);
   };
 
-  // const appuyerSoumettre = () => {
-  //   console.log("appuyerSoumettre");
-  // };
-
   const sauvgaurderInfos = () => {
     // console.log("VwAjouterDocument > sauvgaurderInfos > nom: ", nom);
     payloadObj = {
@@ -71,103 +96,115 @@ export default function VwAjouterDocument(props) {
   };
 
   return (
-    <View style={styles.modalOverlay}>
+    // <View style={styles.modalOverlay}>
+    <ScrollView>
       {modalFicherTypeVisible ? modalFicher : null}
-      <View style={styles.modalBackground}>
-        <View style={styles.vwHaut}>
-          <TouchableOpacity
-            onPress={props.closeModal}
-            style={styles.btnModalFermer}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.textButtonX}>x</Text>
-          </TouchableOpacity>
-          <Text style={styles.txtTitre}>Ajouter Une Document</Text>
-        </View>
-
-        <View style={styles.vwAuMileu}>
-          <View style={styles.vwInputSuper}>
-            <View style={styles.vwInput}>
-              <TextInput
-                style={styles.txtInput}
-                onChangeText={(value) => {
-                  setNom(value);
-                  sauvgaurderInfos();
-                }}
-                placeholder="Nom"
-                placeholderTextColor="#555555" // Dark gray color for the placeholder
-                value={nom}
-              />
-            </View>
+      <View style={styles.modalOverlayScroll}>
+        <View style={styles.modalBackground}>
+          <View style={styles.vwHaut}>
+            <TouchableOpacity
+              onPress={props.closeModal}
+              style={styles.btnModalFermer}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.textButtonX}>x</Text>
+            </TouchableOpacity>
+            <Text style={styles.txtTitre}>Ajouter Une Document</Text>
           </View>
 
-          <View style={styles.vwInputSuper}>
-            <View style={styles.vwInput}>
-              <TextInput
-                style={styles.txtInput}
-                onChangeText={(value) => {
-                  setPracticien(value);
-                  sauvgaurderInfos();
-                }}
-                placeholder="Practicien"
-                placeholderTextColor="#555555" // Dark gray color for the placeholder
-                value={practicien}
-              />
+          <View style={styles.vwAuMileu}>
+            <View style={styles.vwInputSuper}>
+              <View style={styles.vwInput}>
+                <TextInput
+                  style={styles.txtInput}
+                  onChangeText={(value) => {
+                    setNom(value);
+                    sauvgaurderInfos();
+                  }}
+                  placeholder="Nom"
+                  placeholderTextColor="#555555" // Dark gray color for the placeholder
+                  value={nom}
+                />
+              </View>
+            </View>
+
+            <View style={styles.vwInputSuper}>
+              <View style={styles.vwInput}>
+                <TextInput
+                  style={styles.txtInput}
+                  onChangeText={(value) => {
+                    setPracticien(value);
+                    sauvgaurderInfos();
+                  }}
+                  placeholder="Practicien"
+                  placeholderTextColor="#555555" // Dark gray color for the placeholder
+                  value={practicien}
+                />
+              </View>
+            </View>
+            <View style={styles.vwInputSuperNotes}>
+              <View style={styles.vwInputNotes}>
+                <TextInput
+                  style={styles.txtInputNotes}
+                  onChangeText={(value) => {
+                    setNotes(value);
+                    sauvgaurderInfos();
+                  }}
+                  placeholder="Notes"
+                  placeholderTextColor="#555555" // Dark gray color for the placeholder
+                  value={notes}
+                  multiline={true}
+                  numberOfLines={4} // Initial visible lines
+                  textAlignVertical="top" // Aligns text at the top of the input field
+                />
+              </View>
             </View>
           </View>
-          <View style={styles.vwInputSuperNotes}>
-            <View style={styles.vwInputNotes}>
-              <TextInput
-                style={styles.txtInputNotes}
-                onChangeText={(value) => {
-                  setNotes(value);
-                  sauvgaurderInfos();
-                }}
-                placeholder="Notes"
-                placeholderTextColor="#555555" // Dark gray color for the placeholder
-                value={notes}
-                multiline={true}
-                numberOfLines={4} // Initial visible lines
-                textAlignVertical="top" // Aligns text at the top of the input field
-              />
-            </View>
+          {imagesArr.length > 0 && (
+            <View style={styles.vwInputPhotos}>{imagesArr}</View>
+          )}
+          <View style={styles.vwButonsEnBas}>
+            <TouchableOpacity
+              onPress={() => appuyerFicherType()}
+              style={styles.btnAjouter}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.btnAjouterText}>Image / Ficher</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => appuyerSoumettre()}
+              style={styles.btn}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.btnText}>Soumettre</Text>
+            </TouchableOpacity>
           </View>
-        </View>
-        <View style={styles.vwButonsEnBas}>
-          <TouchableOpacity
-            onPress={() => appuyerFicherType()}
-            style={styles.btnAjouter}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.btnAjouterText}>Image / Ficher</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => appuyerSoumettre()}
-            style={styles.btn}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.btnText}>Soumettre</Text>
-          </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
+    // </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  modalOverlay: {
     flex: 1,
-    width: Dimensions.get("screen").width,
-    height: Dimensions.get("screen").height,
-    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent overlay
+  },
+  modalOverlayScroll: {
+    flex: 1,
+    paddingTop: 100,
     alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent overlay
+    height: Dimensions.get("screen").height * 1.5,
+    width: Dimensions.get("screen").width,
   },
 
   modalBackground: {
     // justifyContent: "center",
     alignItems: "center",
     width: Dimensions.get("screen").width * 0.8,
-    height: Dimensions.get("screen").height * 0.6,
+    // height: Dimensions.get("screen").height * 0.6,
     backgroundColor: "white",
     borderRadius: 12,
     // padding: 30,
@@ -180,13 +217,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent overlay
-    // height: Dimensions.get("screen").height,
-  },
+
   txtTitre: {
     fontSize: 23,
     fontWeight: "bold",
@@ -216,14 +247,18 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   vwHaut: {
+    // flex: 1,
     alignItems: "center",
     width: Dimensions.get("screen").width * 0.8,
     // height: Dimensions.get("screen").height * 0.6,
+    // backgroundColor: "green",
   },
   vwAuMileu: {
+    // flex: 1,
     alignItems: "center",
     width: Dimensions.get("screen").width * 0.8,
     // height: Dimensions.get("screen").height * 0.6,
+    // backgroundColor: "yellow",
   },
   vwInputSuper: {
     display: "flex",
@@ -267,18 +302,32 @@ const styles = StyleSheet.create({
     // // height: "300%",
   },
   txtInputNotes: {
-    // // width: "100%",
-    // height: "300%",
     padding: 10,
-    // fontSize: 16,
   },
+  vwInputPhotos: {
+    // backgroundColor: "gray",
+    flexWrap: "wrap",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  imgElemStyle: {
+    // margin: 10,
+    width: 50,
+    height: 50,
+  },
+  photoContainer: {
+    alignItems: "flex-end",
+    margin: 5,
+  },
+
   vwButonsEnBas: {
-    flex: 1,
+    // flex: 1,
     // backgroundColor: "gray",
     alignItems: "center",
     width: Dimensions.get("screen").width * 0.8,
     justifyContent: "flex-end",
     paddingBottom: 20,
+    marginTop: 20,
   },
   btnAjouter: {
     paddingVertical: 12,
