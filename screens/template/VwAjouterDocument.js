@@ -18,6 +18,7 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function VwAjouterDocument(props) {
   const documentRedux = useSelector((state) => state.document.value);
+  const userRedux = useSelector((state) => state.user.value);
   const [nom, setNom] = useState("");
   const [practicien, setPracticien] = useState("");
   const [notes, setNotes] = useState("");
@@ -44,19 +45,9 @@ export default function VwAjouterDocument(props) {
 
   photosArr.map((elem, index) => {
     const imgElem = (
-      // <Image
-      //   source={{ uri: elem }}
-      //   style={styles.imgElemStyle}
-      //   resizeMode="contain"
-      // />
       <View key={index} style={styles.photoContainer}>
         <TouchableOpacity onPress={() => dispatch(removePhoto(data))}>
-          <FontAwesome
-            name="times"
-            size={20}
-            color="#000000"
-            style={styles.deleteIcon}
-          />
+          <FontAwesome name="times" size={20} color="red" />
         </TouchableOpacity>
 
         <Image source={{ uri: elem }} style={styles.imgElemStyle} />
@@ -65,10 +56,15 @@ export default function VwAjouterDocument(props) {
     imagesArr.push(imgElem);
   });
 
-  const fermerModal = () => {
-    // cette fonctionnne fermer le modal VwFicherType
+  // const fermerModalFicherType = () => {
+  //   // cette fonctionnne fermer le modal VwFicherType
+  //   setModalFicherTypeVisible(false);
+  //   props.closeModal();
+  // };
+
+  const cameraScreenFermerModalsSansEffacerRedux = () => {
     setModalFicherTypeVisible(false);
-    props.closeModal();
+    props.fermerModalSansEffacer();
   };
 
   const modalFicher = (
@@ -77,7 +73,10 @@ export default function VwAjouterDocument(props) {
       animationType="fade"
       transparent={true}
     >
-      <VwFicherType closeModal={fermerModal} navigation={props.navigation} />
+      <VwFicherType
+        fermerModal={cameraScreenFermerModalsSansEffacerRedux}
+        navigation={props.navigation}
+      />
     </Modal>
   );
 
@@ -95,6 +94,26 @@ export default function VwAjouterDocument(props) {
     dispatch(sauvgaurderDocumentInfos(payloadObj));
   };
 
+  const appuyerSoumettre = () => {
+    const bodyObj = {
+      token: userRedux.token,
+      tokenProject: userRedux.tokenProject,
+      nom: nom,
+      practicien: practicien,
+      notes: notes,
+      url: photosArr[0],
+    };
+    fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/document/add`,
+      // fetch("http://192.168.1.156:3000/user/signin",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bodyObj),
+      }
+    ).then((response) => response.json());
+  };
+
   return (
     // <View style={styles.modalOverlay}>
     <ScrollView>
@@ -103,7 +122,7 @@ export default function VwAjouterDocument(props) {
         <View style={styles.modalBackground}>
           <View style={styles.vwHaut}>
             <TouchableOpacity
-              onPress={props.closeModal}
+              onPress={props.fermerModal}
               style={styles.btnModalFermer}
               activeOpacity={0.8}
             >
@@ -303,6 +322,7 @@ const styles = StyleSheet.create({
   },
   txtInputNotes: {
     padding: 10,
+    fontSize: 16,
   },
   vwInputPhotos: {
     // backgroundColor: "gray",
@@ -312,8 +332,8 @@ const styles = StyleSheet.create({
   },
   imgElemStyle: {
     // margin: 10,
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100,
   },
   photoContainer: {
     alignItems: "flex-end",

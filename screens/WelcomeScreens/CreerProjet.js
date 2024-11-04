@@ -116,7 +116,8 @@ export default function CreerProjetScreen({ navigation }) {
         };
 
         // fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signupProject`,
-        fetch("http://192.168.100.47:3000/user/signupProject", {
+        // fetch("http://192.168.100.47:3000/user/signupProject", {
+        fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signupProject`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(bodyObj),

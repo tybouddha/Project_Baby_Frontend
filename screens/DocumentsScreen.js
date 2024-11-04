@@ -24,6 +24,7 @@ import {
 } from "../reducers/document";
 
 export default function DocumentsScreen({ navigation }) {
+  const userRedux = useSelector((state) => state.user.value);
   const documentRedux = useSelector((state) => state.document.value);
   const dispatch = useDispatch();
 
@@ -34,11 +35,16 @@ export default function DocumentsScreen({ navigation }) {
     setmodalAjouterDocumentVisible(true);
   };
 
-  const fermerModal = () => {
+  const fermerModalVwAjouterDoc = () => {
     // cette fonctionne ferme le VwAjouterDocument
+    console.log("🚨 DocumentScreen > fermerModalVwAjouterDoc ");
     setmodalAjouterDocumentVisible(false);
     dispatch(sauvgaurderDocumentInfos({ nom: "", practcien: "", notes: "" }));
     dispatch(supprimerTousLesPhotos());
+  };
+
+  const cameraScreenFermerModalSansEffacerRedux = () => {
+    setmodalAjouterDocumentVisible(false);
   };
 
   let ajourdhui = new Date();
@@ -71,15 +77,25 @@ export default function DocumentsScreen({ navigation }) {
   useFocusEffect(
     useCallback(() => {
       // Code to run every time the screen comes into focus
-      // console.log("DocumentScreen is now in focus");
       setmodalAjouterDocumentVisible(documentRedux.modalOuvert);
       // Fetch data, reset state, or perform any necessary actions here
-
-      // return () => {
-      //   // Optional cleanup when the screen loses focus
-      //   console.log("DocumentScreen is out of focus");
-      // };
     }, [])
+  );
+  useEffect(
+    () => {
+      console.log("- Mount DocumentScreen.js > useEffect ");
+      console.log(`userRedux.tokenProject: ${userRedux.tokenProject}`);
+      fetch(
+        `${process.env.EXPO_PUBLIC_API_URL}/document/${userRedux.tokenProject}`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Bien reçu reponse de backen");
+
+          console.log(data);
+        });
+    },
+    [] //<--- tableaux vide
   );
 
   const modalAjouterDocument = (
@@ -88,7 +104,11 @@ export default function DocumentsScreen({ navigation }) {
       animationType="fade"
       transparent={true}
     >
-      <VwAjouterDocument closeModal={fermerModal} navigation={navigation} />
+      <VwAjouterDocument
+        fermerModal={fermerModalVwAjouterDoc}
+        fermerModalSansEffacer={cameraScreenFermerModalSansEffacerRedux}
+        navigation={navigation}
+      />
     </Modal>
   );
 

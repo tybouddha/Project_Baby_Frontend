@@ -18,7 +18,7 @@ export default function CameraScreen({ navigation }) {
 
   useEffect(() => {
     (async () => {
-      console.log("CAmeraScreen useEffect");
+      console.log("CameraScreen useEffect");
       const result = await Camera.requestCameraPermissionsAsync();
       if (result) {
         setHasPermission(result.status === "granted");
@@ -42,6 +42,7 @@ export default function CameraScreen({ navigation }) {
 
     dispatch(ajouterPhoto(uri));
     console.log(`takePicture uri: ${uri}`);
+    navigation.navigate("Documents");
     // fetch(`${BACKEND_ADDRESS}/upload`, {
     // 	method: "POST",
     // 	body: formData,
