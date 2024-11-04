@@ -143,7 +143,7 @@ export default function CarnetBebeScreen({ navigation }) {
         <FontAwesome
           name="trash-o"
           onPress={() => handleDelete(data.name)}
-          size={10}
+          size={25}
           color="#ec6e5b"
         />
       </View>

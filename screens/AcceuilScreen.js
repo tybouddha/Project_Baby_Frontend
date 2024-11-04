@@ -20,14 +20,64 @@ import { useSelector } from "react-redux";
 export default function AcceuilScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
   const username = user.username;
+  const projectToken = user.tokenProject;
   //hook for update the modal and open the modal
   const [modalVisible, setModalVisible] = useState(false);
   const [role, setrole] = useState("lecteur");
   const [textrole, settextrole] = useState("attribuer accès");
+  const [markedDates, setMarkedDates] = useState({}); // Dates marquées sur le calendrier
+  const [idArray, setIdArray] = useState([]); // L'id du rendez-vous
+  const [rendezVous, setRendezVous] = useState({ rdv: [] }); // Liste des rendez-vous récupérés
   const handleSubmit = () => {
     setModalVisible(true);
     console.log("btn fonctionnel");
+    console.log(projectToken);
+    console.log(user);
   };
+  // useEffect to recover data at mount of component
+  useEffect(() => {
+    if (projectToken) {
+      fetch(
+        // Fait une requête pour récupérer les rendez-vous de l'utilisateur
+        `${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}`
+      )
+        // fetch(`http://192.168.1.156:3000/rdv/${projectToken}`)
+        .then((response) => response.json()) // Transforme la réponse en JSON
+        .then((data) => {
+          if (data.rdv) {
+            for (const elem of data.rdv) {
+              setIdArray([...idArray, elem._id]);
+            }
+            // Si des rendez-vous sont trouvés
+            setRendezVous({ rdv: data.rdv }); // Stocke les rendez-vous récupérés
+            initializeMarkedDates(data.rdv);
+
+            // Initialise les dates marquées avec les rendez-vous récupérés
+          } else {
+            setRendezVous({ rdv: [] }); // Sinon, définit les rendez-vous comme vide
+            setMarkedDates({}); // Réinitialise les dates marquées
+          }
+        })
+        .catch(
+          (
+            error // Gère les erreurs de requête
+          ) =>
+            console.error("Erreur lors de la récupération des données :", error)
+        );
+    }
+  }, [projectToken]);
+
+  const initializeMarkedDates = (appointments) => {
+    const newMarkedDates = {};
+    if (Array.isArray(appointments)) {
+      for (const appointment of appointments) {
+        const date = appointment.date.split("T")[0];
+        newMarkedDates[date] = { marked: true, dotColor: "blue" };
+      }
+    }
+    setMarkedDates(newMarkedDates);
+  };
+
   //function for set and choose the acces for invite
   const toggleSwitch = () => {
     setrole(role === "lecteur" ? "editeur" : "lecteur");
@@ -39,16 +89,30 @@ export default function AcceuilScreen({ navigation }) {
     console.log(role);
   };
 
-  const handleClose = () => {
-    setModalVisible(false);
-  };
-  const generateCode = () => {
-    //  fetch la route http://localhost/user/invite
-    console.log("123456");
-  };
+  // const generateCode = () => {
+  //   const bodyObj = {
+  //     token: projectToken,
+  //     role: role,
+  //   };
+  //   if (bodyObj)
+  //     fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/invite`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(bodyObj),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((inviteLink) => {
+  //         console.log("test1", inviteLink);
+  //       });
+
+  //   console.log("123456");
+  // };
   //function to get the page for guide
   const directionalimentation = () => {
     console.log("switch vers la page guide alimentation");
+  };
+  const handleClose = () => {
+    setModalVisible(false);
   };
   return (
     <ImageBackground
@@ -62,6 +126,7 @@ export default function AcceuilScreen({ navigation }) {
         <View style={styles.header}>
           <HeaderView navigation={navigation} />
         </View>
+        <Text style={styles.title}>Bienvenue {username} sur BabyProject!</Text>
         <View style={styles.div_btn}>
           <TouchableOpacity style={styles.btn} onPress={() => handleSubmit()}>
             <Text>Inviter un proche</Text>
@@ -70,7 +135,11 @@ export default function AcceuilScreen({ navigation }) {
         <Modal visible={modalVisible} animationType="fade" transparent>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <TextInput placeholder="code d'invitation" style={styles.input} />
+              <TextInput
+                placeholder="code d'invitation"
+                // value={inviteLink}
+                style={styles.input}
+              />
               <Text style={styles.textrole}>{textrole}</Text>
               <Switch
                 style={styles.toggle}
@@ -99,14 +168,15 @@ export default function AcceuilScreen({ navigation }) {
         </Modal>
 
         <View>
-          <Text style={styles.title}>
-            Bienvenue {username} sur BabyProject!
-          </Text>
+          <Text style={styles.title}>Voici votre calendrier actualisé!</Text>
           <Calendar
             style={styles.calendar}
             onDayPress={(day) => {
               console.log("selected day", day);
             }}
+            minDate={"2024-10-31"}
+            maxDate={"2035-12-31"}
+            markedDates={markedDates}
           />
         </View>
         <TouchableOpacity

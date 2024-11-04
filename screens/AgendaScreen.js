@@ -77,6 +77,7 @@ export default function AgendaScreen({ navigation }) {
   // recover user data to reducer
   const user = useSelector((state) => state.user.value); // Données utilisateur dans le store
   const projectToken = user.tokenProject; // Récupère le token de projet de l'utilisateur
+  console.log("token :", projectToken);
 
   // function to open and close modals
   const openModal = () => setModalVisible(true); // Ouvre le modal d'ajout de rendez-vous
