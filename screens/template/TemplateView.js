@@ -3,8 +3,6 @@ import { StyleSheet, View, Dimensions, ImageBackground } from "react-native";
 import HeaderView from "../NavComposants/Header";
 
 export default function TemplateView(props) {
-  console.log("-- TemplateView 👀");
-
   return (
     <ImageBackground
       source={require("../../assets/images/projectbaby-background.jpg")}
