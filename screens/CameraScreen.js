@@ -18,7 +18,7 @@ export default function CameraScreen({ navigation }) {
 
   useEffect(() => {
     (async () => {
-      console.log("CAmeraScreen useEffect");
+      console.log("CameraScreen useEffect");
       const result = await Camera.requestCameraPermissionsAsync();
       if (result) {
         setHasPermission(result.status === "granted");

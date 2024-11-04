@@ -18,7 +18,7 @@ export default function VwFicherType(props) {
   const appuyerCamera = () => {
     // console.log("appuyerCamera");
     dispatch(documentModalRestOuvert());
-    props.closeModal();
+    props.fermerModal();
     props.navigation.navigate("Camera");
   };
 
@@ -27,7 +27,7 @@ export default function VwFicherType(props) {
       <View style={styles.modalBackground}>
         <View style={styles.vwHaut}>
           <TouchableOpacity
-            onPress={props.closeModal}
+            onPress={props.fermerModal}
             style={styles.btnModalFermer}
             activeOpacity={0.8}
           >

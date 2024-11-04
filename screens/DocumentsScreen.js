@@ -34,11 +34,16 @@ export default function DocumentsScreen({ navigation }) {
     setmodalAjouterDocumentVisible(true);
   };
 
-  const fermerModal = () => {
+  const fermerModalVwAjouterDoc = () => {
     // cette fonctionne ferme le VwAjouterDocument
+    console.log("🚨 DocumentScreen > fermerModalVwAjouterDoc ");
     setmodalAjouterDocumentVisible(false);
     dispatch(sauvgaurderDocumentInfos({ nom: "", practcien: "", notes: "" }));
     dispatch(supprimerTousLesPhotos());
+  };
+
+  const cameraScreenFermerModalSansEffacerRedux = () => {
+    setmodalAjouterDocumentVisible(false);
   };
 
   let ajourdhui = new Date();
@@ -88,7 +93,11 @@ export default function DocumentsScreen({ navigation }) {
       animationType="fade"
       transparent={true}
     >
-      <VwAjouterDocument closeModal={fermerModal} navigation={navigation} />
+      <VwAjouterDocument
+        fermerModal={fermerModalVwAjouterDoc}
+        fermerModalSansEffacer={cameraScreenFermerModalSansEffacerRedux}
+        navigation={navigation}
+      />
     </Modal>
   );
 

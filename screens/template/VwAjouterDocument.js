@@ -65,10 +65,15 @@ export default function VwAjouterDocument(props) {
     imagesArr.push(imgElem);
   });
 
-  const fermerModal = () => {
+  const fermerModalFicherType = () => {
     // cette fonctionnne fermer le modal VwFicherType
     setModalFicherTypeVisible(false);
     props.closeModal();
+  };
+
+  const cameraScreenFermerModalsSansEffacerRedux = () => {
+    setModalFicherTypeVisible(false);
+    props.fermerModalSansEffacer();
   };
 
   const modalFicher = (
@@ -77,7 +82,10 @@ export default function VwAjouterDocument(props) {
       animationType="fade"
       transparent={true}
     >
-      <VwFicherType closeModal={fermerModal} navigation={props.navigation} />
+      <VwFicherType
+        fermerModal={cameraScreenFermerModalsSansEffacerRedux}
+        navigation={props.navigation}
+      />
     </Modal>
   );
 
@@ -103,7 +111,7 @@ export default function VwAjouterDocument(props) {
         <View style={styles.modalBackground}>
           <View style={styles.vwHaut}>
             <TouchableOpacity
-              onPress={props.closeModal}
+              onPress={props.fermerModal}
               style={styles.btnModalFermer}
               activeOpacity={0.8}
             >
@@ -303,6 +311,7 @@ const styles = StyleSheet.create({
   },
   txtInputNotes: {
     padding: 10,
+    fontSize: 16,
   },
   vwInputPhotos: {
     // backgroundColor: "gray",
