@@ -16,20 +16,22 @@ import { useEffect, useState } from "react";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import VwAjouterDocument from "./template/VwAjouterDocument";
 import { useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
+import React, { useCallback } from "react";
 
 export default function DocumentsScreen({ navigation }) {
   const documentRedux = useSelector((state) => state.document.value);
-  console.log("documentsRedux show modal: ", documentRedux.modalOuvert);
+  // console.log("documentsRedux show modal: ", documentRedux.modalOuvert);
 
   const [modalAjouterDocumentVisible, setmodalAjouterDocumentVisible] =
     useState(documentRedux);
   const appuyerAjouterDocument = () => {
-    console.log(`appuyerAjouterDocument`);
+    // console.log(`appuyerAjouterDocument`);
     setmodalAjouterDocumentVisible(true);
   };
 
   const fermerModal = () => {
-    console.log("DocumentsScreen fermerModal");
+    // console.log("DocumentsScreen fermerModal");
     setmodalAjouterDocumentVisible(false);
   };
 
@@ -56,16 +58,22 @@ export default function DocumentsScreen({ navigation }) {
   ];
 
   const poubelleAppuyee = (elem) => {
-    console.log("Appuyer poubelle");
+    // console.log("Appuyer poubelle");
     console.log(elem);
   };
 
-  useEffect(
-    () => {
-      // <-- que une seul fois, quand le composant arriver
-      console.log("Mount");
-    },
-    [] //<--- tableaux vide
+  useFocusEffect(
+    useCallback(() => {
+      // Code to run every time the screen comes into focus
+      // console.log("DocumentScreen is now in focus");
+      setmodalAjouterDocumentVisible(documentRedux.modalOuvert);
+      // Fetch data, reset state, or perform any necessary actions here
+
+      // return () => {
+      //   // Optional cleanup when the screen loses focus
+      //   console.log("DocumentScreen is out of focus");
+      // };
+    }, [])
   );
 
   const modalAjouterDocument = (
@@ -80,7 +88,6 @@ export default function DocumentsScreen({ navigation }) {
 
   let cardArr = [];
   fauxDonnes.map((elem, index) => {
-    console.log(`elem: ${elem.nom}`);
     const card = (
       <View key={elem._id} style={styles.card}>
         <View style={styles.cardRayon1}>

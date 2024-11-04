@@ -66,6 +66,7 @@ export default function CameraScreen({ navigation }) {
         >
           <FontAwesome name="arrow-left" size={25} color="#ffffff" />
         </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() =>
             setType(

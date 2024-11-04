@@ -79,8 +79,14 @@ Tab navigation:
       - ce template n'ai pas de profil icon et peux avoir une flesh pour aller au dernieres écran.
       - exemple: CreerProjet.js, WelcomScreen.js
 
-5. Ficher Chercher
+5. Ficher Chercher (est-il utiliser???)
+
    1. ajouter `yarn add react-native-fs`
+
+6. DocumentScreen.js: useFocusEffect & useCallback()
+   - le modal besoin de est overt et rempli avec les infos que le utilisteur a mis avant d'aller a le Camera. donc avec le document redux on sauvagard touts les donnes. Puis avec le useFocusEffect & useCallback() on re-afficher le modal et rempli avec les infos stocker dans le redux.
+   - expliquir comment le useCallback() fonctionne
+   - expliquir comment le useFocusEffect fonctionne
 
 ## Recherche infos bebé
 

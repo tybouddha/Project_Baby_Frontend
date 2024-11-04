@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -9,16 +9,35 @@ import {
   Modal,
 } from "react-native";
 import VwFicherType from "./VwFicherType";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { sauvgaurderDocumentInfos } from "../../reducers/document";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function VwAjouterDocument(props) {
-  //   console.log("- dans vwAjouterTypeDocument ");
+  const documentRedux = useSelector((state) => state.document.value);
   const [nom, setNom] = useState("");
-  const [praticien, setPraticien] = useState("");
+  const [practicien, setPracticien] = useState("");
   const [notes, setNotes] = useState("");
   const [modalFicherTypeVisible, setModalFicherTypeVisible] = useState(false);
+  const dispatch = useDispatch();
+
+  useFocusEffect(
+    useCallback(() => {
+      // console.log("VwAjouterDocument is IN focus");
+      setNom(documentRedux.nom);
+      setPracticien(documentRedux.practicien);
+      setNotes(documentRedux.notes);
+
+      // return () => {
+      //   // Optional cleanup when the screen loses focus
+      //   console.log("VwAjouterDocument is out of focus");
+      // };
+    }, [])
+  );
 
   const fermerModal = () => {
-    console.log("VwAjouterDocument fermerModal");
+    // console.log("VwAjouterDocument fermerModal");
     setModalFicherTypeVisible(false);
     props.closeModal();
   };
@@ -34,12 +53,21 @@ export default function VwAjouterDocument(props) {
   );
 
   const appuyerFicherType = () => {
-    console.log("appuyerFicherType");
     setModalFicherTypeVisible(true);
   };
 
-  const appuyerSoumettre = () => {
-    console.log("appuyerSoumettre");
+  // const appuyerSoumettre = () => {
+  //   console.log("appuyerSoumettre");
+  // };
+
+  const sauvgaurderInfos = () => {
+    // console.log("VwAjouterDocument > sauvgaurderInfos > nom: ", nom);
+    payloadObj = {
+      nom: nom,
+      practicien: practicien,
+      notes: notes,
+    };
+    dispatch(sauvgaurderDocumentInfos(payloadObj));
   };
 
   return (
@@ -62,7 +90,10 @@ export default function VwAjouterDocument(props) {
             <View style={styles.vwInput}>
               <TextInput
                 style={styles.txtInput}
-                onChangeText={(value) => setNom(value)}
+                onChangeText={(value) => {
+                  setNom(value);
+                  sauvgaurderInfos();
+                }}
                 placeholder="Nom"
                 placeholderTextColor="#555555" // Dark gray color for the placeholder
                 value={nom}
@@ -74,10 +105,13 @@ export default function VwAjouterDocument(props) {
             <View style={styles.vwInput}>
               <TextInput
                 style={styles.txtInput}
-                onChangeText={(value) => setPraticien(value)}
-                placeholder="Praticien"
+                onChangeText={(value) => {
+                  setPracticien(value);
+                  sauvgaurderInfos();
+                }}
+                placeholder="Practicien"
                 placeholderTextColor="#555555" // Dark gray color for the placeholder
-                value={praticien}
+                value={practicien}
               />
             </View>
           </View>
@@ -85,7 +119,10 @@ export default function VwAjouterDocument(props) {
             <View style={styles.vwInputNotes}>
               <TextInput
                 style={styles.txtInputNotes}
-                onChangeText={(value) => setNotes(value)}
+                onChangeText={(value) => {
+                  setNotes(value);
+                  sauvgaurderInfos();
+                }}
                 placeholder="Notes"
                 placeholderTextColor="#555555" // Dark gray color for the placeholder
                 value={notes}

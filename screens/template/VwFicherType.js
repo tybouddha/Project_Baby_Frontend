@@ -7,15 +7,17 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import { changeDocumentModalStatus } from "../../reducers/document";
+import { documentModalRestOuvert } from "../../reducers/document";
+import { useSelector } from "react-redux";
 
 export default function VwFicherType(props) {
-  console.log("- dans VwFicherType ");
+  // console.log("- dans VwFicherType ");
   const dispatch = useDispatch();
+  const documentRedux = useSelector((state) => state.document.value);
 
   const appuyerCamera = () => {
-    console.log("appuyerCamera");
-    dispatch(changeDocumentModalStatus());
+    // console.log("appuyerCamera");
+    dispatch(documentModalRestOuvert());
     props.closeModal();
     props.navigation.navigate("Camera");
   };
