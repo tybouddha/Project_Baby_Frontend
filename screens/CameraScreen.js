@@ -42,6 +42,7 @@ export default function CameraScreen({ navigation }) {
 
     dispatch(ajouterPhoto(uri));
     console.log(`takePicture uri: ${uri}`);
+    navigation.navigate("Documents");
     // fetch(`${BACKEND_ADDRESS}/upload`, {
     // 	method: "POST",
     // 	body: formData,
