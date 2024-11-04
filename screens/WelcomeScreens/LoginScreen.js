@@ -42,11 +42,6 @@ export default function LoginScreen({ navigation }) {
   useEffect(
     () => {
       // <-- que une seul fois, quand le composant arriver
-      console.log("- Mount 📌");
-      console.log(
-        `process.env.EXPO_PUBLIC_API_URL: ${process.env.EXPO_PUBLIC_API_URL}`
-        // `process.env.EXPO_PUBLIC_API_URL: http://192.168.1.156:3000`
-      );
       if (envoyerData) {
         console.log("- envoyerData 🚀");
         const bodyObj = {
@@ -74,9 +69,10 @@ export default function LoginScreen({ navigation }) {
                 loginUser({
                   username: username,
                   token: data.token,
-                  tokenProject: data.project.token, // tokenProject: data.token2,
+                  tokenProject: data.project.token,
                 })
               );
+              console.log("tokenproject", data.project.token);
             } else {
               console.log(`data.project?.token2 est falsey 😱`);
               messageErrorSetter(data?.error);

@@ -12,7 +12,6 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 export default function Profil({ navigation }) {
-  // const backend = "http://192.168.1.28;
   const user = useSelector((state) => state.user.value);
   const token = user.token;
 
@@ -29,7 +28,7 @@ export default function Profil({ navigation }) {
     fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/${token}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log("coucou");
+        console.log(data);
         if (data) {
           setusername(data.user.username);
           setemail(data.user.email);
