@@ -7,9 +7,10 @@ import {
   Dimensions,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function HeaderView(props) {
-  // const { width: screenWidth } = Dimensions.get("window");
+  const userRedux = useSelector((state) => state.user.value);
 
   const pressedProfil = () => {
     console.log("btn profil 🙍‍♂️");
