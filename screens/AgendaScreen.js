@@ -72,7 +72,7 @@ export default function AgendaScreen({ navigation }) {
   const [rendezVousDuJour, setRendezVousDuJour] = useState([]); // Rendez-vous pour la date sélectionnée
   const [markedDates, setMarkedDates] = useState({}); // Dates marquées sur le calendrier
   const [filteredRendezVous, setFilteredRendezVous] = useState({}); // Rendez-vous filtrés en fonction de la recherche
-  const [prevRendezVous, setPrevRendezVous] = useState([]);
+  // const [prevRendezVous, setPrevRendezVous] = useState([]);
 
   // recover user data to reducer
   const user = useSelector((state) => state.user.value); // Données utilisateur dans le store
@@ -97,9 +97,13 @@ export default function AgendaScreen({ navigation }) {
     setSearchInput(""); // Efface le champ de recherche
     console.log(user); // Affiche les informations utilisateur pour le débogage
   };
-
   // useEffect to recover data at mount of component
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  //function to fetch data
+  const fetchData = () => {
     fetch(
       // Fait une requête pour récupérer les rendez-vous de l'utilisateur
       `${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}`
@@ -127,7 +131,8 @@ export default function AgendaScreen({ navigation }) {
         ) =>
           console.error("Erreur lors de la récupération des données :", error)
       );
-  }, []);
+  };
+
   // function to init marker's date with recover appointment
   const initializeMarkedDates = (appointments) => {
     const newMarkedDates = {};
@@ -188,13 +193,10 @@ export default function AgendaScreen({ navigation }) {
       .then((data) => {
         if (data.result === true) {
           // Vérifie que la création est réussie
-          setRendezVous([...data.result, newRdv]); //=> ({
-          // Met à jour les rendez-vous
-          // ...rendezVous,
-          // rdv: [...(rendezVous.rdv || []), newRdv], // Ajoute le nouveau rendez-vous
-          //});
+          setRendezVous([...data.result, newRdv]);
           initializeMarkedDates([...data.result, newRdv]); // Met à jour les dates marquées
         }
+        fetchData();
       })
       .catch((error) => console.error("Erreur lors de la requête :", error)); // Gère les erreurs
 
@@ -253,14 +255,9 @@ export default function AgendaScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.result === true) {
-          setRendezVous((prevRendezVous) => ({
-            ...prevRendezVous,
-            rdv: (prevRendezVous.rdv || []).filter((rdv) => rdv._id !== rdvId),
-          }));
-          initializeMarkedDates(
-            (prevRendezVous.rdv || []).filter((rdv) => rdv._id !== rdvId)
-          );
+        console.log(data);
+        if (data.result) {
+          fetchData();
         }
       })
       .catch((error) =>
@@ -296,19 +293,7 @@ export default function AgendaScreen({ navigation }) {
         // Vérifie si la mise à jour a été réussie
         if (data.result === true) {
           // Met à jour l'état des rendez-vous en remplaçant l'ancien par le nouveau rendez-vous mis à jour
-          setRendezVous((prevRendezVous) => ({
-            ...prevRendezVous,
-            rdv: prevRendezVous.rdv.map((rdv) =>
-              rdv.id === rdvId ? { ...rdv, ...updatedRdv } : rdv
-            ),
-          }));
-
-          // Met à jour les dates marquées en incluant les changements du rendez-vous mis à jour
-          initializeMarkedDates(
-            prevRendezVous.rdv.map((rdv) =>
-              rdv.id === rdvId ? { ...rdv, ...updatedRdv } : rdv
-            )
-          );
+          fetchData();
         }
       })
       .catch((error) =>
@@ -316,13 +301,7 @@ export default function AgendaScreen({ navigation }) {
         console.error("Erreur lors de la mise à jour :", error)
       );
   };
-  // if (rendezVousDuJour.length > 0) {
-  //   for (const elem of rendezVousDuJour) {
-  //     console.log("rdv data", elem);
-  //   }
-  // } else {
-  //   console.log("rdvduJour is empty");
-  // }
+
   return (
     <TemplateView navigation={navigation}>
       <KeyboardAvoidingView
@@ -336,11 +315,11 @@ export default function AgendaScreen({ navigation }) {
           <TouchableOpacity style={styles.btn} onPress={openAgendaModal}>
             <Text>Voir agenda</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.btn} onPress={openBabyModal}>
-            <Text>Voir les baby rendez-vous</Text>
-          </TouchableOpacity>
           <TouchableOpacity style={styles.btn} onPress={openMamanModal}>
-            <Text>Voir les maman rendez-vous</Text>
+            <Text>Guide maman rendez-vous</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btn} onPress={openBabyModal}>
+            <Text>Guide baby rendez-vous</Text>
           </TouchableOpacity>
         </View>
         <Modal visible={searchModalVisible} animationType="fade" transparent>
