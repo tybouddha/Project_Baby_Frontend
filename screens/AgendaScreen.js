@@ -58,6 +58,7 @@ export default function AgendaScreen({ navigation }) {
   const [babyModalVisible, setBabyModalVisible] = useState(false);
   const [agendaModalVisible, setAgendaModalVisible] = useState(false);
   const [searchModalVisible, setSearchModalVisible] = useState(false);
+  const [modifierModalVisible, setModifierModalVisible] = useState(false);
 
   // state to stock appointments's data
   const [selectedDate, setSelectedDate] = useState(""); // Date sélectionnée sur le calendrier
@@ -97,6 +98,10 @@ export default function AgendaScreen({ navigation }) {
     setSearchInput(""); // Efface le champ de recherche
     console.log(user); // Affiche les informations utilisateur pour le débogage
   };
+  const openModifierModal = () => setModifierModalVisible(true); // Ouvre la modal modifier
+  const closeModifierModal = () => setModifierModalVisible(false); // Ferme la modal modifier
+  // Update appointment
+
   // useEffect to recover data at mount of component
   useEffect(() => {
     fetchData();
@@ -294,6 +299,7 @@ export default function AgendaScreen({ navigation }) {
         if (data.result === true) {
           // Met à jour l'état des rendez-vous en remplaçant l'ancien par le nouveau rendez-vous mis à jour
           fetchData();
+          closeModifierModal();
         }
       })
       .catch((error) =>
@@ -346,9 +352,58 @@ export default function AgendaScreen({ navigation }) {
                         <TouchableOpacity
                           style={styles.btnModal}
                           title="Modifier"
-                          onPress={() => handleUpdate(rdv.id)}
+                          onPress={openModifierModal}
                         >
                           <Text>Modifier</Text>
+                          <Modal
+                            visible={modifierModalVisible}
+                            animationType="fade"
+                            transparent
+                          >
+                            <View style={styles.centeredView}>
+                              <View style={styles.modalListView}>
+                                <Text style={styles.modalTitle}>Modifier</Text>
+                                <TextInput
+                                  style={styles.listItem}
+                                  placeholder={`${rdv.pourQui}`}
+                                  value={pourQui}
+                                  onChangeText={(text) => setPourQui(text)}
+                                />
+                                <TextInput
+                                  style={styles.listItem}
+                                  placeholder={`${rdv.practicien}`}
+                                  value={practicien}
+                                  onChangeText={(text) => setPracticien(text)}
+                                />
+                                <TextInput
+                                  style={styles.listItem}
+                                  placeholder={`${rdv.lieu}`}
+                                  value={lieu}
+                                  onChangeText={(text) => setLieu(text)}
+                                />
+                                <TextInput
+                                  style={styles.listItem}
+                                  placeholder={`${rdv.heure}`}
+                                  value={heure}
+                                  onChangeText={(text) => setHeure(text)}
+                                />
+                                <TextInput
+                                  style={styles.listItem}
+                                  placeholder={`${rdv.notes}`}
+                                  value={notes}
+                                  onChangeText={(text) => setNotes(text)}
+                                />
+                                <TouchableOpacity
+                                  style={styles.btnModal}
+                                  title="Modifier"
+                                  // onPress={() => handleUpdate(rdv._id)}
+                                  onPress={() => handleUpdate(rdv._id)}
+                                >
+                                  <Text>Modifier</Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          </Modal>
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={styles.btnModal}
@@ -518,9 +573,58 @@ export default function AgendaScreen({ navigation }) {
                       <TouchableOpacity
                         style={styles.btnModal}
                         title="Modifier"
-                        onPress={() => handleUpdate(rdv._id)}
+                        onPress={openModifierModal}
                       >
                         <Text>Modifier</Text>
+                        <Modal
+                          visible={modifierModalVisible}
+                          animationType="fade"
+                          transparent
+                        >
+                          <View style={styles.centeredView}>
+                            <View style={styles.modalListView}>
+                              <Text style={styles.modalTitle}>Modifier</Text>
+                              <TextInput
+                                style={styles.listItem}
+                                placeholder={`${rdv.pourQui}`}
+                                value={pourQui}
+                                onChangeText={(text) => setPourQui(text)}
+                              />
+                              <TextInput
+                                style={styles.listItem}
+                                placeholder={`${rdv.practicien}`}
+                                value={practicien}
+                                onChangeText={(text) => setPracticien(text)}
+                              />
+                              <TextInput
+                                style={styles.listItem}
+                                placeholder={`${rdv.lieu}`}
+                                value={lieu}
+                                onChangeText={(text) => setLieu(text)}
+                              />
+                              <TextInput
+                                style={styles.listItem}
+                                placeholder={`${rdv.heure}`}
+                                value={heure}
+                                onChangeText={(text) => setHeure(text)}
+                              />
+                              <TextInput
+                                style={styles.listItem}
+                                placeholder={`${rdv.notes}`}
+                                value={notes}
+                                onChangeText={(text) => setNotes(text)}
+                              />
+                              <TouchableOpacity
+                                style={styles.btnModal}
+                                title="Modifier"
+                                // onPress={() => handleUpdate(rdv._id)}
+                                onPress={() => handleUpdate(rdv._id)}
+                              >
+                                <Text>Modifier</Text>
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </Modal>
                       </TouchableOpacity>
                       <TouchableOpacity
                         style={styles.btnModal}
