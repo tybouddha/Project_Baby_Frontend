@@ -32,7 +32,8 @@ export default function AgendaScreen({ navigation }) {
   const [rendezVous, setRendezVous] = useState({});
   const [markedDates, setMarkedDates] = useState({});
   const [filteredRendezVous, setFilteredRendezVous] = useState({});
-  const projectToken = useSelector((state) => state.user.value.projectId);
+  const user = useSelector((state) => state.user.value);
+  const projectToken = user.tokenProject;
 
   const mamanRendezVousList = [
     "1er trimestre : Prendre rendez-vous avec un médecin généraliste, gynécologue ou sage-femme pour confirmer la grossesse.",
@@ -81,12 +82,14 @@ export default function AgendaScreen({ navigation }) {
   const closeAgendaModal = () => setAgendaModalVisible(false);
   const openSearchModal = () => setSearchModalVisible(true);
   const closeSearchModal = () => setSearchModalVisible(false);
+  console.log(user);
 
   useEffect(() => {
-    fetch(`http://192.168.100.149:3000/rdv/${projectToken}`)
+    fetch(`${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}`)
       .then((response) => response.json())
       .then((data) => {
-        if (data) {
+        if (data.rdv) {
+          console.log(data.rdv);
           setRendezVous(data);
         } else {
           res.json({ result: false, error: "no data" });
@@ -106,19 +109,32 @@ export default function AgendaScreen({ navigation }) {
       practicien,
       lieu,
       notes,
+      date: selectedDate,
       heure,
     };
 
-    // add rdv to date
-    setRendezVous((prevRendezVous) => ({
-      ...prevRendezVous,
-      [selectedDate]: [...(prevRendezVous[selectedDate] || []), newRdv],
-    }));
-    //add marker to date
-    setMarkedDates((prevMarkedDates) => ({
-      ...prevMarkedDates,
-      [selectedDate]: { marked: true, dotColor: "blue" },
-    }));
+    fetch(`${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newRdv),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result === true) {
+          console.log("Youpi !");
+          setRendezVous((prevRendezVous) => ({
+            ...prevRendezVous,
+            [selectedDate]: [...(prevRendezVous[selectedDate] || []), newRdv],
+          }));
+          setMarkedDates((prevMarkedDates) => ({
+            ...prevMarkedDates,
+            [selectedDate]: { marked: true, dotColor: "blue" },
+          }));
+        } else {
+          console.log("Moins youpi...");
+        }
+      })
+      .catch((error) => console.error("Erreur lors de la requête :", error));
 
     closeModal();
     setPourQui("");

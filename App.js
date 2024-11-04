@@ -15,6 +15,7 @@ import WelcomeScreen from "./screens/WelcomeScreens/WelcomeScreen";
 import CreerProjetScreen from "./screens/WelcomeScreens/CreerProjet";
 import ProfilScreen from "./screens/ProfilScreen";
 import LoginScreen from "./screens/WelcomeScreens/LoginScreen";
+import CameraScreen from "./screens/CameraScreen";
 
 import IconView from "./screens/NavComposants/IconView";
 
@@ -24,9 +25,10 @@ import * as Font from "expo-font";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/user";
+import document from "./reducers/document";
 
 const store = configureStore({
-  reducer: { user },
+  reducer: { user, document },
 });
 
 const Stack = createNativeStackNavigator();
@@ -91,8 +93,6 @@ export default function App() {
   useEffect(() => {
     async function loadFonts() {
       await Font.loadAsync({
-        // 'Mont-Heavy': require('./assets/fonts/mont-heavy.ttf'),
-        // 'Mark-My-Words': require('./assets/fonts/mark_my_words.ttf'),
         Caveat: require("./assets/fonts/Caveat-VariableFont_wght.ttf"),
       });
       setFontsLoaded(true);
@@ -102,6 +102,11 @@ export default function App() {
 
   if (!fontsLoaded) {
     console.log("--- font NOT loaded");
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading...</Text>
+      </View>
+    );
   } else {
     console.log("--- font loaded");
   }
@@ -116,6 +121,7 @@ export default function App() {
           <Stack.Screen name="Profil" component={ProfilScreen} />
           <Stack.Screen name="Documents" component={DocumentsScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Camera" component={CameraScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

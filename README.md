@@ -66,6 +66,7 @@ Tab navigation:
 3. [AutresDetails](./docs/AutresDetails.md)
 
 4. Les templates
+
    1. TemplateView
       - children est le nom (syntax) de propertié pour touts les trucs entre le balise `<TemplateView>{children}<TemplateView/>`
       - exemple: DocumentsScreen.js, CarenetBebeScreen.js
@@ -78,4 +79,47 @@ Tab navigation:
       - ce template n'ai pas de profil icon et peux avoir une flesh pour aller au dernieres écran.
       - exemple: CreerProjet.js, WelcomScreen.js
 
+5. Ficher Chercher (est-il utiliser???)
+
+   1. ajouter `yarn add react-native-fs`
+
+6. DocumentScreen.js: useFocusEffect & useCallback()
+   - le modal besoin de est overt et rempli avec les infos que le utilisteur a mis avant d'aller a le Camera. donc avec le document redux on sauvagard touts les donnes. Puis avec le useFocusEffect & useCallback() on re-afficher le modal et rempli avec les infos stocker dans le redux.
+   - expliquir comment le useCallback() fonctionne
+   - expliquir comment le useFocusEffect fonctionne
+
 ## Recherche infos bebé
+
+## Installation de Android Emulator dans MacOS
+
+1. install watchman `brew install watchman`
+2. install JDK `brew install --cask zulu@17`
+3. telecharger Android Studio [https://developer.android.com/studio](https://developer.android.com/studio)
+4. créer env variables:
+
+```bash
+export ANDROID_HOME=/Users/your-username/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+```
+
+5. `yarn start`
+
+### nettoyer le android dossier
+
+1. dans le racine de le project il y a un android/. Dans ça fait `./gradlew clean`
+
+```bash
+cd android
+./gradlew clean
+```
+
+2. re-install yarn env
+
+```bash
+rm -rf node_modules
+rm -rf .expo
+yarn install   # or `npm install` if you use npm
+```
