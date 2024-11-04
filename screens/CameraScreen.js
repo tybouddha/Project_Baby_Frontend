@@ -2,11 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera/legacy";
 import { useDispatch } from "react-redux";
-import { addPhoto } from "../reducers/user";
+import { ajouterPhoto } from "../reducers/document";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useIsFocused } from "@react-navigation/native";
-
-const BACKEND_ADDRESS = "http://BACKEND_IP:3000";
 
 export default function CameraScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -20,9 +18,13 @@ export default function CameraScreen({ navigation }) {
 
   useEffect(() => {
     (async () => {
+      console.log("CAmeraScreen useEffect");
       const result = await Camera.requestCameraPermissionsAsync();
       if (result) {
         setHasPermission(result.status === "granted");
+        console.log("reussite");
+      } else {
+        console.log("echeur");
       }
     })();
   }, []);
@@ -38,6 +40,8 @@ export default function CameraScreen({ navigation }) {
       type: "image/jpeg",
     });
 
+    dispatch(ajouterPhoto(uri));
+    console.log(`takePicture uri: ${uri}`);
     // fetch(`${BACKEND_ADDRESS}/upload`, {
     // 	method: "POST",
     // 	body: formData,

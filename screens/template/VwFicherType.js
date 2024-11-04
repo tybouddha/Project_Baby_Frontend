@@ -25,7 +25,17 @@ export default function VwFicherType(props) {
   return (
     <View style={styles.modalOverlay}>
       <View style={styles.modalBackground}>
-        <Text style={styles.textMessage}>Quelle Type</Text>
+        <View style={styles.vwHaut}>
+          <TouchableOpacity
+            onPress={props.closeModal}
+            style={styles.btnModalFermer}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.textButtonX}>x</Text>
+          </TouchableOpacity>
+          {/* <Text style={styles.txtTitre}>Ajouter Une Document</Text> */}
+          <Text style={styles.textMessage}>Quelle Type</Text>
+        </View>
         <View style={styles.vwButonsEnBas}>
           <TouchableOpacity
             onPress={props.closeModal}
@@ -87,6 +97,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent overlay
+  },
+  vwHaut: {
+    alignItems: "center",
+    width: Dimensions.get("screen").width * 0.8,
+    // height: Dimensions.get("screen").height * 0.6,
   },
   vwButonsEnBas: {
     flex: 1,
