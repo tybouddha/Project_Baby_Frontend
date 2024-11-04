@@ -54,7 +54,7 @@ export default function LoginScreen({ navigation }) {
           password: password,
         };
 
-        fetch("http://192.168.1.28:3000/user/signin", {
+        fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signin`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(bodyObj),

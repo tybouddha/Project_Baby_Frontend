@@ -12,6 +12,8 @@ import TemplateView from "./template/TemplateView";
 import { Agenda } from "react-native-calendars";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DateTimePicker from "react-native-modal-datetime-picker";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function CarnetBebeScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false); // action modal
@@ -24,21 +26,41 @@ export default function CarnetBebeScreen({ navigation }) {
   const [data, setdata] = useState(false);
   const [lastInfos, setlastInfos] = useState([]);
 
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+  const [currentField, setCurrentField] = useState(null);
+  // Affiche le sélecteur de date pour un champ donné
+  const showDatePicker = (field) => {
+    setCurrentField(field);
+    setDatePickerVisible(true);
+  };
+  // Cache le sélecteur de date
+  const hideDatePicker = () => setDatePickerVisible(false);
+  // Gère la sélection de date
+  const handleDatePicked = (pickedDate) => {
+    const formattedDate = `${pickedDate.getDate()}-${
+      pickedDate.getMonth() + 1
+    }-${pickedDate.getFullYear()}`;
+    if (currentField === "date") {
+      setdate(formattedDate);
+    }
+    hideDatePicker();
+  };
+
   // const enfant = useSelector((state) => state.enfant.value);
   const user = useSelector((state) => state.user.value);
   const tokenProject = user.tokenProject;
   const username = user.username;
 
   useEffect(() => {
-    // console.log("user:", user);
-    // console.log("tokenProject:", tokenProject);
+    console.log("user:", user);
+    console.log("tokenProject:", tokenProject);
     if (username && tokenProject) {
-      fetch(`http://192.168.1.28:3000/carnetbebe/${tokenProject}`)
+      fetch(`${process.env.EXPO_PUBLIC_API_URL}/carnetbebe/${tokenProject}`)
         .then((response) => response.json())
         .then((carnetBebe) => {
           // console.log("carnetBebe:", carnetBebe);
           if (carnetBebe && carnetBebe.infos.length) {
-            const lastCarnetBebe = carnetBebe.infos.slice(0, 3);
+            const lastCarnetBebe = carnetBebe.infos.reverse().slice(0, 3);
             setlastInfos(lastCarnetBebe);
           } else {
             res.json({ result: false, error: "no data" });
@@ -53,7 +75,15 @@ export default function CarnetBebeScreen({ navigation }) {
     setModalVisible(true);
   };
 
-  const closeModal = () => setModalVisible(false);
+  const closeModal = () => {
+    setModalVisible(false);
+    setdate("");
+    setcoucher("");
+    setcouleur("");
+    setselle("");
+    setrepas("");
+    setnote("");
+  };
   const saveInfos = () => setdata(true);
 
   useEffect(() => {
@@ -69,22 +99,36 @@ export default function CarnetBebeScreen({ navigation }) {
         notes: note,
       };
       // fetch pour sauvegarder en BDD nouveau document carnet bebe
-      fetch(`http://192.168.1.28:3000/carnetbebe/ajout/${tokenProject}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyObj),
-      })
+      fetch(
+        `${process.env.EXPO_PUBLIC_API_URL}/carnetbebe/ajout/${tokenProject}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(bodyObj),
+        }
+      )
         .then((response) => response.json())
         .then((newDocbebe) => {
-          console.log(newDocbebe);
-          // setlastInfos([...lastInfos, newDocbebe]);
+          console.log("teste1", newDocbebe);
+          setlastInfos([...lastInfos, newDocbebe.carnetBebe].reverse());
+          console.log("test2", lastInfos);
+        })
+        .catch((error) => {
+          console.error;
         });
+      lastInfos.slice(0, 3);
+      setdate("");
+      setcoucher("");
+      setcouleur("");
+      setselle("");
+      setrepas("");
+      setnote("");
       setdata(false);
     }
   }, [data]);
 
   const lastInfosCard = lastInfos?.map((item, data) => {
-    console.log(item);
+    // console.log(item);
 
     return (
       <View key={item._id} style={styles.card}>
@@ -96,6 +140,12 @@ export default function CarnetBebeScreen({ navigation }) {
           <Text>Couleur Selle: {item.couleurSelle}</Text>
           <Text>Notes: {item.notes}</Text>
         </View>
+        <FontAwesome
+          name="trash-o"
+          onPress={() => handleDelete(data.name)}
+          size={10}
+          color="#ec6e5b"
+        />
       </View>
     );
   });
@@ -119,7 +169,7 @@ export default function CarnetBebeScreen({ navigation }) {
                   placeholder="Date"
                   style={styles.input}
                   value={date}
-                  onChangeText={(value) => setdate(value)}
+                  onPress={() => showDatePicker("date")}
                 />
                 <TextInput
                   placeholder="coucher"
@@ -166,6 +216,12 @@ export default function CarnetBebeScreen({ navigation }) {
               >
                 <Text style={styles.textButton}>Close</Text>
               </TouchableOpacity>
+              <DateTimePicker
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={handleDatePicked}
+                onCancel={hideDatePicker}
+              />
             </View>
           </View>
         </Modal>

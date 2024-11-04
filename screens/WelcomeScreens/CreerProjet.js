@@ -39,7 +39,7 @@ export default function CreerProjetScreen({ navigation }) {
   const [modalEchecVisible, setModalEchecVisible] = useState(false);
   const [messageError, messageErrorSetter] = useState("");
   // const [date1, setDate1] = useState("");
-  const [date2, setDate2] = useState("");
+  // const [date2, setDate2] = useState("");
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const [currentField, setCurrentField] = useState(null);
 
@@ -60,8 +60,8 @@ export default function CreerProjetScreen({ navigation }) {
     }-${pickedDate.getFullYear()}`;
     if (currentField === "dateDerniereMenstruation") {
       dateDerniereMenstruationSetter(formattedDate);
-    } else if (currentField === "date2") {
-      setDate2(formattedDate);
+    } else if (currentField === "dateDebutGrossesse") {
+      dateDebutGrossesseSetter(formattedDate);
     }
     hideDatePicker();
   };
@@ -115,7 +115,7 @@ export default function CreerProjetScreen({ navigation }) {
           email: email,
         };
 
-        fetch(`http://192.168.1.28:3000/user/signupProject`, {
+        fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signupProject`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(bodyObj),
@@ -225,12 +225,12 @@ export default function CreerProjetScreen({ navigation }) {
             </View> */}
             <TouchableOpacity
               style={styles.vwInput}
-              onPress={() => showDatePicker("date2")}
+              onPress={() => showDatePicker("dateDebutGrossesse")}
             >
               <TextInput
                 style={styles.txtInput}
-                placeholder="Choisir la date"
-                value={date2}
+                placeholder="Date de début de grossesse"
+                value={dateDebutGrossesse}
                 editable={false}
               />
             </TouchableOpacity>
