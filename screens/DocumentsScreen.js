@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  Button,
+  ScrollView,
 } from "react-native";
 import TemplateView from "./template/TemplateView";
 // import RNFS from "react-native-fs";
@@ -30,6 +32,27 @@ export default function DocumentsScreen({ navigation }) {
 
   const [modalAjouterDocumentVisible, setmodalAjouterDocumentVisible] =
     useState(documentRedux);
+  const [documentsDonnes, setdocumentsDonnes] = useState([
+    // {
+    //   _id: "1",
+    //   url: "https://",
+    //   nom: "maman",
+    //   practcien: "gyno",
+    //   date: ajourdhui,
+    //   notes: "Un chasseur sachant chasser sans son chien est un bon chasseur.",
+    // },
+    // {
+    //   _id: "2",
+    //   url: "https://",
+    //   nom: "bébe",
+    //   practcien: "pediatrician",
+    //   // date: ajourdhui.setDate(ajourdhui - 1),
+    //   date: ajourdhui,
+    //   notes:
+    //     "Les chaussettes de l’archiduchesse sont-elles sèches ou archi-sèches?",
+    // },
+  ]);
+
   const appuyerAjouterDocument = () => {
     // console.log(`appuyerAjouterDocument`);
     setmodalAjouterDocumentVisible(true);
@@ -48,26 +71,6 @@ export default function DocumentsScreen({ navigation }) {
   };
 
   let ajourdhui = new Date();
-  const fauxDonnes = [
-    {
-      _id: "1",
-      url: "https://",
-      nom: "maman",
-      practcien: "gyno",
-      date: ajourdhui,
-      notes: "Un chasseur sachant chasser sans son chien est un bon chasseur.",
-    },
-    {
-      _id: "2",
-      url: "https://",
-      nom: "bébe",
-      practcien: "pediatrician",
-      // date: ajourdhui.setDate(ajourdhui - 1),
-      date: ajourdhui,
-      notes:
-        "Les chaussettes de l’archiduchesse sont-elles sèches ou archi-sèches?",
-    },
-  ];
 
   const poubelleAppuyee = (elem) => {
     // console.log("Appuyer poubelle");
@@ -93,6 +96,11 @@ export default function DocumentsScreen({ navigation }) {
           console.log("Bien reçu reponse de backen");
 
           console.log(data);
+          let array = [];
+          for (const elem of data.documentsData) {
+            array.push(elem);
+          }
+          setdocumentsDonnes([...documentsDonnes, ...array]);
         });
     },
     [] //<--- tableaux vide
@@ -113,11 +121,12 @@ export default function DocumentsScreen({ navigation }) {
   );
 
   let cardArr = [];
-  fauxDonnes.map((elem, index) => {
+  documentsDonnes.map((elem, index) => {
     const card = (
       <View key={elem._id} style={styles.card}>
         <View style={styles.cardRayon1}>
-          <Text style={styles.txtDate}>{elem.date.toLocaleDateString()}</Text>
+          <Text style={styles.txtDate}>{elem.dateAjoute.substring(0, 10)}</Text>
+          {/* <Text style={styles.txtDate}>Date</Text> */}
         </View>
         <View style={styles.cardRayon2}>
           <View style={styles.cardRayon2Sous}>
@@ -139,16 +148,34 @@ export default function DocumentsScreen({ navigation }) {
         </View>
 
         <Text style={styles.txtNotes}>{elem.notes}</Text>
+        <View style={styles.vwInputPhotos}>
+          <View key={index} style={styles.photoContainer}>
+            <Image source={{ uri: elem.url }} style={styles.imgElemStyle} />
+          </View>
+        </View>
       </View>
     );
     cardArr.push(card);
   });
 
+  const testDocs = () => {
+    console.log("---- testDocs ----");
+
+    documentsDonnes.map((elem, index) => {
+      console.log("elem.nom: ", elem.nom);
+      console.log("elem.url: ", elem.url);
+    });
+
+    console.log("---- testDocs END ----");
+  };
+
   return (
     <TemplateView navigation={navigation}>
       {modalAjouterDocumentVisible ? modalAjouterDocument : null}
+
       <View style={styles.container}>
         <View style={styles.vwHaut}>
+          {/* <Button title="Check Documents" onPress={() => testDocs()} /> */}
           <View style={styles.vwTitre}>
             <Text style={styles.txtTitre}>Documents </Text>
           </View>
@@ -163,8 +190,9 @@ export default function DocumentsScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.vwBas}>{cardArr}</View>
+        <ScrollView>
+          <View style={styles.vwBas}>{cardArr}</View>
+        </ScrollView>
       </View>
     </TemplateView>
   );
@@ -173,6 +201,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
+    // width: Dimensions.get("screen").width,
   },
   vwHaut: {
     display: "flex",
@@ -237,5 +266,20 @@ const styles = StyleSheet.create({
   },
   txtLabel: {
     fontWeight: "bold",
+  },
+  vwInputPhotos: {
+    // backgroundColor: "gray",
+    flexWrap: "wrap",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  imgElemStyle: {
+    // margin: 10,
+    width: 100,
+    height: 100,
+  },
+  photoContainer: {
+    alignItems: "flex-end",
+    margin: 5,
   },
 });
