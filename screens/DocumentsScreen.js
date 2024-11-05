@@ -9,6 +9,7 @@ import {
   Modal,
   Button,
   ScrollView,
+  TextInput,
 } from "react-native";
 import TemplateView from "./template/TemplateView";
 // import RNFS from "react-native-fs";
@@ -35,6 +36,8 @@ export default function DocumentsScreen({ navigation }) {
   const [modalAjouterDocumentVisible, setmodalAjouterDocumentVisible] =
     useState(false);
   const [documentsDonnes, setdocumentsDonnes] = useState([]);
+  const [documentsDonnesInitial, setdocumentsDonnesInitial] = useState([]);
+  const [searchInput, setSearchInput] = useState(""); // Champ de recherche
 
   const appuyerAjouterDocument = () => {
     // console.log(`appuyerAjouterDocument`);
@@ -54,7 +57,7 @@ export default function DocumentsScreen({ navigation }) {
     dispatch(doucumentModalResterFermer());
   };
 
-  let ajourdhui = new Date();
+  // let ajourdhui = new Date();
 
   const poubelleAppuyee = (elem) => {
     // console.log("Appuyer poubelle");
@@ -76,17 +79,17 @@ export default function DocumentsScreen({ navigation }) {
       );
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      console.log("useFocusEffect ----> useCallback");
-      console.log("documentRedux.modalOuvert: ", documentRedux.modalOuvert);
-      // Code to run every time the screen comes into focus
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     // console.log("useFocusEffect ----> useCallback");
+  //     // console.log("documentRedux.modalOuvert: ", documentRedux.modalOuvert);
+  //     // Code to run every time the screen comes into focus
 
-      // Fetch data, reset state, or perform any necessary actions here
-    }, [])
-  );
+  //     // Fetch data, reset state, or perform any necessary actions here
+  //   }, [])
+  // );
   useEffect(() => {
-    console.log("useEffect ----> NO callback");
+    // console.log("useEffect ----> NO callback");
     fetchData();
   }, []);
 
@@ -109,6 +112,7 @@ export default function DocumentsScreen({ navigation }) {
           array.push(elem);
         }
         setdocumentsDonnes(array);
+        setdocumentsDonnesInitial(array);
         // }
       });
   };
@@ -167,6 +171,22 @@ export default function DocumentsScreen({ navigation }) {
     cardArr.push(card);
   });
 
+  const searchDocuments = (text) => {
+    setSearchInput(text);
+    const newDocumentsDonnes = [];
+    const normalizedSearch = text.trim().toLowerCase(); // Normalise l'entrée de recherche
+    documentsDonnesInitial.forEach((doc) => {
+      const matchesSearch =
+        doc.nom.toLowerCase().includes(normalizedSearch) ||
+        doc.practicien?.toLowerCase().includes(normalizedSearch);
+
+      if (matchesSearch) {
+        newDocumentsDonnes.push(doc);
+      }
+    });
+    setdocumentsDonnes(newDocumentsDonnes);
+  };
+
   return (
     <TemplateView navigation={navigation}>
       {/* {modalAjouterDocumentVisible ? modalAjouterDocument : null} */}
@@ -176,6 +196,17 @@ export default function DocumentsScreen({ navigation }) {
         <View style={styles.vwHaut}>
           <View style={styles.vwTitre}>
             <Text style={styles.txtTitre}>Documents </Text>
+            <View style={styles.vwSearch}>
+              <TouchableOpacity onPress={() => console.log("vwSearch")}>
+                <Text>vwSearch</Text>
+              </TouchableOpacity>
+              <TextInput
+                style={styles.txtInputSearchDocs}
+                placeholder="Rechercher vos documents"
+                value={searchInput}
+                onChangeText={(text) => searchDocuments(text)}
+              ></TextInput>
+            </View>
           </View>
 
           <View style={styles.vwPlusButton}>
@@ -228,7 +259,16 @@ const styles = StyleSheet.create({
     height: 50,
     aspectRatio: 1,
   },
-
+  txtInputSearchDocs: {
+    padding: 10,
+    // backgroundColor: "gray",
+    width: Dimensions.get("screen").width * 0.6,
+    //paddingHorizontal: "10%", // Align content centrally
+    height: 40,
+    borderWidth: 1,
+    borderRadius: 12,
+    borderColor: "#007ACC", // Blue outline
+  },
   vwBas: {
     flex: 1,
     justifyContent: "flex-start",
