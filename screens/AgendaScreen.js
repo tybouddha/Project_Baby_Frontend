@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import TemplateView from "./template/TemplateView";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function AgendaScreen({ navigation }) {
   const mamanRendezVousList = [
@@ -59,6 +60,7 @@ export default function AgendaScreen({ navigation }) {
   const [agendaModalVisible, setAgendaModalVisible] = useState(false);
   const [searchModalVisible, setSearchModalVisible] = useState(false);
   const [modifierModalVisible, setModifierModalVisible] = useState(false);
+  const [svModalVisible, setSvModalVisible] = useState(false);
 
   // state to stock appointments's data
   const [selectedDate, setSelectedDate] = useState(""); // Date sélectionnée sur le calendrier
@@ -67,13 +69,17 @@ export default function AgendaScreen({ navigation }) {
   const [lieu, setLieu] = useState(""); // Lieu du rendez-vous
   const [heure, setHeure] = useState(""); // Heure du rendez-vous
   const [notes, setNotes] = useState(""); // Notes du rendez-vous
+  const [pourQuiModif, setPourQuiModif] = useState(""); // Nom modif de la personne pour qui le rendez-vous est
+  const [practicienModif, setPracticienModif] = useState(""); // Nom  du practicien modif
+  const [lieuModif, setLieuModif] = useState(""); // Lieu modif du rendez-vous
+  const [heureModif, setHeureModif] = useState(""); // Heure modif du rendez-vous
+  const [notesModif, setNotesModif] = useState(""); // Notes modif du rendez-vous
   const [searchInput, setSearchInput] = useState(""); // Champ de recherche
   const [idArray, setIdArray] = useState([]); // L'id du rendez-vous
   const [rendezVous, setRendezVous] = useState({ rdv: [] }); // Liste des rendez-vous récupérés
   const [rendezVousDuJour, setRendezVousDuJour] = useState([]); // Rendez-vous pour la date sélectionnée
   const [markedDates, setMarkedDates] = useState({}); // Dates marquées sur le calendrier
   const [filteredRendezVous, setFilteredRendezVous] = useState({}); // Rendez-vous filtrés en fonction de la recherche
-  // const [prevRendezVous, setPrevRendezVous] = useState([]);
 
   // recover user data to reducer
   const user = useSelector((state) => state.user.value); // Données utilisateur dans le store
@@ -92,6 +98,8 @@ export default function AgendaScreen({ navigation }) {
     setAgendaModalVisible(false); // Ferme le modal de l'agenda
     setRendezVousDuJour([]); // Réinitialise les rendez-vous quotidiens
   };
+  const openSvModalVisible = () => setSvModalVisible(true); // Ouvre la ScrollView modal
+  const closeSvModalVisible = () => setSvModalVisible(false); // Ferme la ScrollView modal
   const openSearchModal = () => setSearchModalVisible(true); // Ouvre le modal de recherche
   const closeSearchModal = () => {
     setSearchModalVisible(false); // Ferme le modal de recherche
@@ -99,9 +107,24 @@ export default function AgendaScreen({ navigation }) {
     setSearchInput(""); // Efface le champ de recherche
     console.log(user); // Affiche les informations utilisateur pour le débogage
   };
-  const openModifierModal = () => setModifierModalVisible(true); // Ouvre la modal modifier
-  const closeModifierModal = () => setModifierModalVisible(false); // Ferme la modal modifier
-  // Update appointment
+  const openModifierModal = (rdvData) => {
+    // Ouvre la modal modifier
+    setPourQuiModif(rdvData.pourQui);
+    setPracticienModif(rdvData.practicien);
+    setLieuModif(rdvData.lieu);
+    setHeureModif(rdvData.heure);
+    setNotesModif(rdvData.notes);
+    setModifierModalVisible(true);
+  };
+  const closeModifierModal = () => {
+    // Ferme la modal modifier
+    setModifierModalVisible(false);
+    setPourQuiModif("");
+    setPracticienModif("");
+    setLieuModif("");
+    setNotesModif("");
+    setHeureModif("");
+  };
 
   // useEffect to recover data at mount of component
   useEffect(() => {
@@ -124,7 +147,6 @@ export default function AgendaScreen({ navigation }) {
           // Si des rendez-vous sont trouvés
           setRendezVous({ rdv: data.rdv }); // Stocke les rendez-vous récupérés
           initializeMarkedDates(data.rdv);
-
           // Initialise les dates marquées avec les rendez-vous récupérés
         } else {
           setRendezVous({ rdv: [] }); // Sinon, définit les rendez-vous comme vide
@@ -165,7 +187,7 @@ export default function AgendaScreen({ navigation }) {
       if (rendezVousDuJour.length > 0) {
         // Si des rendez-vous sont trouvés
         setRendezVousDuJour(rendezVousDuJour); // Met à jour les rendez-vous du jour
-        setAgendaModalVisible(true); // Ouvre le modal de l'agenda
+        setSvModalVisible(true); // Ouvre le modal de l'agenda
       } else {
         openModal(); // Ouvre le modal d'ajout de rendez-vous
       }
@@ -275,14 +297,16 @@ export default function AgendaScreen({ navigation }) {
   const handleUpdate = (rdvId) => {
     console.log("ID du rendez-vous à mettre à jour :", rdvId);
     // Création d'un objet représentant le rendez-vous mis à jour avec les nouvelles informations
+
     const updatedRdv = {
-      pourQui, // Nom de la personne pour qui le rendez-vous est
-      practicien, // Praticien
-      lieu, // Lieu du rendez-vous
-      notes, // Notes supplémentaires
-      date: selectedDate, // Nouvelle date du rendez-vous
-      heure, // Nouvelle heure du rendez-vous
+      pourQui: pourQuiModif, // Nom de la personne pour qui le rendez-vous est
+      practicien: practicienModif, // Praticien
+      lieu: lieuModif, // Lieu du rendez-vous
+      notes: notesModif, // Notes supplémentaires
+      heure: heureModif, // Nouvelle heure du rendez-vous
     };
+
+    console.log(updatedRdv);
 
     // Fait une requête PUT pour mettre à jour le rendez-vous avec les nouvelles informations
     fetch(
@@ -290,7 +314,7 @@ export default function AgendaScreen({ navigation }) {
       // fetch(`http://192.168.1.156:3000/rdv/${projectToken}/${rdvId}`,
       {
         method: "PUT", // Spécifie la méthode PUT pour la mise à jour
-        headers: { "Content-Type": "application/json" }, // Indique que les données sont en JSON
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updatedRdv), // Convertit l'objet updatedRdv en JSON pour l'envoyer
       }
     )
@@ -298,10 +322,10 @@ export default function AgendaScreen({ navigation }) {
       .then((data) => {
         // Vérifie si la mise à jour a été réussie
         if (data.result === true) {
-          // Met à jour l'état des rendez-vous en remplaçant l'ancien par le nouveau rendez-vous mis à jour
-          fetchData();
-          closeModifierModal();
         }
+        // Met à jour l'état des rendez-vous en remplaçant l'ancien par le nouveau rendez-vous mis à jour
+        fetchData();
+        closeModifierModal();
       })
       .catch((error) =>
         // Affiche un message d'erreur en cas de problème lors de la mise à jour
@@ -313,7 +337,7 @@ export default function AgendaScreen({ navigation }) {
     <TemplateView navigation={navigation}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.container}
+        style={styles.background}
       >
         <View style={styles.div_btn}>
           <TouchableOpacity style={styles.btn} onPress={openSearchModal}>
@@ -353,7 +377,7 @@ export default function AgendaScreen({ navigation }) {
                         <TouchableOpacity
                           style={styles.btnModal}
                           title="Modifier"
-                          onPress={openModifierModal}
+                          onPress={() => openModifierModal(rdv)}
                         >
                           <Text>Modifier</Text>
                           <Modal
@@ -366,41 +390,44 @@ export default function AgendaScreen({ navigation }) {
                                 <Text style={styles.modalTitle}>Modifier</Text>
                                 <TextInput
                                   style={styles.listItem}
-                                  placeholder={`${rdv.pourQui}`}
-                                  value={pourQui}
-                                  onChangeText={(text) => setPourQui(text)}
+                                  value={pourQuiModif}
+                                  onChangeText={(text) => setPourQuiModif(text)}
                                 />
                                 <TextInput
                                   style={styles.listItem}
-                                  placeholder={`${rdv.practicien}`}
-                                  value={practicien}
-                                  onChangeText={(text) => setPracticien(text)}
+                                  value={practicienModif}
+                                  onChangeText={(text) =>
+                                    setPracticienModif(text)
+                                  }
                                 />
                                 <TextInput
                                   style={styles.listItem}
-                                  placeholder={`${rdv.lieu}`}
-                                  value={lieu}
-                                  onChangeText={(text) => setLieu(text)}
+                                  value={lieuModif}
+                                  onChangeText={(text) => setLieuModif(text)}
                                 />
                                 <TextInput
                                   style={styles.listItem}
-                                  placeholder={`${rdv.heure}`}
-                                  value={heure}
-                                  onChangeText={(text) => setHeure(text)}
+                                  value={heureModif}
+                                  onChangeText={(text) => setHeureModif(text)}
                                 />
                                 <TextInput
                                   style={styles.listItem}
-                                  placeholder={`${rdv.notes}`}
-                                  value={notes}
-                                  onChangeText={(text) => setNotes(text)}
+                                  value={notesModif}
+                                  onChangeText={(text) => setNotesModif(text)}
                                 />
                                 <TouchableOpacity
                                   style={styles.btnModal}
                                   title="Modifier"
-                                  // onPress={() => handleUpdate(rdv._id)}
                                   onPress={() => handleUpdate(rdv._id)}
                                 >
                                   <Text>Modifier</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                  style={styles.btnModal}
+                                  title="Fermer"
+                                  onPress={closeModifierModal}
+                                >
+                                  <Text>Fermer</Text>
                                 </TouchableOpacity>
                               </View>
                             </View>
@@ -559,87 +586,6 @@ export default function AgendaScreen({ navigation }) {
           <View style={styles.centeredView}>
             <View style={styles.modalListView}>
               <Text style={styles.modalTitle}>Agenda</Text>
-              <ScrollView style={styles.scrollView}>
-                <Text style={styles.modalTitle}>
-                  Rendez-vous pour le {selectedDate}
-                </Text>
-                {rendezVousDuJour.length > 0 ? (
-                  rendezVousDuJour.map((rdv, index) => (
-                    <View key={index} style={styles.listItem}>
-                      <Text>Pour : {rdv.pourQui}</Text>
-                      <Text>Praticien : {rdv.practicien}</Text>
-                      <Text>Lieu : {rdv.lieu}</Text>
-                      <Text>Heure : {rdv.heure}</Text>
-                      <Text>Notes : {rdv.notes}</Text>
-                      <TouchableOpacity
-                        style={styles.btnModal}
-                        title="Modifier"
-                        onPress={openModifierModal}
-                      >
-                        <Text>Modifier</Text>
-                        <Modal
-                          visible={modifierModalVisible}
-                          animationType="fade"
-                          transparent
-                        >
-                          <View style={styles.centeredView}>
-                            <View style={styles.modalListView}>
-                              <Text style={styles.modalTitle}>Modifier</Text>
-                              <TextInput
-                                style={styles.listItem}
-                                placeholder={`${rdv.pourQui}`}
-                                value={pourQui}
-                                onChangeText={(text) => setPourQui(text)}
-                              />
-                              <TextInput
-                                style={styles.listItem}
-                                placeholder={`${rdv.practicien}`}
-                                value={practicien}
-                                onChangeText={(text) => setPracticien(text)}
-                              />
-                              <TextInput
-                                style={styles.listItem}
-                                placeholder={`${rdv.lieu}`}
-                                value={lieu}
-                                onChangeText={(text) => setLieu(text)}
-                              />
-                              <TextInput
-                                style={styles.listItem}
-                                placeholder={`${rdv.heure}`}
-                                value={heure}
-                                onChangeText={(text) => setHeure(text)}
-                              />
-                              <TextInput
-                                style={styles.listItem}
-                                placeholder={`${rdv.notes}`}
-                                value={notes}
-                                onChangeText={(text) => setNotes(text)}
-                              />
-                              <TouchableOpacity
-                                style={styles.btnModal}
-                                title="Modifier"
-                                // onPress={() => handleUpdate(rdv._id)}
-                                onPress={() => handleUpdate(rdv._id)}
-                              >
-                                <Text>Modifier</Text>
-                              </TouchableOpacity>
-                            </View>
-                          </View>
-                        </Modal>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.btnModal}
-                        title="Supprimer"
-                        onPress={() => handleDelete(rdv._id)}
-                      >
-                        <Text>Supprimer</Text>
-                      </TouchableOpacity>
-                    </View>
-                  ))
-                ) : (
-                  <Text>Aucun rendez-vous trouvé pour cette date.</Text>
-                )}
-              </ScrollView>
               <Calendar
                 onDayPress={handleDayPress}
                 style={{ borderRadius: 10, elevation: 4, margin: 40 }}
@@ -654,6 +600,125 @@ export default function AgendaScreen({ navigation }) {
               >
                 <Text style={styles.textButton}>Fermer</Text>
               </TouchableOpacity>
+              <Modal
+                visible={svModalVisible}
+                animationType="slides"
+                transparent
+              >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalListView}>
+                    <ScrollView style={styles.scrollView}>
+                      <Text style={styles.modalTitle}>
+                        Rendez-vous pour le {selectedDate}
+                      </Text>
+                      {rendezVousDuJour.length > 0 ? (
+                        rendezVousDuJour.map((rdv, index) => (
+                          <View key={index} style={styles.listItem}>
+                            <Text>Pour : {rdv.pourQui}</Text>
+                            <Text>Praticien : {rdv.practicien}</Text>
+                            <Text>Lieu : {rdv.lieu}</Text>
+                            <Text>Heure : {rdv.heure}</Text>
+                            <Text>Notes : {rdv.notes}</Text>
+                            <TouchableOpacity
+                              style={styles.btnModal}
+                              title="Modifier"
+                              onPress={() => openModifierModal(rdv)}
+                            >
+                              <Text>Modifier</Text>
+                              <Modal
+                                visible={modifierModalVisible}
+                                animationType="fade"
+                                transparent
+                              >
+                                <View style={styles.centeredView}>
+                                  <View style={styles.modalListView}>
+                                    <Text style={styles.modalTitle}>
+                                      Modifier
+                                    </Text>
+                                    <TextInput
+                                      style={styles.listItem}
+                                      value={pourQuiModif}
+                                      onChangeText={(text) =>
+                                        setPourQuiModif(text)
+                                      }
+                                    />
+                                    <TextInput
+                                      style={styles.listItem}
+                                      value={practicienModif}
+                                      onChangeText={(text) =>
+                                        setPracticienModif(text)
+                                      }
+                                    />
+                                    <TextInput
+                                      style={styles.listItem}
+                                      value={lieuModif}
+                                      onChangeText={(text) =>
+                                        setLieuModif(text)
+                                      }
+                                    />
+                                    <TextInput
+                                      style={styles.listItem}
+                                      value={heureModif}
+                                      onChangeText={(text) =>
+                                        setHeureModif(text)
+                                      }
+                                    />
+                                    <TextInput
+                                      style={styles.listItem}
+                                      value={notesModif}
+                                      onChangeText={(text) =>
+                                        setNotesModif(text)
+                                      }
+                                    />
+                                    <TouchableOpacity
+                                      style={styles.btnModal}
+                                      title="Modifier"
+                                      onPress={() => handleUpdate(rdv._id)}
+                                    >
+                                      <Text>Modifier</Text>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity
+                                      style={styles.btnModal}
+                                      title="Fermer"
+                                      onPress={closeModifierModal}
+                                    >
+                                      <Text>Fermer</Text>
+                                    </TouchableOpacity>
+                                  </View>
+                                </View>
+                              </Modal>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={styles.btnModal}
+                              title="Ajouter"
+                              onPress={openModal}
+                            >
+                              <Text>Ajouter un nouveau rendez-vous</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={styles.btnModal}
+                              title="Supprimer"
+                              onPress={() => handleDelete(rdv._id)}
+                            >
+                              <Text>Supprimer</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              style={styles.btnModal}
+                              title="Fermer"
+                              onPress={closeSvModalVisible}
+                            >
+                              <Text>Fermer</Text>
+                            </TouchableOpacity>
+                          </View>
+                        ))
+                      ) : (
+                        <Text>Aucun rendez-vous trouvé pour cette date.</Text>
+                      )}
+                    </ScrollView>
+                  </View>
+                </View>
+              </Modal>
             </View>
           </View>
         </Modal>
@@ -752,6 +817,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
+    alignItems: "center",
   },
   btnModal: {
     backgroundColor: "pink",
@@ -762,6 +828,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
     paddingVertical: 5,
+    flexWrap: "nowrap",
   },
   input: {
     width: 150,
