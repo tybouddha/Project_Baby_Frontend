@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  Button,
+  ScrollView,
 } from "react-native";
 import TemplateView from "./template/TemplateView";
 // import RNFS from "react-native-fs";
@@ -19,6 +21,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  documentModalRestOuvert,
+  doucumentModalResterFermer,
   sauvgaurderDocumentInfos,
   supprimerTousLesPhotos,
 } from "../reducers/document";
@@ -29,78 +33,90 @@ export default function DocumentsScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const [modalAjouterDocumentVisible, setmodalAjouterDocumentVisible] =
-    useState(documentRedux);
+    useState(false);
+  const [documentsDonnes, setdocumentsDonnes] = useState([]);
+
   const appuyerAjouterDocument = () => {
     // console.log(`appuyerAjouterDocument`);
-    setmodalAjouterDocumentVisible(true);
+    // setmodalAjouterDocumentVisible(true);
+    dispatch(documentModalRestOuvert());
   };
 
   const fermerModalVwAjouterDoc = () => {
     // cette fonctionne ferme le VwAjouterDocument
-    console.log("🚨 DocumentScreen > fermerModalVwAjouterDoc ");
-    setmodalAjouterDocumentVisible(false);
+    // console.log("🚨 DocumentScreen > fermerModalVwAjouterDoc ");
     dispatch(sauvgaurderDocumentInfos({ nom: "", practcien: "", notes: "" }));
     dispatch(supprimerTousLesPhotos());
+    dispatch(doucumentModalResterFermer());
   };
 
   const cameraScreenFermerModalSansEffacerRedux = () => {
-    setmodalAjouterDocumentVisible(false);
+    dispatch(doucumentModalResterFermer());
   };
 
   let ajourdhui = new Date();
-  const fauxDonnes = [
-    {
-      _id: "1",
-      url: "https://",
-      nom: "maman",
-      practcien: "gyno",
-      date: ajourdhui,
-      notes: "Un chasseur sachant chasser sans son chien est un bon chasseur.",
-    },
-    {
-      _id: "2",
-      url: "https://",
-      nom: "bébe",
-      practcien: "pediatrician",
-      // date: ajourdhui.setDate(ajourdhui - 1),
-      date: ajourdhui,
-      notes:
-        "Les chaussettes de l’archiduchesse sont-elles sèches ou archi-sèches?",
-    },
-  ];
 
   const poubelleAppuyee = (elem) => {
     // console.log("Appuyer poubelle");
+    console.log(`a le poubelle avec: `);
     console.log(elem);
+
+    fetch(`${process.env.EXPO_PUBLIC_API_URL}/document/${elem._id}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.result) {
+          fetchData();
+        }
+      })
+      .catch((error) =>
+        console.error("Erreur lors de la suppression :", error)
+      );
   };
 
   useFocusEffect(
     useCallback(() => {
+      console.log("useFocusEffect ----> useCallback");
+      console.log("documentRedux.modalOuvert: ", documentRedux.modalOuvert);
       // Code to run every time the screen comes into focus
-      setmodalAjouterDocumentVisible(documentRedux.modalOuvert);
+
       // Fetch data, reset state, or perform any necessary actions here
     }, [])
   );
-  useEffect(
-    () => {
-      console.log("- Mount DocumentScreen.js > useEffect ");
-      console.log(`userRedux.tokenProject: ${userRedux.tokenProject}`);
-      fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}/document/${userRedux.tokenProject}`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Bien reçu reponse de backen");
+  useEffect(() => {
+    console.log("useEffect ----> NO callback");
+    fetchData();
+  }, []);
 
-          console.log(data);
-        });
-    },
-    [] //<--- tableaux vide
-  );
+  const fetchData = () => {
+    // console.log("- Mount DocumentScreen.js > useEffect ");
+    // console.log(`userRedux.tokenProject: ${userRedux.tokenProject}`);
+    fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/document/${userRedux.tokenProject}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // console.log("Bien reçu reponse de backen");
+
+        // console.log(data);
+        let array = [];
+        // console.log(`array.length: ${array.length}`);
+        // if (array.length > 0) {
+        // console.log(`---> if (array.length >0){`);
+        for (const elem of data.documentsData) {
+          array.push(elem);
+        }
+        setdocumentsDonnes(array);
+        // }
+      });
+  };
 
   const modalAjouterDocument = (
     <Modal
-      visible={modalAjouterDocumentVisible}
+      // visible={modalAjouterDocumentVisible}
+      visible={documentRedux.modalOuvert}
       animationType="fade"
       transparent={true}
     >
@@ -108,22 +124,24 @@ export default function DocumentsScreen({ navigation }) {
         fermerModal={fermerModalVwAjouterDoc}
         fermerModalSansEffacer={cameraScreenFermerModalSansEffacerRedux}
         navigation={navigation}
+        fetchDocumentsData={fetchData}
       />
     </Modal>
   );
 
   let cardArr = [];
-  fauxDonnes.map((elem, index) => {
+  documentsDonnes.map((elem, index) => {
     const card = (
       <View key={elem._id} style={styles.card}>
         <View style={styles.cardRayon1}>
-          <Text style={styles.txtDate}>{elem.date.toLocaleDateString()}</Text>
+          <Text style={styles.txtDate}>{elem.dateAjoute.substring(0, 10)}</Text>
+          {/* <Text style={styles.txtDate}>Date</Text> */}
         </View>
         <View style={styles.cardRayon2}>
           <View style={styles.cardRayon2Sous}>
             <View style={styles.cardRayon2SousPracticien}>
               <Text style={styles.txtLabel}>Practicien: </Text>
-              <Text style={styles.txtPracticien}>{elem.practcien}</Text>
+              <Text style={styles.txtPracticien}>{elem.practicien}</Text>
             </View>
             <View style={styles.cardRayon2SousPracticien}>
               <Text style={styles.txtLabel}>Pour qui: </Text>
@@ -139,6 +157,11 @@ export default function DocumentsScreen({ navigation }) {
         </View>
 
         <Text style={styles.txtNotes}>{elem.notes}</Text>
+        <View style={styles.vwInputPhotos}>
+          <View key={index} style={styles.photoContainer}>
+            <Image source={{ uri: elem.url[0] }} style={styles.imgElemStyle} />
+          </View>
+        </View>
       </View>
     );
     cardArr.push(card);
@@ -146,7 +169,9 @@ export default function DocumentsScreen({ navigation }) {
 
   return (
     <TemplateView navigation={navigation}>
-      {modalAjouterDocumentVisible ? modalAjouterDocument : null}
+      {/* {modalAjouterDocumentVisible ? modalAjouterDocument : null} */}
+      {documentRedux.modalOuvert ? modalAjouterDocument : null}
+
       <View style={styles.container}>
         <View style={styles.vwHaut}>
           <View style={styles.vwTitre}>
@@ -163,8 +188,9 @@ export default function DocumentsScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
-
-        <View style={styles.vwBas}>{cardArr}</View>
+        <ScrollView>
+          <View style={styles.vwBas}>{cardArr}</View>
+        </ScrollView>
       </View>
     </TemplateView>
   );
@@ -173,6 +199,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     flex: 1,
+    // width: Dimensions.get("screen").width,
   },
   vwHaut: {
     display: "flex",
@@ -237,5 +264,20 @@ const styles = StyleSheet.create({
   },
   txtLabel: {
     fontWeight: "bold",
+  },
+  vwInputPhotos: {
+    // backgroundColor: "gray",
+    flexWrap: "wrap",
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  imgElemStyle: {
+    // margin: 10,
+    width: 100,
+    height: 100,
+  },
+  photoContainer: {
+    alignItems: "flex-end",
+    margin: 5,
   },
 });

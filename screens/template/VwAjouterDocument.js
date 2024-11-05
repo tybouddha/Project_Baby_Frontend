@@ -10,9 +10,12 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import VwFicherType from "./VwFicherType";
+// import VwFicherType from "./VwFicherType";
 import { useSelector, useDispatch } from "react-redux";
-import { sauvgaurderDocumentInfos } from "../../reducers/document";
+import {
+  sauvgaurderDocumentInfos,
+  documentModalRestOuvert,
+} from "../../reducers/document";
 import { useFocusEffect } from "@react-navigation/native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
@@ -22,20 +25,23 @@ export default function VwAjouterDocument(props) {
   const [nom, setNom] = useState("");
   const [practicien, setPracticien] = useState("");
   const [notes, setNotes] = useState("");
-  const [modalFicherTypeVisible, setModalFicherTypeVisible] = useState(false);
+  // const [modalFicherTypeVisible, setModalFicherTypeVisible] = useState(false);
   const dispatch = useDispatch();
-  const [photosArr, setPhotosArr] = useState([]);
+  // const [photosArr, setPhotosArr] = useState([]);
 
   let imagesArr = [];
 
   useFocusEffect(
     useCallback(() => {
-      // console.log("VwAjouterDocument is IN focus");
+      console.log("- VwAjouterDocument > useFocusEffect > useCallback");
       setNom(documentRedux.nom);
       setPracticien(documentRedux.practicien);
       setNotes(documentRedux.notes);
-      setPhotosArr(documentRedux.photos);
-
+      // setPhotosArr(documentRedux.photos);
+      // console.log(
+      //   "- VwAjouterDocument > useFocusEffect > useCallback > photosArr",
+      //   photosArr
+      // );
       // return () => {
       //   // Optional cleanup when the screen loses focus
       //   console.log("VwAjouterDocument is out of focus");
@@ -43,7 +49,11 @@ export default function VwAjouterDocument(props) {
     }, [])
   );
 
-  photosArr.map((elem, index) => {
+  // photosArr.map((elem, index) => {
+  documentRedux.photos.map((elem, index) => {
+    console.log("documentRedux.photos elem: ", index);
+    console.log(elem);
+
     const imgElem = (
       <View key={index} style={styles.photoContainer}>
         <TouchableOpacity onPress={() => dispatch(removePhoto(data))}>
@@ -63,36 +73,39 @@ export default function VwAjouterDocument(props) {
   // };
 
   const cameraScreenFermerModalsSansEffacerRedux = () => {
-    setModalFicherTypeVisible(false);
+    console.log(
+      "*** >> fremer le modal cameraScreenFermerModalsSansEffacerRedux"
+    );
+    // setModalFicherTypeVisible(false);
     props.fermerModalSansEffacer();
   };
 
-  const modalFicher = (
-    <Modal
-      visible={modalFicherTypeVisible}
-      animationType="fade"
-      transparent={true}
-    >
-      <VwFicherType
-        fermerModal={cameraScreenFermerModalsSansEffacerRedux}
-        navigation={props.navigation}
-      />
-    </Modal>
-  );
+  const appuyerCamera = () => {
+    console.log("appuyerCamera");
+    // console.log("docs images (documentRedux.photos): ", documentRedux.photos);
+    dispatch(documentModalRestOuvert());
+    console.log("docRexux: ", documentRedux.nom);
+    console.log("docRexux: ", documentRedux.practicien);
 
-  const appuyerFicherType = () => {
-    setModalFicherTypeVisible(true);
-  };
-
-  const sauvgaurderInfos = () => {
-    // console.log("VwAjouterDocument > sauvgaurderInfos > nom: ", nom);
     payloadObj = {
       nom: nom,
       practicien: practicien,
       notes: notes,
     };
     dispatch(sauvgaurderDocumentInfos(payloadObj));
+
+    props.fermerModalSansEffacer();
+    props.navigation.navigate("Camera");
   };
+
+  // const sauvgaurderInfos = () => {
+  //   payloadObj = {
+  //     nom: nom,
+  //     practicien: practicien,
+  //     notes: notes,
+  //   };
+  //   dispatch(sauvgaurderDocumentInfos(payloadObj));
+  // };
 
   const appuyerSoumettre = () => {
     const bodyObj = {
@@ -101,7 +114,7 @@ export default function VwAjouterDocument(props) {
       nom: nom,
       practicien: practicien,
       notes: notes,
-      url: photosArr[0],
+      url: documentRedux.photos,
     };
     fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/document/add`,
@@ -111,13 +124,20 @@ export default function VwAjouterDocument(props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bodyObj),
       }
-    ).then((response) => response.json());
+    )
+      .then((response) => response.json())
+      .then((resJson) => {
+        if (resJson.result) {
+          props.fetchDocumentsData();
+          props.fermerModal();
+        }
+      });
   };
 
   return (
     // <View style={styles.modalOverlay}>
     <ScrollView>
-      {modalFicherTypeVisible ? modalFicher : null}
+      {/* {modalFicherTypeVisible ? modalFicher : null} */}
       <View style={styles.modalOverlayScroll}>
         <View style={styles.modalBackground}>
           <View style={styles.vwHaut}>
@@ -138,7 +158,7 @@ export default function VwAjouterDocument(props) {
                   style={styles.txtInput}
                   onChangeText={(value) => {
                     setNom(value);
-                    sauvgaurderInfos();
+                    // sauvgaurderInfos();
                   }}
                   placeholder="Nom"
                   placeholderTextColor="#555555" // Dark gray color for the placeholder
@@ -153,7 +173,7 @@ export default function VwAjouterDocument(props) {
                   style={styles.txtInput}
                   onChangeText={(value) => {
                     setPracticien(value);
-                    sauvgaurderInfos();
+                    // sauvgaurderInfos();
                   }}
                   placeholder="Practicien"
                   placeholderTextColor="#555555" // Dark gray color for the placeholder
@@ -167,7 +187,7 @@ export default function VwAjouterDocument(props) {
                   style={styles.txtInputNotes}
                   onChangeText={(value) => {
                     setNotes(value);
-                    sauvgaurderInfos();
+                    // sauvgaurderInfos();
                   }}
                   placeholder="Notes"
                   placeholderTextColor="#555555" // Dark gray color for the placeholder
@@ -184,11 +204,11 @@ export default function VwAjouterDocument(props) {
           )}
           <View style={styles.vwButonsEnBas}>
             <TouchableOpacity
-              onPress={() => appuyerFicherType()}
+              onPress={() => appuyerCamera()}
               style={styles.btnAjouter}
               activeOpacity={0.8}
             >
-              <Text style={styles.btnAjouterText}>Image / Ficher</Text>
+              <Text style={styles.btnAjouterText}>Camera</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => appuyerSoumettre()}

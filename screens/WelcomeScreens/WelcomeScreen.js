@@ -12,12 +12,12 @@ import TemplateViewNoNav from "../template/TemplateViewNoNav";
 
 export default function WelcomeScreen({ navigation }) {
   const pressedLogin = () => {
-    console.log("- aller à LoginScreen 📢");
+    // console.log("- aller à LoginScreen 📢");
     navigation.navigate("Login");
   };
 
   const pressedCreerProjet = () => {
-    console.log("- aller à pressedCreerProjet 📢");
+    // console.log("- aller à pressedCreerProjet 📢");
     navigation.navigate("CreerProjet");
   };
 

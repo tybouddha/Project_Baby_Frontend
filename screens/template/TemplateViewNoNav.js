@@ -3,7 +3,7 @@ import { StyleSheet, View, Dimensions, ImageBackground } from "react-native";
 import HeaderView from "../NavComposants/Header";
 
 export default function TemplateViewNoNav(props) {
-  console.log("-- TemplateViewNoNav 👀");
+  // console.log("-- TemplateViewNoNav 👀");
 
   return (
     <ImageBackground

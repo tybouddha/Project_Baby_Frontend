@@ -17,7 +17,7 @@ import { loginUser } from "../../reducers/user";
 import { useSelector } from "react-redux";
 
 export default function LoginScreen({ navigation }) {
-  console.log("- dans LoginScreen");
+  // console.log("- dans LoginScreen");
   const dispatch = useDispatch();
   const userReducer = useSelector((state) => state.user.value);
   const [username, usernameSetter] = useState("");
@@ -28,7 +28,7 @@ export default function LoginScreen({ navigation }) {
   const [messageError, messageErrorSetter] = useState("");
 
   const pressedLogin = () => {
-    console.log("- aller à LoginScreen 📢");
+    // console.log("- aller à LoginScreen 📢");
     envoyerDataSetter(true);
   };
 
@@ -60,10 +60,10 @@ export default function LoginScreen({ navigation }) {
         )
           .then((response) => response.json())
           .then((data) => {
-            console.log(`--- bien reçu le reponse ✅ `);
-            console.log(data);
+            // console.log(`--- bien reçu le reponse ✅ `);
+            // console.log(data);
             if (data.project?.token) {
-              console.log(`data.project?.token est Truey 🤗`);
+              // console.log(`data.project?.token est Truey 🤗`);
               navigation.navigate("TabNavigator");
               dispatch(
                 loginUser({
@@ -72,9 +72,9 @@ export default function LoginScreen({ navigation }) {
                   tokenProject: data.project.token,
                 })
               );
-              console.log("tokenproject", data.project.token);
+              // console.log("tokenproject", data.project.token);
             } else {
-              console.log(`data.project?.token2 est falsey 😱`);
+              // console.log(`data.project?.token2 est falsey 😱`);
               messageErrorSetter(data?.error);
               setModalEchecVisible(true);
             }

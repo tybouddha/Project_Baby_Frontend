@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Modal } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera/legacy";
-import { useDispatch } from "react-redux";
-import { ajouterPhoto } from "../reducers/document";
+import { useDispatch, useSelector } from "react-redux";
+import { documentModalRestOuvert } from "../reducers/document";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useIsFocused } from "@react-navigation/native";
+import VwStockerImage from "./template/VwStockerImage";
 
 export default function CameraScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -13,6 +14,9 @@ export default function CameraScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(false);
   const [type, setType] = useState(CameraType.back);
   const [flashMode, setFlashMode] = useState(FlashMode.off);
+  const [modalStockerVisible, setModalStockerVisible] = useState(false);
+  const [photoCacheUri, setPhotoCacheUri] = useState("");
+  const documentRedux = useSelector((state) => state.document.value);
 
   let cameraRef = useRef(null);
 
@@ -20,6 +24,9 @@ export default function CameraScreen({ navigation }) {
     (async () => {
       console.log("CameraScreen useEffect");
       const result = await Camera.requestCameraPermissionsAsync();
+
+      console.log("documentRedux.nom: ", documentRedux.nom);
+      console.log("documentRedux.practicien: ", documentRedux.practicien);
       if (result) {
         setHasPermission(result.status === "granted");
         console.log("reussite");
@@ -29,33 +36,36 @@ export default function CameraScreen({ navigation }) {
     })();
   }, []);
 
+  const fermerModalStockerImage = () => setModalStockerVisible(false);
+
   const takePicture = async () => {
     const photo = await cameraRef.takePictureAsync({ quality: 0.3 });
-    const formData = new FormData();
-    const uri = photo?.uri;
+    setPhotoCacheUri(photo?.uri);
 
-    formData.append("photoFromFront", {
-      uri: uri,
-      name: "photo.jpg",
-      type: "image/jpeg",
-    });
-
-    dispatch(ajouterPhoto(uri));
-    console.log(`takePicture uri: ${uri}`);
-    navigation.navigate("Documents");
-    // fetch(`${BACKEND_ADDRESS}/upload`, {
-    // 	method: "POST",
-    // 	body: formData,
-    // })
-    // 	.then((response) => response.json())
-    // 	.then((data) => {
-    // 		data.result && dispatch(addPhoto(data.url));
-    // 	});
+    console.log("leaving Camera Screen, and documentModalRestOuvert ");
+    dispatch(documentModalRestOuvert());
+    setModalStockerVisible(true);
   };
 
   if (!hasPermission || !isFocused) {
     return <View />;
   }
+
+  const modalStocker = (
+    <Modal
+      visible={modalStockerVisible}
+      animationType="fade"
+      transparent={true}
+    >
+      <VwStockerImage
+        fermerModalStockerImage={fermerModalStockerImage}
+        // fermerModalSansEffacer={cameraScreenFermerModalSansEffacerRedux}
+        navigation={navigation}
+        // fetchDocumentsData={fetchData}
+        photoCacheUri={photoCacheUri}
+      />
+    </Modal>
+  );
 
   return (
     <Camera
@@ -64,9 +74,13 @@ export default function CameraScreen({ navigation }) {
       ref={(ref) => (cameraRef = ref)}
       style={styles.camera}
     >
+      {modalStocker ? modalStocker : null}
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Documents")}
+          // onPress={() => navigation.navigate("Documents")}
+          onPress={() =>
+            navigation.navigate("TabNavigator", { screen: "Documents" })
+          }
           style={styles.button}
         >
           <FontAwesome name="arrow-left" size={25} color="#ffffff" />
