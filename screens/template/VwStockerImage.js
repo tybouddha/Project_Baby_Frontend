@@ -44,6 +44,7 @@ export default function VwStockerImage(props) {
 
         dispatch(ajouterPhoto(resJson.url));
         props.fermerModalStockerImage();
+        props.navigation.navigate("TabNavigator", { screen: "Documents" });
       });
   };
 
