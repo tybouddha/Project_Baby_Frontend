@@ -16,6 +16,7 @@ import CreerProjetScreen from "./screens/WelcomeScreens/CreerProjet";
 import ProfilScreen from "./screens/ProfilScreen";
 import LoginScreen from "./screens/WelcomeScreens/LoginScreen";
 import CameraScreen from "./screens/CameraScreen";
+import InviterScreen from "./screens/WelcomeScreens/InviterScreen";
 
 import IconView from "./screens/NavComposants/IconView";
 
@@ -122,6 +123,7 @@ export default function App() {
           <Stack.Screen name="Documents" component={DocumentsScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Camera" component={CameraScreen} />
+          <Stack.Screen name="invite" component={InviterScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

@@ -23,7 +23,7 @@ export default function WelcomeScreen({ navigation }) {
 
   const pressedInviter = () => {
     console.log("- pressedInviter 📢");
-    navigation.navigate("TabNavigator");
+    navigation.navigate("invite");
   };
 
   return (

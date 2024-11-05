@@ -10,6 +10,7 @@ import {
   Modal,
   TextInput,
   Switch,
+  ScrollView,
 } from "react-native";
 import ToggleSwitch from "toggle-switch-react-native";
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
@@ -21,10 +22,17 @@ export default function AcceuilScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
   const username = user.username;
   const projectToken = user.tokenProject;
+  const [selectedDate, setSelectedDate] = useState(""); // Date sélectionnée sur le calendrier
+  const [agendaModalVisible, setAgendaModalVisible] = useState(false);
+  const [rendezVousDuJour, setRendezVousDuJour] = useState([]); // Rendez-vous pour la date sélectionnée
+  const closeAgendaModal = () => {
+    setAgendaModalVisible(false); // Ferme le modal de l'agenda
+    setRendezVousDuJour([]); // Réinitialise les rendez-vous quotidiens
+  };
   //hook for update the modal and open the modal
   const [modalVisible, setModalVisible] = useState(false);
   const [role, setrole] = useState("lecteur");
-  const [textrole, settextrole] = useState("attribuer accès");
+  const [link, setlink] = useState("link");
   const [markedDates, setMarkedDates] = useState({}); // Dates marquées sur le calendrier
   const [idArray, setIdArray] = useState([]); // L'id du rendez-vous
   const [rendezVous, setRendezVous] = useState({ rdv: [] }); // Liste des rendez-vous récupérés
@@ -81,38 +89,47 @@ export default function AcceuilScreen({ navigation }) {
   //function for set and choose the acces for invite
   const toggleSwitch = () => {
     setrole(role === "lecteur" ? "editeur" : "lecteur");
-    if (role === "lecteur") {
-      settextrole("lecteur");
-    } else {
-      settextrole("editeur");
-    }
+
     console.log(role);
   };
-
-  // const generateCode = () => {
-  //   const bodyObj = {
-  //     token: projectToken,
-  //     role: role,
-  //   };
-  //   if (bodyObj)
-  //     fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/invite`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(bodyObj),
-  //     })
-  //       .then((response) => response.json())
-  //       .then((inviteLink) => {
-  //         console.log("test1", inviteLink);
-  //       });
-
-  //   console.log("123456");
-  // };
+  const generateCode = () => {
+    const bodyObj = {
+      token: projectToken,
+      roles: role,
+    };
+    if (bodyObj) {
+      const inviteLink = `${projectToken}/${role}`;
+      console.log(bodyObj);
+      setlink(inviteLink);
+      console.log("test1", inviteLink);
+    }
+  };
   //function to get the page for guide
   const directionalimentation = () => {
     console.log("switch vers la page guide alimentation");
   };
   const handleClose = () => {
     setModalVisible(false);
+  };
+  // function trigger when select date in calendar
+  const handleDayPress = (day) => {
+    const dateKey = day.dateString; // Récupère la date sous forme de chaîne
+    setSelectedDate(dateKey); // Définit la date sélectionnée
+
+    if (Array.isArray(rendezVous.rdv)) {
+      // Vérifie que rendezVous.rdv est un tableau
+      const rendezVousDuJour = rendezVous.rdv.filter(
+        (rdv) => rdv.date.split("T")[0] === dateKey // Filtre les rendez-vous pour la date sélectionnée
+      );
+
+      if (rendezVousDuJour.length > 0) {
+        // Si des rendez-vous sont trouvés
+        setRendezVousDuJour(rendezVousDuJour); // Met à jour les rendez-vous du jour
+        setAgendaModalVisible(true); // Ouvre le modal de l'agenda
+      }
+    } else {
+      console.error("Le format des rendez-vous est incorrect:", error); // Gère les erreurs de format
+    }
   };
   return (
     <ImageBackground
@@ -136,19 +153,22 @@ export default function AcceuilScreen({ navigation }) {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <TextInput
-                placeholder="code d'invitation"
-                // value={inviteLink}
+                placeholder={"lien d'invitation"}
+                value={link}
                 style={styles.input}
               />
-              <Text style={styles.textrole}>{textrole}</Text>
-              <Switch
-                style={styles.toggle}
-                thumbColor={role === "lecteur" ? "#f5dd4b" : "#f4f3f4"}
-                ios_backgroundColor="black"
-                onValueChange={toggleSwitch}
-                onToggle={(role) => toggleSwitch()}
-                value={role === "lecteur"}
-              />
+              <Text style={styles.textrole}>{role}</Text>
+              <View style={styles.switchContainer}>
+                <Text>Switch role </Text>
+                <Switch
+                  style={styles.toggle}
+                  thumbColor={role === "lecteur" ? "#f5dd4b" : "#f4f3f4"}
+                  ios_backgroundColor="black"
+                  onValueChange={toggleSwitch}
+                  onToggle={(role) => toggleSwitch()}
+                  value={role === "lecteur"}
+                />
+              </View>
               <TouchableOpacity
                 onPress={() => generateCode()}
                 style={styles.btnModal}
@@ -171,14 +191,44 @@ export default function AcceuilScreen({ navigation }) {
           <Text style={styles.title}>Voici votre calendrier actualisé!</Text>
           <Calendar
             style={styles.calendar}
-            onDayPress={(day) => {
-              console.log("selected day", day);
-            }}
+            onDayPress={handleDayPress}
+            // onDayPress={(day) => {
+            //   console.log("selected day", day);
+            // }}
             minDate={"2024-10-31"}
             maxDate={"2035-12-31"}
             markedDates={markedDates}
           />
         </View>
+        <Modal visible={agendaModalVisible} animationType="slide" transparent>
+          <View style={styles.centeredView}>
+            <View style={styles.modalListView}>
+              <Text style={styles.modalTitle}>Agenda</Text>
+              <ScrollView style={styles.scrollView}>
+                <Text style={styles.modalTitle}>
+                  Rendez-vous pour le {selectedDate}
+                </Text>
+                {rendezVousDuJour.length > 0 &&
+                  rendezVousDuJour.map((rdv, index) => (
+                    <View key={index} style={styles.listItem}>
+                      <Text>Pour : {rdv.pourQui}</Text>
+                      <Text>Praticien : {rdv.practicien}</Text>
+                      <Text>Lieu : {rdv.lieu}</Text>
+                      <Text>Heure : {rdv.heure}</Text>
+                      <Text>Notes : {rdv.notes}</Text>
+                    </View>
+                  ))}
+              </ScrollView>
+              <TouchableOpacity
+                onPress={closeAgendaModal}
+                style={styles.btnModal}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.textButton}>Fermer</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         <TouchableOpacity
           style={styles.alimentationBTN}
           onPress={() => directionalimentation()}
@@ -300,5 +350,32 @@ const styles = StyleSheet.create({
   },
   textrole: {
     fontSize: 20,
+  },
+  modalListView: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 20,
+    width: "50%",
+    maxHeight: "70%",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  scrollView: {
+    width: "100%",
+  },
+  listItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  switchContainer: {
+    flexDirection: "row",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
