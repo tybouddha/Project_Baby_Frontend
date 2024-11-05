@@ -37,10 +37,10 @@ export default function CameraScreen({ navigation }) {
     dispatch(ajouterPhoto(uriCache));
     console.log("leaving Camera Screen, and documentModalRestOuvert ");
     dispatch(documentModalRestOuvert());
-    navigation.navigate("Documents");
-    // navigation.navigate("TabNavigator", {
-    //   screen: "Documents",
-    // });
+    // navigation.navigate("Documents");
+    navigation.navigate("TabNavigator", {
+      screen: "Documents",
+    });
 
     // formData.append("photoFromFront", {
     //   uri: uri,
