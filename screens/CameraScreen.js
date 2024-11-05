@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera/legacy";
 import { useDispatch } from "react-redux";
-import { ajouterPhoto } from "../reducers/document";
+import { ajouterPhoto, documentModalRestOuvert } from "../reducers/document";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -32,25 +32,54 @@ export default function CameraScreen({ navigation }) {
   const takePicture = async () => {
     const photo = await cameraRef.takePictureAsync({ quality: 0.3 });
     const formData = new FormData();
-    const uri = photo?.uri;
+    const uriCache = photo?.uri;
 
-    formData.append("photoFromFront", {
-      uri: uri,
-      name: "photo.jpg",
-      type: "image/jpeg",
-    });
-
-    dispatch(ajouterPhoto(uri));
-    console.log(`takePicture uri: ${uri}`);
+    dispatch(ajouterPhoto(uriCache));
+    console.log("leaving Camera Screen, and documentModalRestOuvert ");
+    dispatch(documentModalRestOuvert());
     navigation.navigate("Documents");
-    // fetch(`${BACKEND_ADDRESS}/upload`, {
-    // 	method: "POST",
-    // 	body: formData,
-    // })
-    // 	.then((response) => response.json())
-    // 	.then((data) => {
-    // 		data.result && dispatch(addPhoto(data.url));
-    // 	});
+    // navigation.navigate("TabNavigator", {
+    //   screen: "Documents",
+    // });
+
+    // formData.append("photoFromFront", {
+    //   uri: uri,
+    //   name: "photo.jpg",
+    //   type: "image/jpeg",
+    // });
+
+    // Deplacer photo a une dossier permenanant
+
+    // // etap 1: creer nom de nouveau dossier /photos
+    // const nomDeFicher = `photo_${Date.now()}.jpg`;
+    // const cheminDeFicher = `${FileSystem.documentDirectory}photos`;
+    // const newUri = `${cheminDeFicher}/${nomDeFicher}`;
+    // console.log("----- permenant locaiton: ----");
+    // console.log(newUri);
+
+    // // etap 2: verifie si /photos exists ou non
+    // // --- créer nouveau dossier pour stocker les photos
+    // try {
+    //   // Ensure the photos directory exists
+    //   // ---> if folder does not exist it will create it
+    //   // ---> if it does exist it will do nothing
+    //   await FileSystem.makeDirectoryAsync(
+    //     `${FileSystem.documentDirectory}photos`,
+    //     {
+    //       intermediates: true,
+    //     }
+    //   );
+    //   await FileSystem.moveAsync({
+    //     from: uriCache,
+    //     to: uriPermanent,
+    //   });
+    //   console.log(`waited on newURI: ${uriPermanent}`);
+    //   //setPhotoUri(newUri); // Update the URI to point to the new permanent location
+    //   // dispatch(setPhotoPermenantUri(newUri));
+    //   dispatch(ajouterPhoto(uriPermanent));
+    // } catch (error) {
+    //   console.error("Error moving photo:", error);
+    // }
   };
 
   if (!hasPermission || !isFocused) {

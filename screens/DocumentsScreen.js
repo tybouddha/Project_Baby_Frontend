@@ -32,26 +32,7 @@ export default function DocumentsScreen({ navigation }) {
 
   const [modalAjouterDocumentVisible, setmodalAjouterDocumentVisible] =
     useState(documentRedux);
-  const [documentsDonnes, setdocumentsDonnes] = useState([
-    // {
-    //   _id: "1",
-    //   url: "https://",
-    //   nom: "maman",
-    //   practcien: "gyno",
-    //   date: ajourdhui,
-    //   notes: "Un chasseur sachant chasser sans son chien est un bon chasseur.",
-    // },
-    // {
-    //   _id: "2",
-    //   url: "https://",
-    //   nom: "bébe",
-    //   practcien: "pediatrician",
-    //   // date: ajourdhui.setDate(ajourdhui - 1),
-    //   date: ajourdhui,
-    //   notes:
-    //     "Les chaussettes de l’archiduchesse sont-elles sèches ou archi-sèches?",
-    // },
-  ]);
+  const [documentsDonnes, setdocumentsDonnes] = useState([]);
 
   const appuyerAjouterDocument = () => {
     // console.log(`appuyerAjouterDocument`);
@@ -67,6 +48,7 @@ export default function DocumentsScreen({ navigation }) {
   };
 
   const cameraScreenFermerModalSansEffacerRedux = () => {
+    console.log("**** shutting down modal ***");
     setmodalAjouterDocumentVisible(false);
   };
 
@@ -74,37 +56,58 @@ export default function DocumentsScreen({ navigation }) {
 
   const poubelleAppuyee = (elem) => {
     // console.log("Appuyer poubelle");
+    console.log(`a le poubelle avec: `);
     console.log(elem);
+
+    fetch(`${process.env.EXPO_PUBLIC_API_URL}/document/${elem._id}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.result) {
+          fetchData();
+        }
+      })
+      .catch((error) =>
+        console.error("Erreur lors de la suppression :", error)
+      );
   };
 
   useFocusEffect(
     useCallback(() => {
+      console.log("useFocusEffect ----> useCallback");
+      console.log("documentRedux.modalOuvert: ", documentRedux.modalOuvert);
       // Code to run every time the screen comes into focus
       setmodalAjouterDocumentVisible(documentRedux.modalOuvert);
       // Fetch data, reset state, or perform any necessary actions here
     }, [])
   );
-  useEffect(
-    () => {
-      console.log("- Mount DocumentScreen.js > useEffect ");
-      console.log(`userRedux.tokenProject: ${userRedux.tokenProject}`);
-      fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}/document/${userRedux.tokenProject}`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("Bien reçu reponse de backen");
+  useEffect(() => {
+    console.log("useEffect ----> NO callback");
+    fetchData();
 
-          console.log(data);
-          let array = [];
-          for (const elem of data.documentsData) {
-            array.push(elem);
-          }
-          setdocumentsDonnes([...documentsDonnes, ...array]);
-        });
-    },
-    [] //<--- tableaux vide
-  );
+    setmodalAjouterDocumentVisible(documentRedux.modalOuvert);
+  }, []);
+
+  const fetchData = () => {
+    console.log("- Mount DocumentScreen.js > useEffect ");
+    // console.log(`userRedux.tokenProject: ${userRedux.tokenProject}`);
+    fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/document/${userRedux.tokenProject}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Bien reçu reponse de backen");
+
+        // console.log(data);
+        let array = [];
+        for (const elem of data.documentsData) {
+          array.push(elem);
+        }
+        setdocumentsDonnes(array);
+      });
+  };
 
   const modalAjouterDocument = (
     <Modal
@@ -116,6 +119,7 @@ export default function DocumentsScreen({ navigation }) {
         fermerModal={fermerModalVwAjouterDoc}
         fermerModalSansEffacer={cameraScreenFermerModalSansEffacerRedux}
         navigation={navigation}
+        fetchDocumentsData={fetchData}
       />
     </Modal>
   );
@@ -150,7 +154,7 @@ export default function DocumentsScreen({ navigation }) {
         <Text style={styles.txtNotes}>{elem.notes}</Text>
         <View style={styles.vwInputPhotos}>
           <View key={index} style={styles.photoContainer}>
-            <Image source={{ uri: elem.url }} style={styles.imgElemStyle} />
+            <Image source={{ uri: elem.url[0] }} style={styles.imgElemStyle} />
           </View>
         </View>
       </View>
@@ -158,16 +162,16 @@ export default function DocumentsScreen({ navigation }) {
     cardArr.push(card);
   });
 
-  const testDocs = () => {
-    console.log("---- testDocs ----");
+  // const testDocs = () => {
+  //   console.log("---- testDocs ----");
 
-    documentsDonnes.map((elem, index) => {
-      console.log("elem.nom: ", elem.nom);
-      console.log("elem.url: ", elem.url);
-    });
+  //   documentsDonnes.map((elem, index) => {
+  //     console.log("elem.nom: ", elem.nom);
+  //     console.log("elem.url: ", elem.url);
+  //   });
 
-    console.log("---- testDocs END ----");
-  };
+  //   console.log("---- testDocs END ----");
+  // };
 
   return (
     <TemplateView navigation={navigation}>

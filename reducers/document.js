@@ -15,7 +15,7 @@ export const documentSlice = createSlice({
   initialState,
   reducers: {
     sauvgaurderDocumentInfos: (state, action) => {
-      console.log("doc Redux > sauvgaurderDocumentInfos");
+      // console.log("doc Redux > sauvgaurderDocumentInfos");
       state.value.nom = action.payload.nom;
       state.value.practicien = action.payload.practicien;
       state.value.notes = action.payload.notes;
@@ -24,11 +24,12 @@ export const documentSlice = createSlice({
       state.value.modalOuvert = true;
     },
     doucumentModalResterFermer: (state) => {
+      console.log("*** doucumentModalResterFermer ***");
       state.value.modalOuvert = false;
     },
     // addPhoto: (state, action) => {
     ajouterPhoto: (state, action) => {
-      console.log("docRedux > addPhoto");
+      // console.log("docRedux > addPhoto");
       state.value.photos.push(action.payload);
     },
     supprimerPhoto: (state, action) => {

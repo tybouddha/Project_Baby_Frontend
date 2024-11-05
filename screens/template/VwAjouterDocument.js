@@ -63,6 +63,9 @@ export default function VwAjouterDocument(props) {
   // };
 
   const cameraScreenFermerModalsSansEffacerRedux = () => {
+    console.log(
+      "*** >> fremer le modal cameraScreenFermerModalsSansEffacerRedux"
+    );
     setModalFicherTypeVisible(false);
     props.fermerModalSansEffacer();
   };
@@ -101,7 +104,7 @@ export default function VwAjouterDocument(props) {
       nom: nom,
       practicien: practicien,
       notes: notes,
-      url: photosArr[0],
+      url: photosArr,
     };
     fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/document/add`,
@@ -111,7 +114,14 @@ export default function VwAjouterDocument(props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bodyObj),
       }
-    ).then((response) => response.json());
+    )
+      .then((response) => response.json())
+      .then((resJson) => {
+        if (resJson.result) {
+          props.fetchDocumentsData();
+          props.fermerModal();
+        }
+      });
   };
 
   return (
