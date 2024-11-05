@@ -95,7 +95,12 @@ Tab navigation:
    - implementation voir: faceup-part3 / front
 
 8. Redux
+
    - installer: `yarn add react-redux @reduxjs/toolkit`
+
+9. Navigaur dans une autre Screen dans le Tab Navigation
+
+   - `navigation.navigate("TabNavigator", { screen: "Settings" });`
 
 ## Recherche infos bebé
 

@@ -21,6 +21,8 @@ import { useFocusEffect } from "@react-navigation/native";
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  documentModalRestOuvert,
+  doucumentModalResterFermer,
   sauvgaurderDocumentInfos,
   supprimerTousLesPhotos,
 } from "../reducers/document";
@@ -31,25 +33,25 @@ export default function DocumentsScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const [modalAjouterDocumentVisible, setmodalAjouterDocumentVisible] =
-    useState(documentRedux);
+    useState(false);
   const [documentsDonnes, setdocumentsDonnes] = useState([]);
 
   const appuyerAjouterDocument = () => {
     // console.log(`appuyerAjouterDocument`);
-    setmodalAjouterDocumentVisible(true);
+    // setmodalAjouterDocumentVisible(true);
+    dispatch(documentModalRestOuvert());
   };
 
   const fermerModalVwAjouterDoc = () => {
     // cette fonctionne ferme le VwAjouterDocument
-    console.log("🚨 DocumentScreen > fermerModalVwAjouterDoc ");
-    setmodalAjouterDocumentVisible(false);
+    // console.log("🚨 DocumentScreen > fermerModalVwAjouterDoc ");
     dispatch(sauvgaurderDocumentInfos({ nom: "", practcien: "", notes: "" }));
     dispatch(supprimerTousLesPhotos());
+    dispatch(doucumentModalResterFermer());
   };
 
   const cameraScreenFermerModalSansEffacerRedux = () => {
-    console.log("**** shutting down modal ***");
-    setmodalAjouterDocumentVisible(false);
+    dispatch(doucumentModalResterFermer());
   };
 
   let ajourdhui = new Date();
@@ -79,39 +81,42 @@ export default function DocumentsScreen({ navigation }) {
       console.log("useFocusEffect ----> useCallback");
       console.log("documentRedux.modalOuvert: ", documentRedux.modalOuvert);
       // Code to run every time the screen comes into focus
-      setmodalAjouterDocumentVisible(documentRedux.modalOuvert);
+
       // Fetch data, reset state, or perform any necessary actions here
     }, [])
   );
   useEffect(() => {
     console.log("useEffect ----> NO callback");
     fetchData();
-
-    setmodalAjouterDocumentVisible(documentRedux.modalOuvert);
   }, []);
 
   const fetchData = () => {
-    console.log("- Mount DocumentScreen.js > useEffect ");
+    // console.log("- Mount DocumentScreen.js > useEffect ");
     // console.log(`userRedux.tokenProject: ${userRedux.tokenProject}`);
     fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/document/${userRedux.tokenProject}`
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log("Bien reçu reponse de backen");
+        // console.log("Bien reçu reponse de backen");
 
         // console.log(data);
         let array = [];
+        // console.log(`array.length: ${array.length}`);
+        // if (array.length > 0) {
+        // console.log(`---> if (array.length >0){`);
         for (const elem of data.documentsData) {
           array.push(elem);
         }
         setdocumentsDonnes(array);
+        // }
       });
   };
 
   const modalAjouterDocument = (
     <Modal
-      visible={modalAjouterDocumentVisible}
+      // visible={modalAjouterDocumentVisible}
+      visible={documentRedux.modalOuvert}
       animationType="fade"
       transparent={true}
     >
@@ -136,7 +141,7 @@ export default function DocumentsScreen({ navigation }) {
           <View style={styles.cardRayon2Sous}>
             <View style={styles.cardRayon2SousPracticien}>
               <Text style={styles.txtLabel}>Practicien: </Text>
-              <Text style={styles.txtPracticien}>{elem.practcien}</Text>
+              <Text style={styles.txtPracticien}>{elem.practicien}</Text>
             </View>
             <View style={styles.cardRayon2SousPracticien}>
               <Text style={styles.txtLabel}>Pour qui: </Text>
@@ -162,24 +167,13 @@ export default function DocumentsScreen({ navigation }) {
     cardArr.push(card);
   });
 
-  // const testDocs = () => {
-  //   console.log("---- testDocs ----");
-
-  //   documentsDonnes.map((elem, index) => {
-  //     console.log("elem.nom: ", elem.nom);
-  //     console.log("elem.url: ", elem.url);
-  //   });
-
-  //   console.log("---- testDocs END ----");
-  // };
-
   return (
     <TemplateView navigation={navigation}>
-      {modalAjouterDocumentVisible ? modalAjouterDocument : null}
+      {/* {modalAjouterDocumentVisible ? modalAjouterDocument : null} */}
+      {documentRedux.modalOuvert ? modalAjouterDocument : null}
 
       <View style={styles.container}>
         <View style={styles.vwHaut}>
-          {/* <Button title="Check Documents" onPress={() => testDocs()} /> */}
           <View style={styles.vwTitre}>
             <Text style={styles.txtTitre}>Documents </Text>
           </View>

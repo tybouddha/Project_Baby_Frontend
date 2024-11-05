@@ -15,15 +15,14 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     loginUser: (state, action) => {
-      console.log(`- dans Redux: loginUser 🔔`);
+      // console.log(`- dans Redux: loginUser 🔔`);
       state.value.token = action.payload.token;
       state.value.projectId = action.payload.projectId;
       state.value.tokenProject = action.payload.tokenProject;
       state.value.username = action.payload.username;
-      console.log(`- dans Redux: loginUser fini 🏁`);
     },
     logoutUser: (state) => {
-      console.log(`- dans Redux: logoutUser 🔔`);
+      // console.log(`- dans Redux: logoutUser 🔔`);
       state.value.token = null;
       state.value.username = null;
       state.value.tokenProject = null;

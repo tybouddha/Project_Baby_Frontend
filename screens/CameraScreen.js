@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Modal } from "react-native";
 import { Camera, CameraType, FlashMode } from "expo-camera/legacy";
-import { useDispatch } from "react-redux";
-import { ajouterPhoto, documentModalRestOuvert } from "../reducers/document";
+import { useDispatch, useSelector } from "react-redux";
+import { documentModalRestOuvert } from "../reducers/document";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useIsFocused } from "@react-navigation/native";
+import VwStockerImage from "./template/VwStockerImage";
 
 export default function CameraScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -13,6 +14,9 @@ export default function CameraScreen({ navigation }) {
   const [hasPermission, setHasPermission] = useState(false);
   const [type, setType] = useState(CameraType.back);
   const [flashMode, setFlashMode] = useState(FlashMode.off);
+  const [modalStockerVisible, setModalStockerVisible] = useState(false);
+  const [photoCacheUri, setPhotoCacheUri] = useState("");
+  const documentRedux = useSelector((state) => state.document.value);
 
   let cameraRef = useRef(null);
 
@@ -20,6 +24,9 @@ export default function CameraScreen({ navigation }) {
     (async () => {
       console.log("CameraScreen useEffect");
       const result = await Camera.requestCameraPermissionsAsync();
+
+      console.log("documentRedux.nom: ", documentRedux.nom);
+      console.log("documentRedux.practicien: ", documentRedux.practicien);
       if (result) {
         setHasPermission(result.status === "granted");
         console.log("reussite");
@@ -29,62 +36,36 @@ export default function CameraScreen({ navigation }) {
     })();
   }, []);
 
+  const fermerModalStockerImage = () => setModalStockerVisible(false);
+
   const takePicture = async () => {
     const photo = await cameraRef.takePictureAsync({ quality: 0.3 });
-    const formData = new FormData();
-    const uriCache = photo?.uri;
+    setPhotoCacheUri(photo?.uri);
 
-    dispatch(ajouterPhoto(uriCache));
     console.log("leaving Camera Screen, and documentModalRestOuvert ");
     dispatch(documentModalRestOuvert());
-    // navigation.navigate("Documents");
-    navigation.navigate("TabNavigator", {
-      screen: "Documents",
-    });
-
-    // formData.append("photoFromFront", {
-    //   uri: uri,
-    //   name: "photo.jpg",
-    //   type: "image/jpeg",
-    // });
-
-    // Deplacer photo a une dossier permenanant
-
-    // // etap 1: creer nom de nouveau dossier /photos
-    // const nomDeFicher = `photo_${Date.now()}.jpg`;
-    // const cheminDeFicher = `${FileSystem.documentDirectory}photos`;
-    // const newUri = `${cheminDeFicher}/${nomDeFicher}`;
-    // console.log("----- permenant locaiton: ----");
-    // console.log(newUri);
-
-    // // etap 2: verifie si /photos exists ou non
-    // // --- créer nouveau dossier pour stocker les photos
-    // try {
-    //   // Ensure the photos directory exists
-    //   // ---> if folder does not exist it will create it
-    //   // ---> if it does exist it will do nothing
-    //   await FileSystem.makeDirectoryAsync(
-    //     `${FileSystem.documentDirectory}photos`,
-    //     {
-    //       intermediates: true,
-    //     }
-    //   );
-    //   await FileSystem.moveAsync({
-    //     from: uriCache,
-    //     to: uriPermanent,
-    //   });
-    //   console.log(`waited on newURI: ${uriPermanent}`);
-    //   //setPhotoUri(newUri); // Update the URI to point to the new permanent location
-    //   // dispatch(setPhotoPermenantUri(newUri));
-    //   dispatch(ajouterPhoto(uriPermanent));
-    // } catch (error) {
-    //   console.error("Error moving photo:", error);
-    // }
+    setModalStockerVisible(true);
   };
 
   if (!hasPermission || !isFocused) {
     return <View />;
   }
+
+  const modalStocker = (
+    <Modal
+      visible={modalStockerVisible}
+      animationType="fade"
+      transparent={true}
+    >
+      <VwStockerImage
+        fermerModalStockerImage={fermerModalStockerImage}
+        // fermerModalSansEffacer={cameraScreenFermerModalSansEffacerRedux}
+        navigation={navigation}
+        // fetchDocumentsData={fetchData}
+        photoCacheUri={photoCacheUri}
+      />
+    </Modal>
+  );
 
   return (
     <Camera
@@ -93,9 +74,13 @@ export default function CameraScreen({ navigation }) {
       ref={(ref) => (cameraRef = ref)}
       style={styles.camera}
     >
+      {modalStocker ? modalStocker : null}
       <View style={styles.buttonsContainer}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Documents")}
+          // onPress={() => navigation.navigate("Documents")}
+          onPress={() =>
+            navigation.navigate("TabNavigator", { screen: "Documents" })
+          }
           style={styles.button}
         >
           <FontAwesome name="arrow-left" size={25} color="#ffffff" />
