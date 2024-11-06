@@ -41,6 +41,8 @@ export default function DocumentsScreen({ navigation }) {
   const [searchModalVisible, setSearchModalVisible] = useState("");
   const [photoModalVisible, setPhotoModalVisible] = useState("");
   const [documentChoisi, setDocumentChoisi] = useState("");
+  const [afficherRechercheScrollView, setAfficherRechercheScrollView] =
+    useState(false);
 
   const fermerModalVwAjouterDoc = () => {
     // cette fonctionne ferme le VwAjouterDocument
@@ -172,6 +174,7 @@ export default function DocumentsScreen({ navigation }) {
 
   const searchDocuments = () => {
     console.log("searchDocuments");
+    setAfficherRechercheScrollView(true);
     // setSearchInput(text);
     const newDocumentsDonnes = [];
     const normalizedSearch = searchInput.trim().toLowerCase(); // Normalise l'entrée de recherche
@@ -192,62 +195,6 @@ export default function DocumentsScreen({ navigation }) {
     );
   };
 
-  const searchDocumentModal = (
-    <Modal visible={searchModalVisible} animationType="fade" transparent={true}>
-      <View style={styles.centeredView}>
-        <View style={styles.modalListView}>
-          <Text style={styles.modalTitle}>Rechercher</Text>
-
-          <TextInput
-            style={styles.listItem}
-            placeholder="Rechercher vos documents"
-            value={searchInput}
-            onChangeText={(text) => setSearchInput(text)}
-          ></TextInput>
-
-          <ScrollView style={styles.scrollView}>{cardArrRecherche}</ScrollView>
-          <View style={styles.vwRechercheButons}>
-            <TouchableOpacity
-              onPress={() => searchDocuments()}
-              style={styles.btnModal}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.textButton}>rechercher</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setSearchModalVisible(false)}
-              style={styles.btnModal}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.textButton}>Fermer</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-
-  const afficherPhotoModal = (
-    <Modal visible={photoModalVisible} animationType="fade" transparent={true}>
-      <View style={styles.photoModalContainer}>
-        {documentChoisi && (
-          <Image
-            source={{ uri: documentChoisi?.url[0] }}
-            width={Dimensions.get("screen").width * 0.8}
-            height={Dimensions.get("screen").height * 0.8}
-          />
-        )}
-        <TouchableOpacity
-          onPress={() => setPhotoModalVisible(false)}
-          style={styles.btnModal}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.textButton}>Fermer</Text>
-        </TouchableOpacity>
-      </View>
-    </Modal>
-  );
-
   const appuyerPhoto = (doc) => {
     console.log("- appuyerPhoto");
     console.log(doc);
@@ -259,8 +206,6 @@ export default function DocumentsScreen({ navigation }) {
 
   return (
     <TemplateView navigation={navigation}>
-      {/* {modalAjouterDocumentVisible ? modalAjouterDocument : null} */}
-      {/* {documentRedux.modalOuvert ? modalAjouterDocument : null} */}
       <Modal
         // visible={modalAjouterDocumentVisible}
         visible={documentRedux.modalOuvert}
@@ -274,8 +219,73 @@ export default function DocumentsScreen({ navigation }) {
           fetchDocumentsData={fetchData}
         />
       </Modal>
-      {searchModalVisible ? searchDocumentModal : null}
-      {photoModalVisible ? afficherPhotoModal : null}
+      <Modal
+        visible={searchModalVisible}
+        animationType="fade"
+        transparent={true}
+      >
+        <Modal
+          visible={photoModalVisible}
+          animationType="fade"
+          transparent={true}
+        >
+          <View style={styles.photoModalContainer}>
+            {documentChoisi && (
+              <Image
+                source={{ uri: documentChoisi?.url[0] }}
+                width={Dimensions.get("screen").width * 0.8}
+                height={Dimensions.get("screen").height * 0.8}
+              />
+            )}
+            <TouchableOpacity
+              onPress={() => setPhotoModalVisible(false)}
+              style={styles.btnModal}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.textButton}>Fermer</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+        <View style={styles.centeredView}>
+          <View style={styles.modalListView}>
+            <Text style={styles.modalTitle}>Rechercher</Text>
+
+            <TextInput
+              style={styles.listItem}
+              placeholder="Rechercher vos documents"
+              value={searchInput}
+              onChangeText={(text) => setSearchInput(text)}
+            ></TextInput>
+            {afficherRechercheScrollView && (
+              <ScrollView style={styles.scrollView}>
+                {cardArrRecherche}
+              </ScrollView>
+            )}
+            <View style={styles.vwRechercheButons}>
+              <TouchableOpacity
+                onPress={() => searchDocuments()}
+                style={styles.btnModal}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.textButton}>rechercher</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setAfficherRechercheScrollView(false);
+                  setSearchModalVisible(false);
+                  setSearchInput("");
+                }}
+                style={styles.btnModal}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.textButton}>Fermer</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      {/* {photoModalVisible ? afficherPhotoModal : null} */}
+
       <View style={styles.container}>
         <View style={styles.vwHaut}>
           <TouchableOpacity
@@ -292,9 +302,9 @@ export default function DocumentsScreen({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <ScrollView>
+        {/* <ScrollView>
           <View style={styles.vwBas}>{cardArr}</View>
-        </ScrollView>
+        </ScrollView> */}
       </View>
     </TemplateView>
   );
@@ -313,11 +323,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   vwHaut: {
     display: "flex",
-    width: Dimensions.get("screen").width,
     alignItems: "center",
+    width: Dimensions.get("screen").width,
+    height: Dimensions.get("screen").height * 0.5,
+    justifyContent: "space-around",
   },
   btn: {
     display: "flex",
