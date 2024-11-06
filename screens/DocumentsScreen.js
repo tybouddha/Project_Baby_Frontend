@@ -38,12 +38,7 @@ export default function DocumentsScreen({ navigation }) {
   const [documentsDonnes, setdocumentsDonnes] = useState([]);
   const [documentsDonnesInitial, setdocumentsDonnesInitial] = useState([]);
   const [searchInput, setSearchInput] = useState(""); // Champ de recherche
-
-  const appuyerAjouterDocument = () => {
-    // console.log(`appuyerAjouterDocument`);
-    // setmodalAjouterDocumentVisible(true);
-    dispatch(documentModalRestOuvert());
-  };
+  const [searchModalVisible, setSearchModalVisible] = useState("");
 
   const fermerModalVwAjouterDoc = () => {
     // cette fonctionne ferme le VwAjouterDocument
@@ -187,38 +182,63 @@ export default function DocumentsScreen({ navigation }) {
     setdocumentsDonnes(newDocumentsDonnes);
   };
 
+  const searchDocumentModal = (
+    <Modal visible={searchModalVisible} animationType="fade" transparent={true}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalListView}>
+          <Text style={styles.modalTitle}>Rechercher</Text>
+
+          <View style={styles.vwSearch}>
+            <TextInput
+              style={styles.listItem}
+              placeholder="Rechercher vos documents"
+              value={searchInput}
+              onChangeText={(text) => searchDocuments(text)}
+            ></TextInput>
+            <ScrollView style={styles.scrollView}></ScrollView>
+
+            <TouchableOpacity
+              onPress={() => console.log("handling search")}
+              style={styles.btnModal}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.textButton}>rechercher</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setSearchModalVisible(false)}
+              style={styles.btnModal}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.textButton}>Fermer</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+
   return (
     <TemplateView navigation={navigation}>
       {/* {modalAjouterDocumentVisible ? modalAjouterDocument : null} */}
       {documentRedux.modalOuvert ? modalAjouterDocument : null}
+      {searchModalVisible ? searchDocumentModal : null}
 
       <View style={styles.container}>
         <View style={styles.vwHaut}>
-          <View style={styles.vwTitre}>
-            <Text style={styles.txtTitre}>Documents </Text>
-            <View style={styles.vwSearch}>
-              <TouchableOpacity onPress={() => console.log("vwSearch")}>
-                <Text>vwSearch</Text>
-              </TouchableOpacity>
-              <TextInput
-                style={styles.txtInputSearchDocs}
-                placeholder="Rechercher vos documents"
-                value={searchInput}
-                onChangeText={(text) => searchDocuments(text)}
-              ></TextInput>
-            </View>
-          </View>
-
-          <View style={styles.vwPlusButton}>
-            <TouchableOpacity onPress={() => appuyerAjouterDocument()}>
-              <Image
-                source={require("../assets/images/plus.png")}
-                resizeMode="contain"
-                style={styles.imageButon}
-              />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => setSearchModalVisible(true)}
+          >
+            <Text>Rechercher un document</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => dispatch(documentModalRestOuvert())}
+          >
+            <Text>Ajoute un document</Text>
+          </TouchableOpacity>
         </View>
+
         <ScrollView>
           <View style={styles.vwBas}>{cardArr}</View>
         </ScrollView>
@@ -228,46 +248,68 @@ export default function DocumentsScreen({ navigation }) {
 }
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
     flex: 1,
-    // width: Dimensions.get("screen").width,
   },
   vwHaut: {
     display: "flex",
-    flexDirection: "row",
     width: Dimensions.get("screen").width,
-    alignItems: "center", // Move this here
-    justifyContent: "flex-end",
-    // backgroundColor: "gray",
-  },
-  vwTitre: {
-    position: "absolute", // Absolute positioning to take up the full width
-    left: 0,
-    right: 0,
-    alignItems: "center", // Center text within vwTitre
-  },
-  txtTitre: {
-    fontSize: 25,
-    fontWeight: "bold",
-  },
-  vwPlusButton: {
-    width: Dimensions.get("screen").width * 0.2,
     alignItems: "center",
-    justifyContent: "center",
   },
-  imageButon: {
+  btn: {
+    display: "flex",
+    backgroundColor: "white",
+    width: 300,
     height: 50,
-    aspectRatio: 1,
-  },
-  txtInputSearchDocs: {
-    padding: 10,
-    // backgroundColor: "gray",
-    width: Dimensions.get("screen").width * 0.6,
-    //paddingHorizontal: "10%", // Align content centrally
-    height: 40,
-    borderWidth: 1,
+    alignItems: "center",
     borderRadius: 12,
-    borderColor: "#007ACC", // Blue outline
+    justifyContent: "center",
+    margin: 5,
+  },
+  modalTitle: {
+    fontSize: 20,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalListView: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 20,
+    width: "90%",
+    maxHeight: "70%",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  searchBar: {
+    flex: 1,
+    textAlign: "center",
+  },
+  btnModal: {
+    backgroundColor: "pink",
+    borderWidth: 1,
+    width: 120,
+    alignItems: "center",
+    borderRadius: 12,
+    justifyContent: "center",
+    marginTop: 10,
+    paddingVertical: 5,
+  },
+  // input: {
+  //   width: 150,
+  //   borderBottomColor: "#ec6e5b",
+  //   borderBottomWidth: 1,
+  //   fontSize: 16,
+  // },
+  textButton: {
+    color: "#ffffff",
+    fontWeight: "600",
+    fontSize: 15,
   },
   vwBas: {
     flex: 1,
