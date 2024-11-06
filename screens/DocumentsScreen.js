@@ -35,10 +35,12 @@ export default function DocumentsScreen({ navigation }) {
 
   const [modalAjouterDocumentVisible, setmodalAjouterDocumentVisible] =
     useState(false);
-  const [documentsDonnes, setdocumentsDonnes] = useState([]);
-  const [documentsDonnesInitial, setdocumentsDonnesInitial] = useState([]);
+  const [documentsDonnes, setDocumentsDonnes] = useState([]);
+  const [documentsDonnesRecherche, setDocumentsDonnesRecherche] = useState([]);
   const [searchInput, setSearchInput] = useState(""); // Champ de recherche
   const [searchModalVisible, setSearchModalVisible] = useState("");
+  const [photoModalVisible, setPhotoModalVisible] = useState("");
+  const [documentChoisi, setDocumentChoisi] = useState("");
 
   const fermerModalVwAjouterDoc = () => {
     // cette fonctionne ferme le VwAjouterDocument
@@ -74,41 +76,22 @@ export default function DocumentsScreen({ navigation }) {
       );
   };
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     // console.log("useFocusEffect ----> useCallback");
-  //     // console.log("documentRedux.modalOuvert: ", documentRedux.modalOuvert);
-  //     // Code to run every time the screen comes into focus
-
-  //     // Fetch data, reset state, or perform any necessary actions here
-  //   }, [])
-  // );
   useEffect(() => {
-    // console.log("useEffect ----> NO callback");
     fetchData();
   }, []);
 
   const fetchData = () => {
-    // console.log("- Mount DocumentScreen.js > useEffect ");
-    // console.log(`userRedux.tokenProject: ${userRedux.tokenProject}`);
     fetch(
       `${process.env.EXPO_PUBLIC_API_URL}/document/${userRedux.tokenProject}`
     )
       .then((response) => response.json())
       .then((data) => {
-        // console.log("Bien reçu reponse de backen");
-
-        // console.log(data);
         let array = [];
-        // console.log(`array.length: ${array.length}`);
-        // if (array.length > 0) {
-        // console.log(`---> if (array.length >0){`);
         for (const elem of data.documentsData) {
           array.push(elem);
         }
-        setdocumentsDonnes(array);
-        setdocumentsDonnesInitial(array);
-        // }
+        setDocumentsDonnes(array);
+        setDocumentsDonnesRecherche(array);
       });
   };
 
@@ -129,8 +112,10 @@ export default function DocumentsScreen({ navigation }) {
   );
 
   let cardArr = [];
-  documentsDonnes.map((elem, index) => {
-    const card = (
+  let cardArrRecherche = [];
+
+  const createDocumentCard = (elem, index) => {
+    return (
       <View key={elem._id} style={styles.card}>
         <View style={styles.cardRayon1}>
           <Text style={styles.txtDate}>{elem.dateAjoute.substring(0, 10)}</Text>
@@ -147,39 +132,64 @@ export default function DocumentsScreen({ navigation }) {
               <Text style={styles.txtNom}>{elem.nom}</Text>
             </View>
           </View>
-          <TouchableOpacity
-            style={styles.touchPoubelle}
-            onPress={() => poubelleAppuyee(elem)}
-          >
-            <FontAwesome name={"trash"} size={30} color={"red"} />
-          </TouchableOpacity>
         </View>
 
         <Text style={styles.txtNotes}>{elem.notes}</Text>
         <View style={styles.vwInputPhotos}>
           <View key={index} style={styles.photoContainer}>
-            <Image source={{ uri: elem.url[0] }} style={styles.imgElemStyle} />
+            <TouchableOpacity
+              style={{ flex: 1 }}
+              onPress={() => appuyerPhoto(elem)}
+            >
+              <Image
+                source={{ uri: elem.url[0] }}
+                style={styles.imgElemStyle}
+              />
+            </TouchableOpacity>
           </View>
+        </View>
+        <View style={styles.vwButonSupprimer}>
+          <TouchableOpacity
+            style={styles.btnModal}
+            onPress={() => poubelleAppuyee(elem)}
+          >
+            <Text style={{ color: "white" }}>Supprimer</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
+  };
+
+  documentsDonnes.map((elem, index) => {
+    const card = createDocumentCard(elem, index);
     cardArr.push(card);
   });
 
-  const searchDocuments = (text) => {
-    setSearchInput(text);
+  documentsDonnesRecherche.map((elem, index) => {
+    const card = createDocumentCard(elem, index);
+    cardArrRecherche.push(card);
+  });
+
+  const searchDocuments = () => {
+    console.log("searchDocuments");
+    // setSearchInput(text);
     const newDocumentsDonnes = [];
-    const normalizedSearch = text.trim().toLowerCase(); // Normalise l'entrée de recherche
-    documentsDonnesInitial.forEach((doc) => {
+    const normalizedSearch = searchInput.trim().toLowerCase(); // Normalise l'entrée de recherche
+    documentsDonnes.forEach((doc) => {
       const matchesSearch =
         doc.nom.toLowerCase().includes(normalizedSearch) ||
-        doc.practicien?.toLowerCase().includes(normalizedSearch);
-
+        doc.practicien?.toLowerCase().includes(normalizedSearch) ||
+        doc.notes?.toLowerCase().includes(normalizedSearch) ||
+        doc.dateAjoute?.toLowerCase().includes(normalizedSearch);
       if (matchesSearch) {
         newDocumentsDonnes.push(doc);
       }
     });
-    setdocumentsDonnes(newDocumentsDonnes);
+    setDocumentsDonnesRecherche(newDocumentsDonnes);
+    console.log(
+      "length documentsDonnesRecherche: ",
+      documentsDonnesRecherche.length
+    );
   };
 
   const searchDocumentModal = (
@@ -188,17 +198,17 @@ export default function DocumentsScreen({ navigation }) {
         <View style={styles.modalListView}>
           <Text style={styles.modalTitle}>Rechercher</Text>
 
-          <View style={styles.vwSearch}>
-            <TextInput
-              style={styles.listItem}
-              placeholder="Rechercher vos documents"
-              value={searchInput}
-              onChangeText={(text) => searchDocuments(text)}
-            ></TextInput>
-            <ScrollView style={styles.scrollView}></ScrollView>
+          <TextInput
+            style={styles.listItem}
+            placeholder="Rechercher vos documents"
+            value={searchInput}
+            onChangeText={(text) => setSearchInput(text)}
+          ></TextInput>
 
+          <ScrollView style={styles.scrollView}>{cardArrRecherche}</ScrollView>
+          <View style={styles.vwRechercheButons}>
             <TouchableOpacity
-              onPress={() => console.log("handling search")}
+              onPress={() => searchDocuments()}
               style={styles.btnModal}
               activeOpacity={0.8}
             >
@@ -217,12 +227,55 @@ export default function DocumentsScreen({ navigation }) {
     </Modal>
   );
 
+  const afficherPhotoModal = (
+    <Modal visible={photoModalVisible} animationType="fade" transparent={true}>
+      <View style={styles.photoModalContainer}>
+        {documentChoisi && (
+          <Image
+            source={{ uri: documentChoisi?.url[0] }}
+            width={Dimensions.get("screen").width * 0.8}
+            height={Dimensions.get("screen").height * 0.8}
+          />
+        )}
+        <TouchableOpacity
+          onPress={() => setPhotoModalVisible(false)}
+          style={styles.btnModal}
+          activeOpacity={0.8}
+        >
+          <Text style={styles.textButton}>Fermer</Text>
+        </TouchableOpacity>
+      </View>
+    </Modal>
+  );
+
+  const appuyerPhoto = (doc) => {
+    console.log("- appuyerPhoto");
+    console.log(doc);
+    console.log(`photoModalVisible: ${photoModalVisible}`);
+    setDocumentChoisi(doc);
+    setPhotoModalVisible(true);
+    console.log(`photoModalVisible: ${photoModalVisible}`);
+  };
+
   return (
     <TemplateView navigation={navigation}>
       {/* {modalAjouterDocumentVisible ? modalAjouterDocument : null} */}
-      {documentRedux.modalOuvert ? modalAjouterDocument : null}
+      {/* {documentRedux.modalOuvert ? modalAjouterDocument : null} */}
+      <Modal
+        // visible={modalAjouterDocumentVisible}
+        visible={documentRedux.modalOuvert}
+        animationType="fade"
+        transparent={true}
+      >
+        <VwAjouterDocument
+          fermerModal={fermerModalVwAjouterDoc}
+          fermerModalSansEffacer={cameraScreenFermerModalSansEffacerRedux}
+          navigation={navigation}
+          fetchDocumentsData={fetchData}
+        />
+      </Modal>
       {searchModalVisible ? searchDocumentModal : null}
-
+      {photoModalVisible ? afficherPhotoModal : null}
       <View style={styles.container}>
         <View style={styles.vwHaut}>
           <TouchableOpacity
@@ -247,6 +300,17 @@ export default function DocumentsScreen({ navigation }) {
   );
 }
 const styles = StyleSheet.create({
+  photoModalContainer: {
+    height: Dimensions.get("screen").height,
+    width: Dimensions.get("screen").width,
+    backgroundColor: "white",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  photoModalImageStyle: {
+    height: Dimensions.get("screen").height,
+    width: Dimensions.get("screen").width,
+  },
   container: {
     flex: 1,
   },
@@ -289,6 +353,14 @@ const styles = StyleSheet.create({
   searchBar: {
     flex: 1,
     textAlign: "center",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  listItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
   },
   btnModal: {
     backgroundColor: "pink",
@@ -300,22 +372,26 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingVertical: 5,
   },
-  // input: {
-  //   width: 150,
-  //   borderBottomColor: "#ec6e5b",
-  //   borderBottomWidth: 1,
-  //   fontSize: 16,
-  // },
+  scrollView: {
+    width: "100%",
+  },
   textButton: {
     color: "#ffffff",
     fontWeight: "600",
     fontSize: 15,
   },
-  vwBas: {
-    flex: 1,
-    justifyContent: "flex-start",
+  vwRechercheButons: {
+    width: "100%",
+    justifyContent: "center",
     alignItems: "center",
-    paddingTop: 20,
+    // backgroundColor: "gray",
+  },
+  vwButonSupprimer: {
+    width: "100%",
+    alignItems: "center",
+  },
+  vwBas: {
+    width: "100%",
   },
   card: {
     backgroundColor: "#fff", // Background color for the row
@@ -323,9 +399,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 10,
     borderRadius: 8,
-    width: Dimensions.get("screen").width * 0.8,
+    // width: Dimensions.get("screen").width * 0.8,
     // Shadow for Android
     elevation: 7,
+    flex: 1,
+    // backgroundColor: "gray",
   },
   cardRayon1: {
     alignItems: "flex-end",
