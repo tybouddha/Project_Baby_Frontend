@@ -527,7 +527,7 @@ export default function AgendaScreen({ navigation }) {
                 style={styles.btnModal}
                 activeOpacity={0.8}
               >
-                <Text style={styles.textButton}>Enregistrer</Text>
+                <Text style={styles.textButton}>Sauvegarder</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={closeModal}
@@ -693,7 +693,7 @@ export default function AgendaScreen({ navigation }) {
                               title="Ajouter"
                               onPress={openModal}
                             >
-                              <Text>Ajouter un nouveau rendez-vous</Text>
+                              <Text>Ajouter</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
                               style={styles.btnModal}
@@ -731,13 +731,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: Dimensions.get("screen").width,
     height: Dimensions.get("screen").height,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  header: {
-    display: "flex",
-    width: Dimensions.get("screen").width,
-    marginBottom: 40,
     justifyContent: "center",
     alignItems: "center",
   },
