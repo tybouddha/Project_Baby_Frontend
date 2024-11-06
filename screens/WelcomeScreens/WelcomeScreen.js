@@ -31,7 +31,7 @@ export default function WelcomeScreen({ navigation }) {
       <View style={styles.container}>
         <View style={styles.vwBtn}>
           <TouchableOpacity style={styles.btn} onPress={() => pressedLogin()}>
-            <Text style={styles.btnText}>Login</Text>
+            <Text style={styles.btnText}>Se connecter</Text>
           </TouchableOpacity>
         </View>
 
@@ -46,7 +46,7 @@ export default function WelcomeScreen({ navigation }) {
 
         <View style={styles.vwBtn}>
           <TouchableOpacity style={styles.btn} onPress={() => pressedInviter()}>
-            <Text style={styles.btnText}>Inviter</Text>
+            <Text style={styles.btnText}>Compte inviter</Text>
           </TouchableOpacity>
         </View>
       </View>

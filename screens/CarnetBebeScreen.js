@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
+  Image,
 } from "react-native";
 import TemplateView from "./template/TemplateView";
 import { Agenda } from "react-native-calendars";
@@ -25,6 +26,7 @@ export default function CarnetBebeScreen({ navigation }) {
   const [note, setnote] = useState(null); // note bonus
   const [data, setdata] = useState(false);
   const [lastInfos, setlastInfos] = useState([]);
+  const [docBebe, setdocBebe] = useState([]);
 
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const [currentField, setCurrentField] = useState(null);
@@ -50,29 +52,37 @@ export default function CarnetBebeScreen({ navigation }) {
   const user = useSelector((state) => state.user.value);
   const tokenProject = user.tokenProject;
   const username = user.username;
-
   useEffect(() => {
-    console.log("user:", user);
+    fetchData();
+  }, [username, tokenProject]);
+
+  const fetchData = () => {
+    console.log("new user:", user);
     console.log("tokenProject:", tokenProject);
     if (username && tokenProject) {
       fetch(`${process.env.EXPO_PUBLIC_API_URL}/carnetbebe/${tokenProject}`)
         .then((response) => response.json())
         .then((carnetBebe) => {
+          setdocBebe(carnetBebe);
           // console.log("carnetBebe:", carnetBebe);
           if (carnetBebe && carnetBebe.infos.length) {
             const lastCarnetBebe = carnetBebe.infos.reverse().slice(0, 3);
             setlastInfos(lastCarnetBebe);
           } else {
-            res.json({ result: false, error: "no data" });
+            response.json({ result: false, error: "no data" });
             console.log("Pas de données disponibles");
           }
           console.log(lastInfos);
         });
     }
-  }, [username, tokenProject]);
+  };
 
   const modalCarnetBebe = () => {
-    setModalVisible(true);
+    if (user.role === "lecteur") {
+      return alert("ny pense meme pas, tu na pas le droit");
+    } else {
+      setModalVisible(true);
+    }
   };
 
   const closeModal = () => {
@@ -127,6 +137,35 @@ export default function CarnetBebeScreen({ navigation }) {
     }
   }, [data]);
 
+  const handleDelete = (docBebe) => {
+    if (user.role === "lecteur") {
+      return alert("ne fout pas ta merde, tu es simple lecteur");
+    }
+    console.log("Vérification de l'ID dans handleDelete:");
+
+    if (!docBebe) {
+      console.error("L'identifiant du rendez-vous est manquant");
+      return;
+    }
+
+    fetch(
+      `${process.env.EXPO_PUBLIC_API_URL}/carnetbebe/${tokenProject}/${docBebe}`,
+      {
+        method: "DELETE",
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.result) {
+          fetchData();
+        }
+      })
+      .catch((error) =>
+        console.error("Erreur lors de la suppression :", error)
+      );
+  };
+
   const lastInfosCard = lastInfos?.map((item, data) => {
     // console.log(item);
 
@@ -139,27 +178,46 @@ export default function CarnetBebeScreen({ navigation }) {
           <Text>Selle: {item.selle}</Text>
           <Text>Couleur Selle: {item.couleurSelle}</Text>
           <Text>Notes: {item.notes}</Text>
+          <TouchableOpacity
+            style={styles.btnModal2}
+            title="Supprimer"
+            onPress={() => {
+              if (item._id) {
+                handleDelete(item._id);
+              } else {
+                console.error(
+                  "L'ID du rendez-vous est manquant :",
+                  docBebe.infos_id
+                );
+              }
+            }}
+          >
+            <Text>Supprimer</Text>
+          </TouchableOpacity>
         </View>
-        <FontAwesome
-          name="trash-o"
-          onPress={() => handleDelete(data.name)}
-          size={25}
-          color="#ec6e5b"
-        />
       </View>
     );
   });
   return (
     <TemplateView navigation={navigation}>
       {/* Commence propriété children */}
-
-      <View style={styles.container}>
+      <View>
+        {/* <View style={styles.container}>
         <TouchableOpacity
           style={styles.carnetBebeBtn}
           onPress={() => modalCarnetBebe()}
         >
           <Text>Carnet Bebe</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
+        <View style={styles.vwPlusButton}>
+          <TouchableOpacity onPress={() => modalCarnetBebe()}>
+            <Image
+              source={require("../assets/images/plus.png")}
+              resizeMode="contain"
+              style={styles.imageButon}
+            />
+          </TouchableOpacity>
+        </View>
 
         <Modal visible={modalVisible} animationType="fade" transparent>
           <View style={styles.centeredView}>
@@ -225,12 +283,9 @@ export default function CarnetBebeScreen({ navigation }) {
             </View>
           </View>
         </Modal>
+        <View style={styles.blocinfos}>{lastInfosCard}</View>
       </View>
       {/* Fin propriété children */}
-      <View style={styles.blocinfos}>
-        <Text>Carnet Bebe Screen </Text>
-        {lastInfosCard}
-      </View>
       {/* Fin propriété children */}
     </TemplateView>
   );
@@ -244,6 +299,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  vwPlusButton: {
+    width: Dimensions.get("screen").width * 0.8,
+    alignItems: "flex-end",
+    justifyContent: "flex-end",
+    margin: 10,
+  },
   // agenda: {
   //   borderWidth: 1,
   //   borderColor: "gray",
@@ -253,16 +314,19 @@ const styles = StyleSheet.create({
   //   margin: "auto",
   //   borderRadius: 15,
   // },
+  imageButon: {
+    height: 50,
+    aspectRatio: 1,
+  },
   carnetBebeBtn: {
     display: "flex",
     fontSize: 20,
-    height: 50,
+    height: 30,
     width: 300,
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 30,
-    margin: "auto",
+    marginBottom: 50,
     borderRadius: 20,
     borderWidth: 1,
   },
@@ -280,7 +344,7 @@ const styles = StyleSheet.create({
   btnModal: {
     backgroundColor: "pink",
     borderWidth: 1,
-    width: 220,
+    width: 200,
     height: 300,
     alignItems: "center",
     borderRadius: 12,
@@ -313,21 +377,46 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   card: {
+    display: "flex-wrap",
+    width: Dimensions.get("screen").width,
+    // justifyContent: "center",
+    // alignItems: "center",
+    padding: 10,
     flexDirection: "row",
-    alignItems: "center",
+    //   alignItems: "center",
     justifyContent: "space-between",
-    width: "80%",
-    backgroundColor: "#ffffff",
-    padding: 8,
+    //   width: "80%",
+    //   backgroundColor: "#ffffff",
+    //   padding: 8,
+    //   marginTop: 10,
+    //   borderRadius: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    width: Dimensions.get("screen").width * 0.7,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: "#007ACC", // Blue outline
+    backgroundColor: "#FFFFFF", // White background
+    alignItems: "center",
     marginTop: 10,
-    borderRadius: 10,
+    flexWrap: " wrap",
   },
   name: {
     fontSize: 18,
   },
   blocinfos: {
-    backgroundColor: "yellow",
-    marginTop: 20,
-    marginBottom: -80,
+    flex: 1,
+    alignItems: "center",
+  },
+  btnModal2: {
+    backgroundColor: "pink",
+    borderWidth: 1,
+    width: 100,
+    alignItems: "center",
+    borderRadius: 12,
+    justifyContent: "center",
+    marginTop: 10,
+    paddingVertical: 5,
+    flexWrap: "nowrap",
   },
 });

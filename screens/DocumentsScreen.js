@@ -37,9 +37,13 @@ export default function DocumentsScreen({ navigation }) {
   const [documentsDonnes, setdocumentsDonnes] = useState([]);
 
   const appuyerAjouterDocument = () => {
-    // console.log(`appuyerAjouterDocument`);
-    // setmodalAjouterDocumentVisible(true);
-    dispatch(documentModalRestOuvert());
+    if (userRedux.role === "lecteur") {
+      return alert("nop, ny pense meme pas");
+    } else {
+      // console.log(`appuyerAjouterDocument`);
+      // setmodalAjouterDocumentVisible(true);
+      dispatch(documentModalRestOuvert());
+    }
   };
 
   const fermerModalVwAjouterDoc = () => {

@@ -52,10 +52,10 @@ const TabNavigator = () => {
             iconName = "file";
             screenName = "documents";
           } else if (route.name === "CarnetBebe") {
-            iconName = "reddit-alien"; // changee
+            iconName = "faBabyBottle"; // changee
             screenName = "carnet bebé";
           } else {
-            iconName = "reddit-alien";
+            iconName = "faBabyBottle";
           }
 
           return (

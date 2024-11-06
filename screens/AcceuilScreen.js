@@ -29,6 +29,8 @@ export default function AcceuilScreen({ navigation }) {
     setAgendaModalVisible(false); // Ferme le modal de l'agenda
     setRendezVousDuJour([]); // Réinitialise les rendez-vous quotidiens
   };
+  const [mamanModalVisible, setMamanModalVisible] = useState(false);
+  const [babyModalVisible, setBabyModalVisible] = useState(false);
   //hook for update the modal and open the modal
   const [modalVisible, setModalVisible] = useState(false);
   const [role, setrole] = useState("lecteur");
@@ -36,11 +38,35 @@ export default function AcceuilScreen({ navigation }) {
   const [markedDates, setMarkedDates] = useState({}); // Dates marquées sur le calendrier
   const [idArray, setIdArray] = useState([]); // L'id du rendez-vous
   const [rendezVous, setRendezVous] = useState({ rdv: [] }); // Liste des rendez-vous récupérés
+
+  const guideNutritionMaman = [
+    "Les besoins nutritionnels lors de la grossesse sont bien spécifiques : les besoins en énergie augmentent dès le 2e trimestre et surtout lors du 3e et des besoins spécifiques apparaissent : besoins supplémentaires en fer, en calcium et en vitamines.",
+    "Une alimentation équilibrée et énergétique essentielle pour le bon développement du bébé.",
+    "L'apport énergétique par l'alimentation ne doit pas être inférieur à 1 600 kcal/jour au risque d'avoir une répercussion sur la croissance du fœtus. Pour couvrir les besoins nutritionnels, l'alimentation doit être diversifiée et équilibrée.",
+    "Une alimentation équilibrée, c'est manger :cinq fruits et légumes par jour",
+    "du pain, des céréales et d'autres sucres lents (légumineuses) à chaque repas selon votre appétit",
+    "des produits laitiers trois fois par jour",
+    "des protéines (viande, poisson ou œufs), chaque jour ;",
+    "de l'eau à volonté.",
+    "Il est important également de limiter sa consommation de matières grasses, de sel et de produits sucrés. Pour ces derniers, privilégiez les sucres lents (féculents, céréales, pain, légumes secs) et prenez l'habitude de les intégrer à tous vos repas.",
+  ];
+  const guideNutritionBebe = [
+    "Le lait constitue l’aliment essentiel et unique du bébé de sa naissance à l’âge de 6 mois. Il contient tous les nutriments nécessaires à sa croissance et à la prévention des infections. Que ce soit au sein ou au biberon, la tétée est un moment d'échange privilégié avec votre enfant.",
+    "Les bénéfices de l'allaitement maternel pour le bébé Outre le lien relationnel mère-enfant, l'allaitement apporte au nourrisson tout ce dont il a besoin pour se développer.",
+    "Même si l'allaitement ne dure que quelques semaines, il est bénéfique à votre enfant. En effet, le lait maternel est facile à digérer et il est vite assimilé. Le lait maternel est riche en anticorps, vitamines, sels minéraux, oligo-éléments, sucres, graisses, protéines... Tout ce dont votre bébé a besoin pour bien démarrer dans la vie.",
+    "L'allaitement maternel est également bénéfique pour la maman car il :permet une perte de poids plus rapide dans les 6 premiers mois après l'accouchement,diminue le risque de survenue ultérieure d'un diabète de type 2,réduit à long terme le risque de cancer du sein ou de l'ovaire avant la ménopause,aurait également un rôle dans la prévention de l'ostéoporose après la ménopause.",
+  ];
+  const directionalimentation = () => setMamanModalVisible(true); // Ouvre le modal des guides nutritions de la mère
+  const closeguideMamanModal = () => setMamanModalVisible(false); // ferme le modal des guides nutritions de la mère
   const handleSubmit = () => {
-    setModalVisible(true);
-    console.log("btn fonctionnel");
-    console.log(projectToken);
-    console.log(user);
+    if (!user.role === "propriétaire") {
+      return alert("c'est chitos mon acces est bloqué");
+    } else {
+      setModalVisible(true);
+      console.log("btn fonctionnel");
+      console.log(projectToken);
+      console.log(user);
+    }
   };
   // useEffect to recover data at mount of component
   useEffect(() => {
@@ -105,9 +131,7 @@ export default function AcceuilScreen({ navigation }) {
     }
   };
   //function to get the page for guide
-  const directionalimentation = () => {
-    console.log("switch vers la page guide alimentation");
-  };
+
   const handleClose = () => {
     setModalVisible(false);
   };
@@ -181,7 +205,7 @@ export default function AcceuilScreen({ navigation }) {
                 style={styles.btnModal}
                 activeOpacity={0.8}
               >
-                <Text style={styles.textButton}>Close</Text>
+                <Text style={styles.textButton}>Fermer</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -235,6 +259,27 @@ export default function AcceuilScreen({ navigation }) {
         >
           <Text>Conseils Alimentation</Text>
         </TouchableOpacity>
+        <Modal visible={mamanModalVisible} animationType="slide" transparent>
+          <View style={styles.centeredView}>
+            <View style={styles.modalListView}>
+              <Text style={styles.modalTitle}>Conseil nutrition maman</Text>
+              <ScrollView style={styles.scrollView}>
+                {guideNutritionMaman.map((rdv, index) => (
+                  <View key={index} style={styles.listItem}>
+                    <Text>{rdv}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+              <TouchableOpacity
+                onPress={closeguideMamanModal}
+                style={styles.btnModal}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.textButton}>Fermer</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </KeyboardAvoidingView>
     </ImageBackground>
   );

@@ -61,17 +61,18 @@ export default function InviterScreen({ navigation }) {
         )
           .then((response) => response.json())
           .then((data) => {
-            console.log("new user", data.responseData.project.token);
-            if (data.responseData.project.token) {
+            console.log("new user", data);
+            if (data) {
               navigation.navigate("TabNavigator");
               dispatch(
                 loginUser({
                   username: username,
-                  token: data.token,
-                  tokenProject: data.responseData.project.token,
+                  token: data.data.tokenUser,
+                  tokenProject: data.data.tokenProject,
+                  role: data.data.role,
                 })
               );
-              console.log("tokenproject", data.responseData.project.token);
+              // console.log("tokenproject", data);
             } else {
               console.log(`data.project?.token2 est falsey 😱`);
               messageErrorSetter(data?.error);
