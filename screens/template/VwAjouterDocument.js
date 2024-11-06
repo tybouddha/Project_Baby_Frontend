@@ -141,21 +141,14 @@ export default function VwAjouterDocument(props) {
       <View style={styles.modalOverlayScroll}>
         <View style={styles.modalBackground}>
           <View style={styles.vwHaut}>
-            <TouchableOpacity
-              onPress={props.fermerModal}
-              style={styles.btnModalFermer}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.textButtonX}>x</Text>
-            </TouchableOpacity>
-            <Text style={styles.txtTitre}>Ajouter Une Document</Text>
+            <Text style={styles.txtTitre}>Ajouter une document</Text>
           </View>
 
           <View style={styles.vwAuMileu}>
             <View style={styles.vwInputSuper}>
               <View style={styles.vwInput}>
                 <TextInput
-                  style={styles.txtInput}
+                  style={styles.listItem}
                   onChangeText={(value) => {
                     setNom(value);
                     // sauvgaurderInfos();
@@ -170,7 +163,7 @@ export default function VwAjouterDocument(props) {
             <View style={styles.vwInputSuper}>
               <View style={styles.vwInput}>
                 <TextInput
-                  style={styles.txtInput}
+                  style={styles.listItem}
                   onChangeText={(value) => {
                     setPracticien(value);
                     // sauvgaurderInfos();
@@ -184,7 +177,7 @@ export default function VwAjouterDocument(props) {
             <View style={styles.vwInputSuperNotes}>
               <View style={styles.vwInputNotes}>
                 <TextInput
-                  style={styles.txtInputNotes}
+                  style={styles.listItem}
                   onChangeText={(value) => {
                     setNotes(value);
                     // sauvgaurderInfos();
@@ -216,6 +209,13 @@ export default function VwAjouterDocument(props) {
               activeOpacity={0.8}
             >
               <Text style={styles.btnText}>Soumettre</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={props.fermerModal}
+              style={styles.btn}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.btnText}>Fermer</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -258,10 +258,11 @@ const styles = StyleSheet.create({
   },
 
   txtTitre: {
-    fontSize: 23,
-    fontWeight: "bold",
+    fontSize: 20,
+    // fontWeight: "bold",
     width: "100%",
     textAlign: "center",
+    paddingTop: 20,
     paddingBottom: 20,
   },
 
@@ -311,9 +312,9 @@ const styles = StyleSheet.create({
     //width: Dimensions.get("screen").width * 0.8, // Full screen width
     width: "80%",
     height: 50,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: 12,
-    borderColor: "#007ACC", // Blue outline
+    // borderColor: "#007ACC", // Blue outline
     margin: 5,
   },
   txtInput: {
@@ -334,9 +335,9 @@ const styles = StyleSheet.create({
     // //width: Dimensions.get("screen").width * 0.8, // Full screen width
     width: "80%",
     // height: 50,
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: 12,
-    borderColor: "#007ACC", // Blue outline
+    // borderColor: "#007ACC", // Blue outline
     // margin: 5,
     // // height: "300%",
   },
@@ -370,32 +371,49 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   btnAjouter: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    width: Dimensions.get("screen").width * 0.7,
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: "#007ACC", // Blue outline
-    backgroundColor: "pink", // White background
+    // paddingVertical: 12,
+    // paddingHorizontal: 20,
+    // width: Dimensions.get("screen").width * 0.7,
+    // borderRadius: 25,
+    // borderWidth: 2,
+    // borderColor: "#007ACC", // Blue outline
+    // backgroundColor: "pink", // White background
+    // alignItems: "center",
+    // marginBottom: 30,
+    backgroundColor: "pink",
+    borderWidth: 1,
+    width: 120,
     alignItems: "center",
-    marginBottom: 30,
+    borderRadius: 12,
+    justifyContent: "center",
+    marginTop: 10,
+    paddingVertical: 5,
   },
-  btnAjouterText: {
-    fontFamily: "Caveat",
-    fontSize: 20,
-  },
+  // btnAjouterText: {
+  //   fontFamily: "Caveat",
+  //   fontSize: 20,
+  // },
   btn: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    width: Dimensions.get("screen").width * 0.7,
-    borderRadius: 25,
-    borderWidth: 2,
-    borderColor: "#007ACC", // Blue outline
-    backgroundColor: "#FFFFFF", // White background
+    // paddingVertical: 12,
+    // paddingHorizontal: 20,
+    // width: Dimensions.get("screen").width * 0.7,
+    // borderRadius: 25,
+    // borderWidth: 2,
+    // borderColor: "#007ACC", // Blue outline
+    // backgroundColor: "#FFFFFF", // White background
+    // alignItems: "center",
+    backgroundColor: "pink",
+    borderWidth: 1,
+    width: 120,
     alignItems: "center",
+    borderRadius: 12,
+    justifyContent: "center",
+    marginTop: 10,
+    paddingVertical: 5,
   },
-  btnText: {
-    fontFamily: "Caveat",
-    fontSize: 20,
+  listItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
   },
 });
