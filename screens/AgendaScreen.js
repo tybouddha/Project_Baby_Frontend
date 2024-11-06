@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import TemplateView from "./template/TemplateView";
-import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function AgendaScreen({ navigation }) {
   const mamanRendezVousList = [
@@ -187,7 +186,7 @@ export default function AgendaScreen({ navigation }) {
       if (rendezVousDuJour.length > 0) {
         // Si des rendez-vous sont trouvés
         setRendezVousDuJour(rendezVousDuJour); // Met à jour les rendez-vous du jour
-        setSvModalVisible(true); // Ouvre le modal de l'agenda
+        openSvModalVisible(); // Ouvre le modal de l'agenda
       } else {
         openModal(); // Ouvre le modal d'ajout de rendez-vous
       }
