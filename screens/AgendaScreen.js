@@ -86,7 +86,13 @@ export default function AgendaScreen({ navigation }) {
   console.log("token :", projectToken);
 
   // function to open and close modals
-  const openModal = () => setModalVisible(true); // Ouvre le modal d'ajout de rendez-vous
+  const openModal = () => {
+    if (user.role === "lecteur") {
+      return alert("c'est chitos mon acces est bloqué");
+    } else {
+      setModalVisible(true);
+    }
+  }; // Ouvre le modal d'ajout de rendez-vous
   const closeModal = () => setModalVisible(false); // Ferme le modal d'ajout de rendez-vous
   const openMamanModal = () => setMamanModalVisible(true); // Ouvre le modal des rendez-vous de la mère
   const closeMamanModal = () => setMamanModalVisible(false); // Ferme le modal des rendez-vous de la mère
@@ -107,13 +113,17 @@ export default function AgendaScreen({ navigation }) {
     console.log(user); // Affiche les informations utilisateur pour le débogage
   };
   const openModifierModal = (rdvData) => {
-    // Ouvre la modal modifier
-    setPourQuiModif(rdvData.pourQui);
-    setPracticienModif(rdvData.practicien);
-    setLieuModif(rdvData.lieu);
-    setHeureModif(rdvData.heure);
-    setNotesModif(rdvData.notes);
-    setModifierModalVisible(true);
+    if (user.role === "lecteur") {
+      return alert("non non non, tu es simple lecteur");
+    } else {
+      // Ouvre la modal modifier
+      setPourQuiModif(rdvData.pourQui);
+      setPracticienModif(rdvData.practicien);
+      setLieuModif(rdvData.lieu);
+      setHeureModif(rdvData.heure);
+      setNotesModif(rdvData.notes);
+      setModifierModalVisible(true);
+    }
   };
   const closeModifierModal = () => {
     // Ferme la modal modifier
@@ -197,6 +207,9 @@ export default function AgendaScreen({ navigation }) {
 
   // function to create a new appointment
   const handleSubmit = () => {
+    if (user.role === "lecteur") {
+      return alert("non non non, tu es simple lecteur");
+    }
     const newRdv = {
       pourQui,
       practicien,
@@ -270,6 +283,9 @@ export default function AgendaScreen({ navigation }) {
 
   // function to delete appointment
   const handleDelete = (rdvId) => {
+    if (user.role === "lecteur") {
+      return alert("ne fout pas ta merde, tu es simple lecteur");
+    }
     console.log("Vérification de l'ID dans handleDelete:", rdvId);
 
     if (!rdvId) {
@@ -434,7 +450,7 @@ export default function AgendaScreen({ navigation }) {
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={styles.btnModal}
-                          title="Supprimer"
+                          title="Supprim er"
                           onPress={() => {
                             if (rdv._id) {
                               handleDelete(rdv._id);

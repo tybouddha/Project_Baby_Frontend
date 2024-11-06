@@ -138,6 +138,7 @@ export default function CreerProjetScreen({ navigation }) {
                   prenom: prenom,
                   email: email,
                   tokenProject: data.project.token, // tokenProject: data.token2,
+                  role: data.role,
                 })
               );
               navigation.navigate("TabNavigator");
@@ -172,7 +173,7 @@ export default function CreerProjetScreen({ navigation }) {
               <TextInput
                 style={styles.txtInput}
                 onChangeText={(value) => usernameSetter(value)}
-                placeholder="Username"
+                placeholder="Pseudonyme"
                 placeholderTextColor="#555555" // Dark gray color for the placeholder
                 value={username}
               />
@@ -251,14 +252,14 @@ export default function CreerProjetScreen({ navigation }) {
               <TextInput
                 style={styles.txtInput}
                 onChangeText={(value) => passwordSetter(value)}
-                placeholder="Password"
+                placeholder="Mot de passe"
                 secureTextEntry={!cachePassword} // cache le text dans le input
                 placeholderTextColor="#555555" // Dark gray color for the placeholder
                 value={password}
               />
             </View>
             <View style={styles.switchCachePassword}>
-              <Text>Afficher Password</Text>
+              <Text>Afficher le mot de passe</Text>
               <Switch
                 value={cachePassword}
                 onValueChange={(value) => cachePasswordSetter(value)}
