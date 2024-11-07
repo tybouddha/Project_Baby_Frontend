@@ -59,6 +59,8 @@ export default function DocumentsScreen({ navigation }) {
         .catch((error) =>
           console.error("Erreur lors de la suppression :", error)
         );
+    } else {
+      return alert("c'est chitos mon acces est bloqué");
     }
   };
 
@@ -258,6 +260,8 @@ export default function DocumentsScreen({ navigation }) {
             onPress={() => {
               if (userRedux.role != "lecteur") {
                 dispatch(documentModalRestOuvert());
+              } else {
+                alert("c'est chitos mon acces est bloqué");
               }
             }}
           >
