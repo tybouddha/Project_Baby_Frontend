@@ -46,16 +46,16 @@ const TabNavigator = () => {
             iconName = "home";
             screenName = "acceuil";
           } else if (route.name === "Agenda") {
-            iconName = "calendar";
+            iconName = "calendar-alt";
             screenName = "agenda";
           } else if (route.name === "Documents") {
-            iconName = "file";
+            iconName = "file-medical-alt";
             screenName = "documents";
           } else if (route.name === "CarnetBebe") {
-            iconName = "faBabyBottle"; // changee
+            iconName = "baby"; // changee
             screenName = "carnet bebé";
           } else {
-            iconName = "faBabyBottle";
+            iconName = "baby";
           }
 
           return (

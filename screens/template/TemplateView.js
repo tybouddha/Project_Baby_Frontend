@@ -9,7 +9,10 @@ export default function TemplateView(props) {
       style={styles.background}
     >
       <View style={styles.vwHeader}>
-        <HeaderView navigation={props.navigation} />
+        <HeaderView
+          navigation={props.navigation}
+          afficherArriére={props.afficherArriére}
+        />
       </View>
       <View style={styles.vwMain}>{props.children}</View>
       {/* {props.children} sont touts les trucs de le vrai Screen */}

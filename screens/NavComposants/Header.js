@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import { useSelector, useDispatch } from "react-redux";
 
 export default function HeaderView(props) {
@@ -22,9 +22,15 @@ export default function HeaderView(props) {
   };
 
   const vwProfil = (
-    <View style={styles.containerProfil}>
+    <View
+      style={
+        props.afficherArriére
+          ? styles.containerProfil
+          : styles.containerProfilSolo
+      }
+    >
       <TouchableOpacity style={styles.btn} onPress={() => pressedProfil()}>
-        <FontAwesome name={"user"} size={25} color={"#FFFFFF"} />
+        <FontAwesome name={"user-ninja"} size={25} color={"#FFFFFF"} />
       </TouchableOpacity>
     </View>
   );
@@ -32,7 +38,11 @@ export default function HeaderView(props) {
   const vwArrière = (
     <View style={styles.containerArrière}>
       <TouchableOpacity style={styles.btn} onPress={() => allerArrière()}>
-        <FontAwesome name={"arrow-left"} size={25} color={"#FFFFFF"} />
+        <FontAwesome
+          name={"arrow-alt-circle-left"}
+          size={25}
+          color={"#FFFFFF"}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -57,6 +67,7 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
+    justifyContent: "space-between",
     padding: 5,
     backgroundColor: "#007ACC",
     height: 70,
@@ -73,15 +84,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: Dimensions.get("screen").width * 0.5 - 40,
   },
-  containerProfil: {
+  containerProfilSolo: {
     width: "100%",
     justifyContent: "center",
     alignItems: "flex-end",
     paddingRight: 10,
   },
+  containerProfil: {
+    justifyContent: "center",
+    marginRight: 10,
+  },
   containerArrière: {
-    display: "flex",
-    justifyContent: "flex-end",
-    paddingBottom: 10,
+    justifyContent: "center",
+    marginLeft: 10,
   },
 });

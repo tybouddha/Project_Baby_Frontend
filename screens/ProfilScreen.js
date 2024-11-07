@@ -158,7 +158,7 @@ export default function Profil({ navigation }) {
   };
 
   return (
-    <TemplateView navigation={navigation}>
+    <TemplateView navigation={navigation} afficherArriére>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.background}
