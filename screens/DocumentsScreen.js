@@ -10,7 +10,6 @@ import {
   TextInput,
 } from "react-native";
 import TemplateView from "./template/TemplateView";
-// import RNFS from "react-native-fs";
 import { useEffect, useState } from "react";
 
 import VwAjouterDocument from "./template/VwAjouterDocument";
@@ -28,7 +27,7 @@ export default function DocumentsScreen({ navigation }) {
   const dispatch = useDispatch();
   const [documentsDonnes, setDocumentsDonnes] = useState([]);
   const [documentsDonnesRecherche, setDocumentsDonnesRecherche] = useState([]);
-  const [searchInput, setSearchInput] = useState(""); // Champ de recherche
+  const [searchInput, setSearchInput] = useState("");
   const [searchModalVisible, setSearchModalVisible] = useState("");
   const [photoModalVisible, setPhotoModalVisible] = useState("");
   const [documentChoisi, setDocumentChoisi] = useState("");
@@ -36,8 +35,6 @@ export default function DocumentsScreen({ navigation }) {
     useState(false);
 
   const fermerModalVwAjouterDoc = () => {
-    // cette fonctionne ferme le VwAjouterDocument
-    // console.log("🚨 DocumentScreen > fermerModalVwAjouterDoc ");
     dispatch(sauvgaurderDocumentInfos({ nom: "", practcien: "", notes: "" }));
     dispatch(supprimerTousLesPhotos());
     dispatch(doucumentModalResterFermer());
@@ -47,26 +44,22 @@ export default function DocumentsScreen({ navigation }) {
     dispatch(doucumentModalResterFermer());
   };
 
-  // let ajourdhui = new Date();
-
   const poubelleAppuyee = (elem) => {
-    // console.log("Appuyer poubelle");
-    console.log(`a le poubelle avec: `);
-    console.log(elem);
-
-    fetch(`${process.env.EXPO_PUBLIC_API_URL}/document/${elem._id}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        if (data.result) {
-          fetchData();
-        }
+    if (userRedux.role != "lecteur") {
+      fetch(`${process.env.EXPO_PUBLIC_API_URL}/document/${elem._id}`, {
+        method: "DELETE",
       })
-      .catch((error) =>
-        console.error("Erreur lors de la suppression :", error)
-      );
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          if (data.result) {
+            fetchData();
+          }
+        })
+        .catch((error) =>
+          console.error("Erreur lors de la suppression :", error)
+        );
+    }
   };
 
   useEffect(() => {
@@ -146,7 +139,6 @@ export default function DocumentsScreen({ navigation }) {
   });
 
   const searchDocuments = () => {
-    console.log("searchDocuments");
     setAfficherRechercheScrollView(true);
     const newDocumentsDonnes = [];
     const normalizedSearch = searchInput.trim().toLowerCase(); // Normalise l'entrée de recherche
@@ -168,12 +160,8 @@ export default function DocumentsScreen({ navigation }) {
   };
 
   const appuyerPhoto = (doc) => {
-    console.log("- appuyerPhoto");
-    console.log(doc);
-    console.log(`photoModalVisible: ${photoModalVisible}`);
     setDocumentChoisi(doc);
     setPhotoModalVisible(true);
-    console.log(`photoModalVisible: ${photoModalVisible}`);
   };
 
   return (
@@ -267,7 +255,11 @@ export default function DocumentsScreen({ navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.btn}
-            onPress={() => dispatch(documentModalRestOuvert())}
+            onPress={() => {
+              if (userRedux.role != "lecteur") {
+                dispatch(documentModalRestOuvert());
+              }
+            }}
           >
             <Text>Ajoute un document</Text>
           </TouchableOpacity>
