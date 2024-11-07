@@ -64,7 +64,7 @@ export default function LoginScreen({ navigation }) {
             // console.log(data);
             if (data.project?.token) {
               // console.log(`data.project?.token est Truey 🤗`);
-              navigation.navigate("TabNavigator");
+
               dispatch(
                 loginUser({
                   username: username,
@@ -79,7 +79,8 @@ export default function LoginScreen({ navigation }) {
               messageErrorSetter(data?.error);
               setModalEchecVisible(true);
             }
-          });
+          })
+          .then(() => navigation.navigate("TabNavigator"));
         envoyerDataSetter(false);
       }
     },
