@@ -8,9 +8,6 @@ import {
 } from "react-native";
 
 export default function VwEchec(props) {
-  console.log("- dans VwEchec ");
-  // export default function LoginScreen({ navigation }) {
-
   return (
     <View style={styles.modalOverlay}>
       <View style={styles.modalBackground}>
@@ -66,7 +63,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent overlay
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
   },
   textMessage: {
     padding: 10,

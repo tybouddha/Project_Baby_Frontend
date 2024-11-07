@@ -11,22 +11,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { ajouterPhoto } from "../../reducers/document";
 
 export default function VwStockerImage(props) {
-  console.log("- dans VwStockerImage ");
   const dispatch = useDispatch();
   const documentRedux = useSelector((state) => state.document.value);
-  // export default function LoginScreen({ navigation }) {
 
   const stockerPhoto = () => {
-    console.log("- stockerPhoto");
-
     const formData = new FormData();
     formData.append("photoFromFront", {
       uri: props.photoCacheUri,
       name: `photo_${Date.now()}.jpg`,
       type: "image/jpeg",
     });
-    console.log("---- formData ----");
-    console.log(formData);
 
     fetch(`${process.env.EXPO_PUBLIC_API_URL}/document/uploadPhoto`, {
       method: "POST",
@@ -34,14 +28,6 @@ export default function VwStockerImage(props) {
     })
       .then((response) => response.json())
       .then((resJson) => {
-        console.log("--- bien recu un reposne");
-        console.log(`resJson: ${resJson}`);
-        console.log(`resJson: ${resJson.url}`);
-
-        console.log("champs de saiser via Redux");
-        console.log(`doucmentRedux nom: ${documentRedux.nom}`);
-        console.log(`doucmentRedux practicien: ${documentRedux.practicien}`);
-
         dispatch(ajouterPhoto(resJson.url));
         props.fermerModalStockerImage();
         props.navigation.navigate("TabNavigator", { screen: "Documents" });
@@ -84,14 +70,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent overlay
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
   },
   modalBackground: {
-    // flex: 1,
     justifyContent: "center",
     alignItems: "center",
     width: Dimensions.get("screen").width * 0.8,
-    // height: Dimensions.get("screen").height * 0.3,
     backgroundColor: "white",
     borderRadius: 12,
     padding: 30,
@@ -106,7 +90,6 @@ const styles = StyleSheet.create({
   },
 
   imgElemStyle: {
-    // margin: 10,
     width: Dimensions.get("screen").width * 0.6,
     height: Dimensions.get("screen").width * 0.6,
   },

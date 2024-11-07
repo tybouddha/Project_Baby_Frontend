@@ -10,7 +10,6 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-// import VwFicherType from "./VwFicherType";
 import { useSelector, useDispatch } from "react-redux";
 import {
   sauvgaurderDocumentInfos,
@@ -25,9 +24,7 @@ export default function VwAjouterDocument(props) {
   const [nom, setNom] = useState("");
   const [practicien, setPracticien] = useState("");
   const [notes, setNotes] = useState("");
-  // const [modalFicherTypeVisible, setModalFicherTypeVisible] = useState(false);
   const dispatch = useDispatch();
-  // const [photosArr, setPhotosArr] = useState([]);
 
   let imagesArr = [];
 
@@ -37,15 +34,6 @@ export default function VwAjouterDocument(props) {
       setNom(documentRedux.nom);
       setPracticien(documentRedux.practicien);
       setNotes(documentRedux.notes);
-      // setPhotosArr(documentRedux.photos);
-      // console.log(
-      //   "- VwAjouterDocument > useFocusEffect > useCallback > photosArr",
-      //   photosArr
-      // );
-      // return () => {
-      //   // Optional cleanup when the screen loses focus
-      //   console.log("VwAjouterDocument is out of focus");
-      // };
     }, [])
   );
 
@@ -66,26 +54,8 @@ export default function VwAjouterDocument(props) {
     imagesArr.push(imgElem);
   });
 
-  // const fermerModalFicherType = () => {
-  //   // cette fonctionnne fermer le modal VwFicherType
-  //   setModalFicherTypeVisible(false);
-  //   props.closeModal();
-  // };
-
-  const cameraScreenFermerModalsSansEffacerRedux = () => {
-    console.log(
-      "*** >> fremer le modal cameraScreenFermerModalsSansEffacerRedux"
-    );
-    // setModalFicherTypeVisible(false);
-    props.fermerModalSansEffacer();
-  };
-
   const appuyerCamera = () => {
-    console.log("appuyerCamera");
-    // console.log("docs images (documentRedux.photos): ", documentRedux.photos);
     dispatch(documentModalRestOuvert());
-    console.log("docRexux: ", documentRedux.nom);
-    console.log("docRexux: ", documentRedux.practicien);
 
     payloadObj = {
       nom: nom,
@@ -98,15 +68,6 @@ export default function VwAjouterDocument(props) {
     props.navigation.navigate("Camera");
   };
 
-  // const sauvgaurderInfos = () => {
-  //   payloadObj = {
-  //     nom: nom,
-  //     practicien: practicien,
-  //     notes: notes,
-  //   };
-  //   dispatch(sauvgaurderDocumentInfos(payloadObj));
-  // };
-
   const appuyerSoumettre = () => {
     const bodyObj = {
       token: userRedux.token,
@@ -116,15 +77,11 @@ export default function VwAjouterDocument(props) {
       notes: notes,
       url: documentRedux.photos,
     };
-    fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/document/add`,
-      // fetch("http://192.168.1.156:3000/user/signin",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyObj),
-      }
-    )
+    fetch(`${process.env.EXPO_PUBLIC_API_URL}/document/add`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bodyObj),
+    })
       .then((response) => response.json())
       .then((resJson) => {
         if (resJson.result) {
@@ -135,9 +92,7 @@ export default function VwAjouterDocument(props) {
   };
 
   return (
-    // <View style={styles.modalOverlay}>
     <ScrollView>
-      {/* {modalFicherTypeVisible ? modalFicher : null} */}
       <View style={styles.modalOverlayScroll}>
         <View style={styles.modalBackground}>
           <View style={styles.vwHaut}>
@@ -151,10 +106,9 @@ export default function VwAjouterDocument(props) {
                   style={styles.listItem}
                   onChangeText={(value) => {
                     setNom(value);
-                    // sauvgaurderInfos();
                   }}
                   placeholder="Nom"
-                  placeholderTextColor="#555555" // Dark gray color for the placeholder
+                  placeholderTextColor="#555555"
                   value={nom}
                 />
               </View>
@@ -166,10 +120,9 @@ export default function VwAjouterDocument(props) {
                   style={styles.listItem}
                   onChangeText={(value) => {
                     setPracticien(value);
-                    // sauvgaurderInfos();
                   }}
                   placeholder="Practicien"
-                  placeholderTextColor="#555555" // Dark gray color for the placeholder
+                  placeholderTextColor="#555555"
                   value={practicien}
                 />
               </View>
@@ -180,14 +133,13 @@ export default function VwAjouterDocument(props) {
                   style={styles.listItem}
                   onChangeText={(value) => {
                     setNotes(value);
-                    // sauvgaurderInfos();
                   }}
                   placeholder="Notes"
-                  placeholderTextColor="#555555" // Dark gray color for the placeholder
+                  placeholderTextColor="#555555"
                   value={notes}
                   multiline={true}
-                  numberOfLines={4} // Initial visible lines
-                  textAlignVertical="top" // Aligns text at the top of the input field
+                  numberOfLines={4}
+                  textAlignVertical="top"
                 />
               </View>
             </View>
@@ -228,25 +180,22 @@ export default function VwAjouterDocument(props) {
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent overlay
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
   },
   modalOverlayScroll: {
     flex: 1,
     paddingTop: 100,
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent overlay
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
     height: Dimensions.get("screen").height * 1.5,
     width: Dimensions.get("screen").width,
   },
 
   modalBackground: {
-    // justifyContent: "center",
     alignItems: "center",
     width: Dimensions.get("screen").width * 0.8,
-    // height: Dimensions.get("screen").height * 0.6,
     backgroundColor: "white",
     borderRadius: 12,
-    // padding: 30,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -259,7 +208,6 @@ const styles = StyleSheet.create({
 
   txtTitre: {
     fontSize: 20,
-    // fontWeight: "bold",
     width: "100%",
     textAlign: "center",
     paddingTop: 20,
@@ -287,18 +235,12 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   vwHaut: {
-    // flex: 1,
     alignItems: "center",
     width: Dimensions.get("screen").width * 0.8,
-    // height: Dimensions.get("screen").height * 0.6,
-    // backgroundColor: "green",
   },
   vwAuMileu: {
-    // flex: 1,
     alignItems: "center",
     width: Dimensions.get("screen").width * 0.8,
-    // height: Dimensions.get("screen").height * 0.6,
-    // backgroundColor: "yellow",
   },
   vwInputSuper: {
     display: "flex",
@@ -309,16 +251,12 @@ const styles = StyleSheet.create({
   },
   vwInput: {
     display: "flex",
-    //width: Dimensions.get("screen").width * 0.8, // Full screen width
     width: "80%",
     height: 50,
-    // borderWidth: 1,
     borderRadius: 12,
-    // borderColor: "#007ACC", // Blue outline
     margin: 5,
   },
   txtInput: {
-    // width: "100%",
     height: "100%",
     padding: 10,
     fontSize: 16,
@@ -331,28 +269,19 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   vwInputNotes: {
-    // display: "flex",
-    // //width: Dimensions.get("screen").width * 0.8, // Full screen width
     width: "80%",
-    // height: 50,
-    // borderWidth: 1,
     borderRadius: 12,
-    // borderColor: "#007ACC", // Blue outline
-    // margin: 5,
-    // // height: "300%",
   },
   txtInputNotes: {
     padding: 10,
     fontSize: 16,
   },
   vwInputPhotos: {
-    // backgroundColor: "gray",
     flexWrap: "wrap",
     flexDirection: "row",
     justifyContent: "center",
   },
   imgElemStyle: {
-    // margin: 10,
     width: 100,
     height: 100,
   },
@@ -362,8 +291,6 @@ const styles = StyleSheet.create({
   },
 
   vwButonsEnBas: {
-    // flex: 1,
-    // backgroundColor: "gray",
     alignItems: "center",
     width: Dimensions.get("screen").width * 0.8,
     justifyContent: "flex-end",
@@ -371,15 +298,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   btnAjouter: {
-    // paddingVertical: 12,
-    // paddingHorizontal: 20,
-    // width: Dimensions.get("screen").width * 0.7,
-    // borderRadius: 25,
-    // borderWidth: 2,
-    // borderColor: "#007ACC", // Blue outline
-    // backgroundColor: "pink", // White background
-    // alignItems: "center",
-    // marginBottom: 30,
     backgroundColor: "pink",
     borderWidth: 1,
     width: 120,
@@ -389,19 +307,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingVertical: 5,
   },
-  // btnAjouterText: {
-  //   fontFamily: "Caveat",
-  //   fontSize: 20,
-  // },
   btn: {
-    // paddingVertical: 12,
-    // paddingHorizontal: 20,
-    // width: Dimensions.get("screen").width * 0.7,
-    // borderRadius: 25,
-    // borderWidth: 2,
-    // borderColor: "#007ACC", // Blue outline
-    // backgroundColor: "#FFFFFF", // White background
-    // alignItems: "center",
     backgroundColor: "pink",
     borderWidth: 1,
     width: 120,
