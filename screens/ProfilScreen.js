@@ -20,6 +20,7 @@ export default function Profil({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value); // Données utilisateur dans le store
   const projectToken = user.tokenProject; // Récupère le token de projet de l'utilisateur
+  const userToken = user.token;
   console.log("token :", projectToken);
 
   const [username, setUsername] = useState("");
@@ -121,7 +122,7 @@ export default function Profil({ navigation }) {
     // Création d'un objet représentant le rendez-vous mis à jour avec les nouvelles informations
 
     const updatedUserPassword = {
-      password: password,
+      oldPassword: password,
       newPassword: newPassword,
     };
 
