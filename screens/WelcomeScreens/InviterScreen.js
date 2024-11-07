@@ -107,7 +107,7 @@ export default function InviterScreen({ navigation }) {
             <TextInput
               style={styles.txtInput}
               onChangeText={(value) => usernameSetter(value)}
-              placeholder="Username"
+              placeholder="Pseudonyme"
               placeholderTextColor="#555555" // Dark gray color for the placeholder
               value={username}
             />
@@ -117,7 +117,7 @@ export default function InviterScreen({ navigation }) {
             <TextInput
               style={styles.txtInput}
               onChangeText={(value) => passwordSetter(value)}
-              placeholder="Password"
+              placeholder="Mot de passe"
               secureTextEntry={!cachePassword} // cache le text dans le input
               placeholderTextColor="#555555" // Dark gray color for the placeholder
               value={password}
@@ -125,7 +125,7 @@ export default function InviterScreen({ navigation }) {
           </View>
 
           <View style={styles.switchCachePassword}>
-            <Text>Afficher Password</Text>
+            <Text>Afficher mot de passe</Text>
             <Switch
               value={cachePassword}
               onValueChange={(value) => cachePasswordSetter(value)}
@@ -135,7 +135,7 @@ export default function InviterScreen({ navigation }) {
 
         <View style={styles.vwBtn}>
           <TouchableOpacity style={styles.btn} onPress={() => pressedLogin()}>
-            <Text style={styles.btnText}>Login</Text>
+            <Text style={styles.btnText}>connection</Text>
           </TouchableOpacity>
         </View>
       </View>

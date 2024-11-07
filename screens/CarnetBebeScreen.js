@@ -139,7 +139,7 @@ export default function CarnetBebeScreen({ navigation }) {
 
   const handleDelete = (docBebe) => {
     if (user.role === "lecteur") {
-      return alert("ne fout pas ta merde, tu es simple lecteur");
+      return alert("Va voir chez Polo Chino, si tu as acces");
     }
     console.log("Vérification de l'ID dans handleDelete:");
 
@@ -202,22 +202,9 @@ export default function CarnetBebeScreen({ navigation }) {
     <TemplateView navigation={navigation}>
       {/* Commence propriété children */}
       <View>
-        {/* <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.carnetBebeBtn}
-          onPress={() => modalCarnetBebe()}
-        >
-          <Text>Carnet Bebe</Text>
-        </TouchableOpacity> */}
-        <View style={styles.vwPlusButton}>
-          <TouchableOpacity onPress={() => modalCarnetBebe()}>
-            <Image
-              source={require("../assets/images/plus.png")}
-              resizeMode="contain"
-              style={styles.imageButon}
-            />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity style={styles.btn} onPress={() => modalCarnetBebe()}>
+          <Text>Ajoute un document carnet Bebe</Text>
+        </TouchableOpacity>
 
         <Modal visible={modalVisible} animationType="fade" transparent>
           <View style={styles.centeredView}>
@@ -305,15 +292,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     margin: 10,
   },
-  // agenda: {
-  //   borderWidth: 1,
-  //   borderColor: "gray",
-  //   height: 100,
-  //   width: 380,
-  //   marginBottom: 50,
-  //   margin: "auto",
-  //   borderRadius: 15,
-  // },
   imageButon: {
     height: 50,
     aspectRatio: 1,
@@ -342,7 +320,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btnModal: {
-    backgroundColor: "pink",
+    backgroundColor: "white",
     borderWidth: 1,
     width: 200,
     height: 300,
@@ -353,6 +331,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   modalView: {
+    backgroundColor: "white",
     justifyContent: "space-between",
     borderRadius: 20,
     alignItems: "center",
@@ -379,17 +358,9 @@ const styles = StyleSheet.create({
   card: {
     display: "flex-wrap",
     width: Dimensions.get("screen").width,
-    // justifyContent: "center",
-    // alignItems: "center",
     padding: 10,
     flexDirection: "row",
-    //   alignItems: "center",
     justifyContent: "space-between",
-    //   width: "80%",
-    //   backgroundColor: "#ffffff",
-    //   padding: 8,
-    //   marginTop: 10,
-    //   borderRadius: 10,
     paddingVertical: 12,
     paddingHorizontal: 10,
     width: Dimensions.get("screen").width * 0.7,
@@ -418,5 +389,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingVertical: 5,
     flexWrap: "nowrap",
+  },
+  btn: {
+    display: "flex",
+    backgroundColor: "white",
+    width: 250,
+    height: 50,
+    alignItems: "center",
+    borderRadius: 12,
+    justifyContent: "center",
+    margin: 5,
   },
 });

@@ -58,14 +58,16 @@ export default function AcceuilScreen({ navigation }) {
   ];
   const directionalimentation = () => setMamanModalVisible(true); // Ouvre le modal des guides nutritions de la mère
   const closeguideMamanModal = () => setMamanModalVisible(false); // ferme le modal des guides nutritions de la mère
+  const directionalimentationBebe = () => setBabyModalVisible(true); //Ouvre le modal des guides nutritions de la mère
+  const closeguideBabyModal = () => setBabyModalVisible(false);
+
   const handleSubmit = () => {
-    if (!user.role === "propriétaire") {
+    if (user.role !== "propriétaire") {
       return alert("c'est chitos mon acces est bloqué");
     } else {
       setModalVisible(true);
-      console.log("btn fonctionnel");
-      console.log(projectToken);
-      console.log(user);
+      // console.log(projectToken);
+      // console.log(user);
     }
   };
   // useEffect to recover data at mount of component
@@ -116,7 +118,7 @@ export default function AcceuilScreen({ navigation }) {
   const toggleSwitch = () => {
     setrole(role === "lecteur" ? "editeur" : "lecteur");
 
-    console.log(role);
+    // console.log(role);
   };
   const generateCode = () => {
     const bodyObj = {
@@ -125,14 +127,15 @@ export default function AcceuilScreen({ navigation }) {
     };
     if (bodyObj) {
       const inviteLink = `${projectToken}/${role}`;
-      console.log(bodyObj);
+      // console.log(bodyObj);
       setlink(inviteLink);
-      console.log("test1", inviteLink);
+      // console.log("test1", inviteLink);
     }
   };
   //function to get the page for guide
 
   const handleClose = () => {
+    setlink("");
     setModalVisible(false);
   };
   // function trigger when select date in calendar
@@ -167,12 +170,16 @@ export default function AcceuilScreen({ navigation }) {
         <View style={styles.header}>
           <HeaderView navigation={navigation} />
         </View>
+
         <Text style={styles.title}>Bienvenue {username} sur BabyProject!</Text>
+
         <View style={styles.div_btn}>
           <TouchableOpacity style={styles.btn} onPress={() => handleSubmit()}>
             <Text>Inviter un proche</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Modal pour l'invitation */}
         <Modal visible={modalVisible} animationType="fade" transparent>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
@@ -183,13 +190,12 @@ export default function AcceuilScreen({ navigation }) {
               />
               <Text style={styles.textrole}>{role}</Text>
               <View style={styles.switchContainer}>
-                <Text>Switch role </Text>
+                <Text>Assigner un role</Text>
                 <Switch
                   style={styles.toggle}
                   thumbColor={role === "lecteur" ? "#f5dd4b" : "#f4f3f4"}
                   ios_backgroundColor="black"
                   onValueChange={toggleSwitch}
-                  onToggle={(role) => toggleSwitch()}
                   value={role === "lecteur"}
                 />
               </View>
@@ -198,7 +204,7 @@ export default function AcceuilScreen({ navigation }) {
                 style={styles.btnModal}
                 activeOpacity={0.8}
               >
-                <Text style={styles.textButton}>envoyer code</Text>
+                <Text style={styles.textButton}> Generer le code</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => handleClose()}
@@ -211,19 +217,21 @@ export default function AcceuilScreen({ navigation }) {
           </View>
         </Modal>
 
+        {/* Section du calendrier */}
         <View>
-          <Text style={styles.title}>Voici votre calendrier actualisé!</Text>
+          <Text style={styles.title}>
+            Voici le calendrier actualisé de votre Projet!
+          </Text>
           <Calendar
             style={styles.calendar}
             onDayPress={handleDayPress}
-            // onDayPress={(day) => {
-            //   console.log("selected day", day);
-            // }}
             minDate={"2024-10-31"}
             maxDate={"2035-12-31"}
             markedDates={markedDates}
           />
         </View>
+
+        {/* Modal pour l'agenda */}
         <Modal visible={agendaModalVisible} animationType="slide" transparent>
           <View style={styles.centeredView}>
             <View style={styles.modalListView}>
@@ -253,33 +261,69 @@ export default function AcceuilScreen({ navigation }) {
             </View>
           </View>
         </Modal>
-        <TouchableOpacity
-          style={styles.alimentationBTN}
-          onPress={() => directionalimentation()}
-        >
-          <Text>Conseils Alimentation</Text>
-        </TouchableOpacity>
-        <Modal visible={mamanModalVisible} animationType="slide" transparent>
-          <View style={styles.centeredView}>
-            <View style={styles.modalListView}>
-              <Text style={styles.modalTitle}>Conseil nutrition maman</Text>
-              <ScrollView style={styles.scrollView}>
-                {guideNutritionMaman.map((rdv, index) => (
-                  <View key={index} style={styles.listItem}>
-                    <Text>{rdv}</Text>
-                  </View>
-                ))}
-              </ScrollView>
-              <TouchableOpacity
-                onPress={closeguideMamanModal}
-                style={styles.btnModal}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.textButton}>Fermer</Text>
-              </TouchableOpacity>
+
+        {/* Section des guides */}
+        <View style={styles.viewGuide}>
+          <TouchableOpacity
+            style={styles.alimentationBTN}
+            onPress={() => directionalimentationBebe()}
+          >
+            <Text>Conseil alimentation bébé</Text>
+          </TouchableOpacity>
+
+          {/* Modal pour le guide bébé */}
+          <Modal visible={babyModalVisible} animationType="slide" transparent>
+            <View style={styles.centeredView}>
+              <View style={styles.modalListView}>
+                <Text style={styles.modalTitle}>Conseil nutrition bébé</Text>
+                <ScrollView style={styles.scrollView}>
+                  {guideNutritionBebe.map((rdv, index) => (
+                    <View key={index} style={styles.listItem}>
+                      <Text>{rdv}</Text>
+                    </View>
+                  ))}
+                </ScrollView>
+                <TouchableOpacity
+                  onPress={closeguideBabyModal}
+                  style={styles.btnModal}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.textButton}>Fermer</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </Modal>
+          </Modal>
+
+          <TouchableOpacity
+            style={styles.alimentationBTN}
+            onPress={() => directionalimentation()}
+          >
+            <Text>Conseil alimentation maman</Text>
+          </TouchableOpacity>
+
+          {/* Modal pour le guide maman */}
+          <Modal visible={mamanModalVisible} animationType="slide" transparent>
+            <View style={styles.centeredView}>
+              <View style={styles.modalListView}>
+                <Text style={styles.modalTitle}>Conseil nutrition maman</Text>
+                <ScrollView style={styles.scrollView}>
+                  {guideNutritionMaman.map((rdv, index) => (
+                    <View key={index} style={styles.listItem}>
+                      <Text>{rdv}</Text>
+                    </View>
+                  ))}
+                </ScrollView>
+                <TouchableOpacity
+                  onPress={closeguideMamanModal}
+                  style={styles.btnModal}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.textButton}>Fermer</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </View>
       </KeyboardAvoidingView>
     </ImageBackground>
   );
@@ -384,14 +428,12 @@ const styles = StyleSheet.create({
     display: "flex",
     fontSize: 20,
     height: 50,
-    width: 300,
+    width: 150,
     backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 50,
-    margin: "auto",
+    margin: 10,
     borderRadius: 20,
-    // borderWidth: 1,
   },
   textrole: {
     fontSize: 20,
@@ -400,7 +442,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     padding: 20,
-    width: "50%",
+    width: "65%",
     maxHeight: "70%",
     alignItems: "center",
     shadowColor: "#000",
@@ -420,6 +462,11 @@ const styles = StyleSheet.create({
   switchContainer: {
     flexDirection: "row",
     display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  viewGuide: {
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },
