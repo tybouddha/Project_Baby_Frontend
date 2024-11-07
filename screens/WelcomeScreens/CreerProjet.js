@@ -5,17 +5,13 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
   Switch,
   Modal,
 } from "react-native";
 import TemplateViewNoNav from "../template/TemplateViewNoNav";
 import { useState, useEffect } from "react";
-import DatePickerComposant from "../template/DatePickerComposant";
 import VwEchec from "../template/VwEchec";
-import FormulaireDate from "../template/EssaiDatePicker";
 import DateTimePicker from "react-native-modal-datetime-picker";
 
 import { useDispatch } from "react-redux";
@@ -38,8 +34,6 @@ export default function CreerProjetScreen({ navigation }) {
   const [cachePassword, cachePasswordSetter] = useState(false);
   const [modalEchecVisible, setModalEchecVisible] = useState(false);
   const [messageError, messageErrorSetter] = useState("");
-  // const [date1, setDate1] = useState("");
-  // const [date2, setDate2] = useState("");
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const [currentField, setCurrentField] = useState(null);
 
@@ -78,23 +72,12 @@ export default function CreerProjetScreen({ navigation }) {
     console.log(dateDerniereMenstruation);
   };
 
-  // const chopperDateDebutGrossesse = (FormulaireDate) => {
-  //   console.log(`date reçu: ${FormulaireDate}`);
-  //   dateDebutGrossesseSetter(FormulaireDate);
-  // };
-
   const pressedCreerProjet = () => {
     // console.log("- aller à LoginScreen 📢");
     console.log(`dateDerniereMenstruation: ${dateDerniereMenstruation}`);
     console.log(`dateDebutGrossesse: ${dateDebutGrossesse}`);
     envoyerDataSetter(true);
   };
-
-  // const pressedTestReducer = () => {
-  //   console.log("- pressedTestReducer 📢");
-  //   console.log(`userReducer.prenom: ${userReducer.prenom}`);
-  //   console.log(`userReducer.token: ${userReducer.token}`);
-  // };
 
   useEffect(
     () => {
@@ -115,8 +98,6 @@ export default function CreerProjetScreen({ navigation }) {
           email: email,
         };
 
-        // fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signupProject`,
-        // fetch("http://192.168.100.47:3000/user/signupProject", {
         fetch(`${process.env.EXPO_PUBLIC_API_URL}/user/signupProject`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -198,15 +179,6 @@ export default function CreerProjetScreen({ navigation }) {
                 value={nomDeFamille}
               />
             </View>
-
-            {/* Ici Date De dernieres Menstruation
-            <View style={styles.vwInput}>
-              <FormulaireDate
-                style={styles.vwInput}
-                placeholder="date de menstruation"
-                chopperDate={chopperDateDerniereMenstruation}
-              />
-            </View> */}
             <TouchableOpacity
               style={styles.vwInput}
               onPress={() => showDatePicker("dateDerniereMenstruation")}
@@ -218,14 +190,6 @@ export default function CreerProjetScreen({ navigation }) {
                 editable={false}
               />
             </TouchableOpacity>
-
-            {/* <View style={styles.vwInput}>
-              <FormulaireDate
-                style={styles.vwInput}
-                placeholder="date de grossesse"
-                chopperDate={chopperDateDebutGrossesse}
-              />
-            </View> */}
             <TouchableOpacity
               style={styles.vwInput}
               onPress={() => showDatePicker("dateDebutGrossesse")}
@@ -265,7 +229,6 @@ export default function CreerProjetScreen({ navigation }) {
                 onValueChange={(value) => cachePasswordSetter(value)}
               />
             </View>
-
             <View style={styles.vwBtn}>
               <TouchableOpacity
                 style={styles.btn}
@@ -280,15 +243,6 @@ export default function CreerProjetScreen({ navigation }) {
               onConfirm={handleDatePicked}
               onCancel={hideDatePicker}
             />
-
-            {/* <View style={styles.vwBtn}>
-              <TouchableOpacity
-                style={styles.btn}
-                onPress={() => pressedTestReducer()}
-              >
-                <Text style={styles.btnText}>Test Reducer</Text>
-              </TouchableOpacity>
-            </View> */}
           </View>
         </ScrollView>
       </View>
@@ -310,7 +264,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   txtInstructions: {
-    fontSize: 24,
+    fontSize: 40,
+    fontFamily: "Caveat",
   },
   vwInput: {
     display: "flex",

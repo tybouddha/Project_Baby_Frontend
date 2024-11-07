@@ -146,7 +146,6 @@ export default function AgendaScreen({ navigation }) {
       // Fait une requête pour récupérer les rendez-vous de l'utilisateur
       `${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}`
     )
-      // fetch(`http://192.168.1.156:3000/rdv/${projectToken}`)
       .then((response) => response.json()) // Transforme la réponse en JSON
       .then((data) => {
         if (data.rdv) {
@@ -219,16 +218,12 @@ export default function AgendaScreen({ navigation }) {
       heure,
     };
 
-    fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}`,
-      // fetch(`http://192.168.1.156:3000/rdv/${projectToken}`,
-      {
-        // Envoie une requête POST
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newRdv), // Contenu de la requête en JSON
-      }
-    )
+    fetch(`${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}`, {
+      // Envoie une requête POST
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newRdv), // Contenu de la requête en JSON
+    })
       .then((response) => response.json()) // Convertit la réponse en JSON
       .then((data) => {
         if (data.result === true) {
@@ -324,15 +319,11 @@ export default function AgendaScreen({ navigation }) {
     console.log(updatedRdv);
 
     // Fait une requête PUT pour mettre à jour le rendez-vous avec les nouvelles informations
-    fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}/${rdvId}`,
-      // fetch(`http://192.168.1.156:3000/rdv/${projectToken}/${rdvId}`,
-      {
-        method: "PUT", // Spécifie la méthode PUT pour la mise à jour
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedRdv), // Convertit l'objet updatedRdv en JSON pour l'envoyer
-      }
-    )
+    fetch(`${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}/${rdvId}`, {
+      method: "PUT", // Spécifie la méthode PUT pour la mise à jour
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedRdv), // Convertit l'objet updatedRdv en JSON pour l'envoyer
+    })
       .then((response) => response.json()) // Convertit la réponse en JSON
       .then((data) => {
         // Vérifie si la mise à jour a été réussie
@@ -354,6 +345,9 @@ export default function AgendaScreen({ navigation }) {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.background}
       >
+        <View style={styles.vwInstructions}>
+          <Text style={styles.txtInstructions}> Agenda </Text>
+        </View>
         <View style={styles.div_btn}>
           <TouchableOpacity style={styles.btn} onPress={openSearchModal}>
             <Text>Rechercher un rendez-vous</Text>
@@ -750,26 +744,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  containerAgenda: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+  vwInstructions: {
+    padding: 20,
+  },
+  txtInstructions: {
+    fontSize: 40,
+    fontFamily: "Caveat",
   },
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  searchBar: {
-    flex: 1,
-    textAlign: "center",
-  },
-  rdvContainer: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    backgroundColor: "#f9f9f9",
-    borderRadius: 8,
-    marginVertical: 5,
   },
   div_btn: {
     display: "flex",
@@ -796,7 +781,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 30,
     alignItems: "center",
-    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -829,6 +813,7 @@ const styles = StyleSheet.create({
   },
   btnModal: {
     backgroundColor: "pink",
+    color: "white",
     borderWidth: 1,
     width: 120,
     alignItems: "center",
@@ -840,7 +825,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 150,
-    borderBottomColor: "#ec6e5b",
+    borderBottomColor: "pink",
     borderBottomWidth: 1,
     fontSize: 16,
   },

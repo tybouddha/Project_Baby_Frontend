@@ -3,9 +3,6 @@ import {
   Text,
   View,
   Dimensions,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
   TouchableOpacity,
 } from "react-native";
 import TemplateViewNoNav from "../template/TemplateViewNoNav";

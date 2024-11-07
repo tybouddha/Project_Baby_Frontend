@@ -3,23 +3,17 @@ import {
   Text,
   View,
   Dimensions,
-  ImageBackground,
   TouchableOpacity,
   Image,
   Modal,
-  Button,
   ScrollView,
   TextInput,
 } from "react-native";
 import TemplateView from "./template/TemplateView";
 // import RNFS from "react-native-fs";
-import { PermissionsAndroid } from "react-native";
 import { useEffect, useState } from "react";
 
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import VwAjouterDocument from "./template/VwAjouterDocument";
-import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   documentModalRestOuvert,
@@ -32,9 +26,6 @@ export default function DocumentsScreen({ navigation }) {
   const userRedux = useSelector((state) => state.user.value);
   const documentRedux = useSelector((state) => state.document.value);
   const dispatch = useDispatch();
-
-  const [modalAjouterDocumentVisible, setmodalAjouterDocumentVisible] =
-    useState(false);
   const [documentsDonnes, setDocumentsDonnes] = useState([]);
   const [documentsDonnesRecherche, setDocumentsDonnesRecherche] = useState([]);
   const [searchInput, setSearchInput] = useState(""); // Champ de recherche
@@ -43,16 +34,6 @@ export default function DocumentsScreen({ navigation }) {
   const [documentChoisi, setDocumentChoisi] = useState("");
   const [afficherRechercheScrollView, setAfficherRechercheScrollView] =
     useState(false);
-
-  const appuyerAjouterDocument = () => {
-    if (userRedux.role === "lecteur") {
-      return alert("nop, ny pense meme pas");
-    } else {
-      // console.log(`appuyerAjouterDocument`);
-      // setmodalAjouterDocumentVisible(true);
-      dispatch(documentModalRestOuvert());
-    }
-  };
 
   const fermerModalVwAjouterDoc = () => {
     // cette fonctionne ferme le VwAjouterDocument
@@ -107,22 +88,6 @@ export default function DocumentsScreen({ navigation }) {
       });
   };
 
-  const modalAjouterDocument = (
-    <Modal
-      // visible={modalAjouterDocumentVisible}
-      visible={documentRedux.modalOuvert}
-      animationType="fade"
-      transparent={true}
-    >
-      <VwAjouterDocument
-        fermerModal={fermerModalVwAjouterDoc}
-        fermerModalSansEffacer={cameraScreenFermerModalSansEffacerRedux}
-        navigation={navigation}
-        fetchDocumentsData={fetchData}
-      />
-    </Modal>
-  );
-
   let cardArr = [];
   let cardArrRecherche = [];
 
@@ -131,7 +96,6 @@ export default function DocumentsScreen({ navigation }) {
       <View key={elem._id} style={styles.card}>
         <View style={styles.cardRayon1}>
           <Text style={styles.txtDate}>{elem.dateAjoute.substring(0, 10)}</Text>
-          {/* <Text style={styles.txtDate}>Date</Text> */}
         </View>
         <View style={styles.cardRayon2}>
           <View style={styles.cardRayon2Sous}>
@@ -145,7 +109,6 @@ export default function DocumentsScreen({ navigation }) {
             </View>
           </View>
         </View>
-
         <Text style={styles.txtNotes}>{elem.notes}</Text>
         <View style={styles.vwInputPhotos}>
           <View key={index} style={styles.photoContainer}>
@@ -185,7 +148,6 @@ export default function DocumentsScreen({ navigation }) {
   const searchDocuments = () => {
     console.log("searchDocuments");
     setAfficherRechercheScrollView(true);
-    // setSearchInput(text);
     const newDocumentsDonnes = [];
     const normalizedSearch = searchInput.trim().toLowerCase(); // Normalise l'entrée de recherche
     documentsDonnes.forEach((doc) => {
@@ -216,8 +178,10 @@ export default function DocumentsScreen({ navigation }) {
 
   return (
     <TemplateView navigation={navigation}>
+      <View style={styles.vwInstructions}>
+        <Text style={styles.txtInstructions}> Agenda </Text>
+      </View>
       <Modal
-        // visible={modalAjouterDocumentVisible}
         visible={documentRedux.modalOuvert}
         animationType="fade"
         transparent={true}
@@ -259,7 +223,6 @@ export default function DocumentsScreen({ navigation }) {
         <View style={styles.centeredView}>
           <View style={styles.modalListView}>
             <Text style={styles.modalTitle}>Rechercher</Text>
-
             <TextInput
               style={styles.listItem}
               placeholder="Rechercher vos documents"
@@ -294,8 +257,6 @@ export default function DocumentsScreen({ navigation }) {
           </View>
         </View>
       </Modal>
-      {/* {photoModalVisible ? afficherPhotoModal : null} */}
-
       <View style={styles.container}>
         <View style={styles.vwHaut}>
           <TouchableOpacity
@@ -311,10 +272,6 @@ export default function DocumentsScreen({ navigation }) {
             <Text>Ajoute un document</Text>
           </TouchableOpacity>
         </View>
-
-        {/* <ScrollView>
-          <View style={styles.vwBas}>{cardArr}</View>
-        </ScrollView> */}
       </View>
     </TemplateView>
   );
@@ -335,6 +292,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  vwInstructions: {
+    padding: 20,
+  },
+  txtInstructions: {
+    fontSize: 40,
+    fontFamily: "Caveat",
   },
   vwHaut: {
     display: "flex",

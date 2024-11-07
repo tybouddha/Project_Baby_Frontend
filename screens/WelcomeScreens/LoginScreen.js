@@ -17,7 +17,6 @@ import { loginUser } from "../../reducers/user";
 import { useSelector } from "react-redux";
 
 export default function LoginScreen({ navigation }) {
-  // console.log("- dans LoginScreen");
   const dispatch = useDispatch();
   const userReducer = useSelector((state) => state.user.value);
   const [username, usernameSetter] = useState("");
@@ -92,7 +91,7 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.container}>
         {modalEchecVisible ? modalEchec : null}
         <View style={styles.vwInstructions}>
-          <Text style={styles.txtInstructions}></Text>
+          <Text style={styles.txtInstructions}> Connexion </Text>
         </View>
 
         <View style={styles.vwInputSuper}>
@@ -128,7 +127,7 @@ export default function LoginScreen({ navigation }) {
 
         <View style={styles.vwBtn}>
           <TouchableOpacity style={styles.btn} onPress={() => pressedLogin()}>
-            <Text style={styles.btnText}>connection</Text>
+            <Text style={styles.btnText}>connexion</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -150,7 +149,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   txtInstructions: {
-    fontSize: 24,
+    fontSize: 40,
+    fontFamily: "Caveat",
   },
   vwInputSuper: {
     display: "flex",

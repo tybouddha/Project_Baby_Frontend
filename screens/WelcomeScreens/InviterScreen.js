@@ -90,7 +90,7 @@ export default function InviterScreen({ navigation }) {
       <View style={styles.container}>
         {modalEchecVisible ? modalEchec : null}
         <View style={styles.vwInstructions}>
-          <Text style={styles.txtInstructions}></Text>
+          <Text style={styles.txtInstructions}>Invité</Text>
         </View>
         <View style={styles.vwInputSuper}>
           <View style={styles.vwInput}>
@@ -107,7 +107,7 @@ export default function InviterScreen({ navigation }) {
             <TextInput
               style={styles.txtInput}
               onChangeText={(value) => usernameSetter(value)}
-              placeholder="Username"
+              placeholder="Pseudonyme"
               placeholderTextColor="#555555" // Dark gray color for the placeholder
               value={username}
             />
@@ -117,7 +117,7 @@ export default function InviterScreen({ navigation }) {
             <TextInput
               style={styles.txtInput}
               onChangeText={(value) => passwordSetter(value)}
-              placeholder="Password"
+              placeholder="Mot de passe"
               secureTextEntry={!cachePassword} // cache le text dans le input
               placeholderTextColor="#555555" // Dark gray color for the placeholder
               value={password}
@@ -157,7 +157,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   txtInstructions: {
-    fontSize: 24,
+    fontSize: 40,
+    fontFamily: "Caveat",
   },
   vwInputSuper: {
     display: "flex",

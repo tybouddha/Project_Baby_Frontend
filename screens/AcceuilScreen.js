@@ -12,8 +12,7 @@ import {
   Switch,
   ScrollView,
 } from "react-native";
-import ToggleSwitch from "toggle-switch-react-native";
-import { Calendar, CalendarList, Agenda } from "react-native-calendars";
+import { Calendar } from "react-native-calendars";
 import HeaderView from "./NavComposants/Header";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -75,7 +74,6 @@ export default function AcceuilScreen({ navigation }) {
         // Fait une requête pour récupérer les rendez-vous de l'utilisateur
         `${process.env.EXPO_PUBLIC_API_URL}/rdv/${projectToken}`
       )
-        // fetch(`http://192.168.1.156:3000/rdv/${projectToken}`)
         .then((response) => response.json()) // Transforme la réponse en JSON
         .then((data) => {
           if (data.rdv) {
@@ -216,9 +214,6 @@ export default function AcceuilScreen({ navigation }) {
           <Calendar
             style={styles.calendar}
             onDayPress={handleDayPress}
-            // onDayPress={(day) => {
-            //   console.log("selected day", day);
-            // }}
             minDate={"2024-10-31"}
             maxDate={"2035-12-31"}
             markedDates={markedDates}
@@ -304,10 +299,11 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   title: {
-    fontSize: 20,
+    fontSize: 30,
     justifyContent: "center",
     alignItems: "center",
     margin: "auto",
+    fontFamily: "Caveat",
   },
   btn: {
     display: "flex",

@@ -5,7 +5,6 @@ import {
   Dimensions,
   TouchableOpacity,
   TextInput,
-  ScrollView,
   KeyboardAvoidingView,
   Platform,
   Modal,
@@ -163,8 +162,11 @@ export default function Profil({ navigation }) {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.background}
       >
+        <View style={styles.vwInstructions}>
+          <Text style={styles.txtInstructions}> Profil utilisateur </Text>
+        </View>
         <View style={styles.centeredView}>
-          <Text>Nom utilisateur</Text>
+          <Text>Pseudonyme</Text>
           <View style={styles.input}>
             <TextInput
               style={styles.listItem}
@@ -208,7 +210,7 @@ export default function Profil({ navigation }) {
             style={styles.btn}
             onPress={openPasswordModalIsVisible}
           >
-            <Text>Modifier mot de passe</Text>
+            <Text>Mot de passe</Text>
           </TouchableOpacity>
           <Modal
             visible={passwordModalIsVisible}
@@ -274,6 +276,13 @@ const styles = StyleSheet.create({
     heigth: Dimensions.get("screen").height,
     justifyContent: "center",
     alignItems: "center",
+  },
+  vwInstructions: {
+    padding: 50,
+  },
+  txtInstructions: {
+    fontSize: 40,
+    fontFamily: "Caveat",
   },
   centeredView: {
     flex: 1,

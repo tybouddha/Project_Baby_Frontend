@@ -3,18 +3,15 @@ import {
   Text,
   View,
   Dimensions,
-  ImageBackground,
   TouchableOpacity,
   Modal,
   TextInput,
   Image,
 } from "react-native";
 import TemplateView from "./template/TemplateView";
-import { Agenda } from "react-native-calendars";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import DateTimePicker from "react-native-modal-datetime-picker";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function CarnetBebeScreen({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false); // action modal
