@@ -207,7 +207,7 @@ export default function AgendaScreen({ navigation }) {
   // function to create a new appointment
   const handleSubmit = () => {
     if (user.role === "lecteur") {
-      return alert("non non non, tu es simple lecteur");
+      return alert("Art or Not tu es bloqué");
     }
     const newRdv = {
       pourQui,

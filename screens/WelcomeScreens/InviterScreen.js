@@ -125,7 +125,7 @@ export default function InviterScreen({ navigation }) {
           </View>
 
           <View style={styles.switchCachePassword}>
-            <Text>Afficher Password</Text>
+            <Text>Afficher mot de passe</Text>
             <Switch
               value={cachePassword}
               onValueChange={(value) => cachePasswordSetter(value)}
@@ -135,7 +135,7 @@ export default function InviterScreen({ navigation }) {
 
         <View style={styles.vwBtn}>
           <TouchableOpacity style={styles.btn} onPress={() => pressedLogin()}>
-            <Text style={styles.btnText}>Login</Text>
+            <Text style={styles.btnText}>connection</Text>
           </TouchableOpacity>
         </View>
       </View>

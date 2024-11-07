@@ -20,7 +20,7 @@ export default function Profil({ navigation }) {
   const user = useSelector((state) => state.user.value); // Données utilisateur dans le store
   const projectToken = user.tokenProject; // Récupère le token de projet de l'utilisateur
   const userToken = user.token;
-  console.log("token :", projectToken);
+  // console.log("token :", projectToken);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -80,7 +80,7 @@ export default function Profil({ navigation }) {
   };
 
   const handleUpdate = (userToken) => {
-    console.log("token de l'utilisateur à mettre à jour :", userToken);
+    // console.log("token de l'utilisateur à mettre à jour :", userToken);
     // Création d'un objet représentant le rendez-vous mis à jour avec les nouvelles informations
 
     const updatedUser = {
@@ -90,7 +90,7 @@ export default function Profil({ navigation }) {
       dateDebutGrossesse: grossesse, // Date de début de grossesse
     };
 
-    console.log(updatedUser);
+    // console.log(updatedUser);
 
     // Fait une requête PUT pour mettre à jour l'utilisateur avec les nouvelles informations
     fetch(
@@ -117,7 +117,7 @@ export default function Profil({ navigation }) {
   };
   // route to modify password
   const handleUpdatePassword = (userToken) => {
-    console.log("token de l'utilisateur à mettre à jour :", userToken);
+    // console.log("token de l'utilisateur à mettre à jour :", userToken);
     // Création d'un objet représentant le rendez-vous mis à jour avec les nouvelles informations
 
     const updatedUserPassword = {
@@ -125,7 +125,7 @@ export default function Profil({ navigation }) {
       newPassword: newPassword,
     };
 
-    console.log(updatedUserPassword);
+    // console.log(updatedUserPassword);
 
     // Fait une requête PUT pour mettre à jour l'utilisateur avec les nouvelles informations
     fetch(

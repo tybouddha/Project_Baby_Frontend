@@ -42,7 +42,7 @@ export default function LoginScreen({ navigation }) {
     () => {
       // <-- que une seul fois, quand le composant arriver
       if (envoyerData) {
-        console.log("- envoyerData 🚀");
+        // console.log("- envoyerData 🚀");
         const bodyObj = {
           username: username,
           password: password,
@@ -60,16 +60,21 @@ export default function LoginScreen({ navigation }) {
           .then((response) => response.json())
           .then((data) => {
             // console.log(`--- bien reçu le reponse ✅ `);
-            // console.log(data);
-            if (data.project?.token) {
-              // console.log(`data.project?.token est Truey 🤗`);
-
+            // console.log({ result: true, reponse: data });
+            // console.log("data =>", data);
+            console.log("data.response.token =>", data.response.token);
+            // console.log("data.project=>", data.response.project);
+            console.log("data.project.token", data.response.project.token);
+            console.log("role", data.response.role);
+            if (data.response.project?.token) {
+              navigation.navigate("TabNavigator");
+              console.log(`data.project?.token est Truey 🤗`);
               dispatch(
                 loginUser({
                   username: username,
-                  token: data.token,
-                  tokenProject: data.project.token,
-                  role: data.role,
+                  token: data.response.token,
+                  tokenProject: data.response.project.token,
+                  role: data.response.role,
                 })
               );
               // console.log("tokenproject", data.project.token);
@@ -78,8 +83,7 @@ export default function LoginScreen({ navigation }) {
               messageErrorSetter(data?.error);
               setModalEchecVisible(true);
             }
-          })
-          .then(() => navigation.navigate("TabNavigator"));
+          });
         envoyerDataSetter(false);
       }
     },
