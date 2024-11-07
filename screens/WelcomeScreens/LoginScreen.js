@@ -61,12 +61,13 @@ export default function LoginScreen({ navigation }) {
           .then((data) => {
             // console.log(`--- bien reçu le reponse ✅ `);
             // console.log({ result: true, reponse: data });
-            // console.log("data =>", data);
-            console.log("data.response.token =>", data.response.token);
+            console.log("data =>", data);
+            // console.log("data.response.token =>", data.response.token);
             // console.log("data.project=>", data.response.project);
-            console.log("data.project.token", data.response.project.token);
-            console.log("role", data.response.role);
-            if (data.response.project?.token) {
+            // console.log("data.project.token", data.response.project.token);
+            // console.log("role", data.response.role);
+            // if (data.response.project?.token) {
+            if (data.result) {
               navigation.navigate("TabNavigator");
               console.log(`data.project?.token est Truey 🤗`);
               dispatch(
@@ -79,7 +80,7 @@ export default function LoginScreen({ navigation }) {
               );
               // console.log("tokenproject", data.project.token);
             } else {
-              // console.log(`data.project?.token2 est falsey 😱`);
+              console.log(`data.project?.token2 est falsey 😱`);
               messageErrorSetter(data?.error);
               setModalEchecVisible(true);
             }
