@@ -61,15 +61,18 @@ export default function CarnetBebeScreen({ navigation }) {
         .then((response) => response.json())
         .then((carnetBebe) => {
           setdocBebe(carnetBebe);
-          // console.log("carnetBebe:", carnetBebe);
+          console.log("carnetBebe:", carnetBebe);
           if (carnetBebe && carnetBebe.infos.length) {
             const lastCarnetBebe = carnetBebe.infos.reverse().slice(0, 3);
             setlastInfos(lastCarnetBebe);
           } else {
-            response.json({ result: false, error: "no data" });
             console.log("Pas de données disponibles");
+            setdocBebe([]);
           }
           console.log(lastInfos);
+        })
+        .catch((error) => {
+          console.error("Erreur de récupération des données :", error);
         });
     }
   };
@@ -134,19 +137,19 @@ export default function CarnetBebeScreen({ navigation }) {
     }
   }, [data]);
 
-  const handleDelete = (docBebe) => {
+  const handleDelete = (docBebeId) => {
     if (user.role === "lecteur") {
       return alert("Va voir chez Polo Chino, si tu as acces");
     }
     console.log("Vérification de l'ID dans handleDelete:");
 
-    if (!docBebe) {
+    if (!docBebeId) {
       console.error("L'identifiant du rendez-vous est manquant");
       return;
     }
 
     fetch(
-      `${process.env.EXPO_PUBLIC_API_URL}/carnetbebe/${tokenProject}/${docBebe}`,
+      `${process.env.EXPO_PUBLIC_API_URL}/carnetbebe/${tokenProject}/${docBebeId}`,
       {
         method: "DELETE",
       }
@@ -155,7 +158,7 @@ export default function CarnetBebeScreen({ navigation }) {
       .then((data) => {
         console.log(data);
         if (data.result) {
-          fetchData();
+          setlastInfos((prev) => prev.filter((e) => e._id !== docBebeId));
         }
       })
       .catch((error) =>
@@ -198,6 +201,9 @@ export default function CarnetBebeScreen({ navigation }) {
   return (
     <TemplateView navigation={navigation}>
       {/* Commence propriété children */}
+      <View style={styles.vwInstructions}>
+        <Text style={styles.txtInstructions}> Carnet Bebe </Text>
+      </View>
       <View>
         <TouchableOpacity style={styles.btn} onPress={() => modalCarnetBebe()}>
           <Text>Ajoute un document carnet Bebe</Text>
@@ -288,6 +294,13 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     justifyContent: "flex-end",
     margin: 10,
+  },
+  vwInstructions: {
+    padding: 20,
+  },
+  txtInstructions: {
+    fontSize: 40,
+    fontFamily: "Caveat",
   },
   imageButon: {
     height: 50,
