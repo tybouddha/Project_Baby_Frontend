@@ -102,6 +102,13 @@ Tab navigation:
 
    - `navigation.navigate("TabNavigator", { screen: "Settings" });`
 
+10. Cache tous le errors dans Expo / apperial
+
+```jsx
+import { LogBox } from "react-native";
+LogBox.ignoreAllLogs(); //Ignore all log notifications
+```
+
 ## Recherche infos bebé
 
 ## Installation de Android Emulator dans MacOS
