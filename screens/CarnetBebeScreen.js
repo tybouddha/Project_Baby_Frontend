@@ -199,6 +199,9 @@ export default function CarnetBebeScreen({ navigation }) {
     <TemplateView navigation={navigation}>
       {/* Commence propriété children */}
       <View>
+        <View style={styles.vwInstructions}>
+          <Text style={styles.txtInstructions}> Agenda </Text>
+        </View>
         <TouchableOpacity style={styles.btn} onPress={() => modalCarnetBebe()}>
           <Text>Ajoute un document carnet Bebe</Text>
         </TouchableOpacity>
@@ -288,6 +291,13 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     justifyContent: "flex-end",
     margin: 10,
+  },
+  vwInstructions: {
+    padding: 20,
+  },
+  txtInstructions: {
+    fontSize: 40,
+    fontFamily: "Caveat",
   },
   imageButon: {
     height: 50,

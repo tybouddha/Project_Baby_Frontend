@@ -27,9 +27,11 @@ export const userSlice = createSlice({
     logoutUser: (state) => {
       // console.log(`- dans Redux: logoutUser 🔔`);
       state.value.token = null;
-      state.value.username = null;
-      state.value.tokenProject = null;
       state.value.projectId = null;
+      state.value.tokenProject = null;
+      state.value.username = null;
+      state.value.role = null;
+      state.value.email = null;
     },
   },
 });
