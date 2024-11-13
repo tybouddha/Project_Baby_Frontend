@@ -36,6 +36,13 @@ export const documentSlice = createSlice({
     supprimerTousLesPhotos: (state) => {
       state.value.photos = [];
     },
+    logOutDocument: (state) => {
+      state.value.nom = null;
+      state.value.notes = null;
+      state.value.photos = null;
+      state.value.practicien = null;
+      state.value.modalOuvert = false;
+    },
   },
 });
 
@@ -46,5 +53,6 @@ export const {
   ajouterPhoto,
   supprimerPhoto,
   supprimerTousLesPhotos,
+  logOutDocument,
 } = documentSlice.actions;
 export default documentSlice.reducer;

@@ -13,6 +13,7 @@ import TemplateView from "./template/TemplateView";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutUser } from "../reducers/user";
+import { logOutDocument } from "../reducers/document";
 import DateTimePicker from "react-native-modal-datetime-picker";
 
 export default function Profil({ navigation }) {
@@ -153,6 +154,7 @@ export default function Profil({ navigation }) {
 
   const handleLogout = () => {
     dispatch(logoutUser());
+    dispatch(logOutDocument());
     navigation.navigate("Welcome");
   };
 
