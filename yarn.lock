@@ -2984,7 +2984,7 @@ expo-updates@~0.26.5:
     ignore "^5.3.1"
     resolve-from "^5.0.0"
 
-expo@52:
+expo@^52.0.0:
   version "52.0.4"
   resolved "https://registry.yarnpkg.com/expo/-/expo-52.0.4.tgz#081d08fd2952fd8fbf39eabb278142931a025ac5"
   integrity sha512-skG7/wd/kcTo3uhJFkCuWwn8Ymrz5DE5RO7vds69LL344lXLBdRegu38qC1Vb18ws+ZN3WgL1rxZ6GLtoVMtDA==
