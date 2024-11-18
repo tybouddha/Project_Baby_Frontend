@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, TouchableOpacity, View, Modal } from "react-native";
-import { Camera, CameraType, FlashMode } from "expo-camera/legacy";
+import { Camera, CameraType, FlashMode } from "expo-camera";
+
 import { useDispatch, useSelector } from "react-redux";
 import { documentModalRestOuvert } from "../reducers/document";
 import FontAwesome from "react-native-vector-icons/FontAwesome";

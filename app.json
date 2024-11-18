@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "frontend",
-    "slug": "frontend",
+    "slug": "projectbabyfront",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,14 +25,15 @@
     },
     "extra": {
       "eas": {
-        "projectId": "509a6ac6-59d5-4c1d-b330-de59d000ca30"
+        "projectId": "586ee30b-84cc-4038-bc66-95b6d4896b26"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/509a6ac6-59d5-4c1d-b330-de59d000ca30"
-    }
+      "url": "https://u.expo.dev/586ee30b-84cc-4038-bc66-95b6d4896b26"
+    },
+    "owner": "bouddha.dev"
   }
 }
