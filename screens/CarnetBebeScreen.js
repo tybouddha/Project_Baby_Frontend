@@ -200,7 +200,7 @@ export default function CarnetBebeScreen({ navigation }) {
       {/* Commence propriété children */}
       <View>
         <View style={styles.vwInstructions}>
-          <Text style={styles.txtInstructions}> Agenda </Text>
+          <Text style={styles.txtInstructions}> Carnet Bébé </Text>
         </View>
         <TouchableOpacity style={styles.btn} onPress={() => modalCarnetBebe()}>
           <Text>Ajoute un document carnet Bebe</Text>
