@@ -169,7 +169,7 @@ export default function DocumentsScreen({ navigation }) {
   return (
     <TemplateView navigation={navigation}>
       <View style={styles.vwInstructions}>
-        <Text style={styles.txtInstructions}> Agenda </Text>
+        <Text style={styles.txtInstructions}> Documents </Text>
       </View>
       <Modal
         visible={documentRedux.modalOuvert}
