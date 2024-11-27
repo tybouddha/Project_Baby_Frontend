@@ -86,8 +86,7 @@ Tab navigation:
 6. DocumentScreen.js: useFocusEffect & useCallback()
 
    - le modal besoin de est overt et rempli avec les infos que le utilisteur a mis avant d'aller a le Camera. donc avec le document redux on sauvagard touts les donnes. Puis avec le useFocusEffect & useCallback() on re-afficher le modal et rempli avec les infos stocker dans le redux.
-   - expliquir comment le useCallback() fonctionne
-   - expliquir comment le useFocusEffect fonctionne
+   - [pour plus des infos](./docs/DocumentsEcran.md)
 
 7. Camera
 
